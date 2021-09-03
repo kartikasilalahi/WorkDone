@@ -137,7 +137,7 @@ module.exports = {
             })
         })
     },
-
+    // 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
     getListDepartemen: (req, res) => {
         console.log("masuk")
         let sql = `SELECT * from departemen`

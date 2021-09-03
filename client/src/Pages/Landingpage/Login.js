@@ -1,30 +1,58 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Box,
     Container,
     Grid
 } from '@material-ui/core'
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from "react-router"
 import AppBar from '../Component/AppBar'
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ImgWorking from '../../Assets/img/undraw_working.svg'
-import { Link } from 'react-router-dom';
-
+import { Link, Redirect } from 'react-router-dom';
+import { login } from '../../Redux/Auth/actionCreator'
+import swal from 'sweetalert'
 
 export default function Loginpage() {
+    const dispatch = useDispatch()
+    const history = useHistory();
+    const Login = useSelector(state => state.auth)
+
     const [validated, setValidated] = useState(false);
     const [dataLogin, sedataLogin] = useState({
         email: "",
         password: "",
     });
 
+    useEffect(() => {
+        if (Login.error !== null) {
+            swal({
+                title: "0ps!",
+                text: `${Login.error}`,
+                icon: "warning",
+            });
+        }
+    }, [Login.loading]);
+
+    useEffect(() => {
+
+        if (Login.login) {
+            swal({
+                title: "Good job!",
+                text: "You clicked the button!",
+                icon: "success",
+            });
+        }
+    }, [Login.login])
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        // const form = event.currentTarget;
-        // if (form.checkValidity() === false) {
-        //     event.preventDefault();
-        //     event.stopPropagation();
-        // }
+        const form = event.currentTarget;
+
+        if (form.checkValidity() && (dataLogin.email.length > 0 && dataLogin.password.length > 0)) {
+            dispatch(login(dataLogin.email, dataLogin.password))
+        }
 
         setValidated(true);
     }
@@ -62,7 +90,13 @@ export default function Loginpage() {
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <Button style={{ width: "100%", borderRadius: "25px", backgroundColor: "#50B799", borderColor: '#50B799' }} variant="primary" type="submit">
-                                        Login
+                                        {
+                                            Login.loading ?
+                                                <Spinner animation="border" variant="light" size="sm" style={{ backgroundColor: "transparent" }}
+                                                />
+                                                :
+                                                <>Login</>
+                                        }
                                     </Button>
                                     <Form.Text className="text-muted">
                                         Don't have an account yet?

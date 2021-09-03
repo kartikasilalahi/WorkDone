@@ -1,11 +1,13 @@
-*{
+body{
   /* font-family: 'Open Sans' !important; */
   font-family: 'Baloo Tamma 2', cursive !important;
   background-color: #EFF4FB;
   color: #2F2E41;
 
 }
-
+*{
+  color: #2F2E41;
+}
 @import url('https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
 body {
