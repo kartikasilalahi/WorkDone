@@ -1,183 +1,188 @@
-body{
+body {
   /* font-family: 'Open Sans' !important; */
-  font-family: 'Baloo Tamma 2', cursive !important;
-  background-color: #EFF4FB;
-  color: #2F2E41;
-
+  font-family: "Baloo Tamma 2", cursive !important;
+  background-color: #eff4fb;
+  color: #2f2e41;
 }
-*{
-  color: #2F2E41;
+* {
+  color: #2f2e41;
 }
-@import url('https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Tamma+2&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
 body {
   /* padding: 0 3%; */
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Baloo Tamma 2', cursive !important;
-  background-color: #EFF4FB;
+  font-family: "Baloo Tamma 2", cursive !important;
+  background-color: #eff4fb;
 }
-.appbar{
-  font-family: 'Baloo Tamma 2', cursive !important;
+.appbar {
+  font-family: "Baloo Tamma 2", cursive !important;
   font-weight: 100;
 }
-a:hover{
+a:hover {
   text-decoration: none !important;
-  }
+}
 
 a {
   text-decoration: none !important;
 }
 
-.container{
+.container {
   margin-top: 8%;
   margin-bottom: 8%;
 }
 
-.title{
-  font-family: 'Baloo Tamma 2', cursive !important;
+.title {
+  font-family: "Baloo Tamma 2", cursive !important;
   font-size: 50px;
   color: #4a4b4e;
 }
 
-.subtitle{
-  font-family: 'Nunito', sans-serif !important;
+.subtitle {
+  font-family: "Nunito", sans-serif !important;
   text-align: center;
   font-size: 20px;
-  color: #22252F;
+  color: #22252f;
   padding-top: 20px;
   padding-bottom: 20px;
 }
 
-.menu:hover{
+.menu:hover {
   font-weight: bold;
 }
 
-.img_task_list_home{
+.img_task_list_home {
   width: 50% !important;
 }
 /* RESPONSIVE LAYOUT */
 
 /* phone */
-@media (min-width: 320px) and (max-width: 767px){
-  .title{
-  font-size: 30px;
+@media (min-width: 320px) and (max-width: 767px) {
+  .title {
+    font-size: 30px;
   }
 
-  .subtitle{
+  .subtitle {
     font-size: 14px;
-    }
+  }
 
-    .img_task_list_home{
-      width: 90% !important;
-    }
+  .img_task_list_home {
+    width: 90% !important;
+  }
 }
 
 /* phone landscape */
-@media (min-width: 320px) and (max-width: 767px) and (orientation: landscape){
-  .title{
+@media (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
+  .title {
     font-size: 30px;
-    }
+  }
 
-  .subtitle{
-  font-size: 16px;
+  .subtitle {
+    font-size: 16px;
   }
 }
 
 /* tablet */
-@media (min-width: 768px) and (max-width: 1024px){
-  .title{
+@media (min-width: 768px) and (max-width: 1024px) {
+  .title {
     font-size: 45px;
-    }
+  }
 
-    .subtitle{
-      font-size: 18px;
-      }
-      .img_task_list_home{
-        width: 80% !important;
-      }
+  .subtitle {
+    font-size: 18px;
+  }
+  .img_task_list_home {
+    width: 80% !important;
+  }
 }
 
 /* tablet landscape */
-@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape){
-  .title{
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .title {
     font-size: 45px;
-    }
-    .subtitle{
-      font-size: 18px;
-      }
-}
-
-
-/* #dashboard {
-  position: absolute;
-  width: 220px;
-} 
-
-#dashboard .pro-sidebar {
-  height: 100vh;
-  
-}
-#dashboard .closemenu {
-  background-color: #50B799;
-  color: #000;
-  position: absolute;
-  right: 50%;
-  z-index: 9999;
-  line-height: 20px;
-  border-radius: 50%;
-  font-weight: bold;
-  font-size: 22px;
-  top: 62px;
-  cursor: pointer;
-}
-#dashboard .pro-sidebar {
-  z-index: 999;
-  width: 100%;
-  min-width: 100%;
-}
-#dashboard .pro-sidebar.collapsed {
-  width: 80px;
-  min-width: 80px;
-}
-#dashboard .pro-sidebar-inner {
-  background-color: white;
-  box-shadow: 0.5px 0.866px 2px 0px rgba(0, 0, 0, 0.15);
-}
-#dashboard .pro-sidebar-inner .pro-sidebar-layout {
-  overflow-y: hidden;
-}
-#dashboard .pro-sidebar-inner .pro-sidebar-layout .logotext p {
-  font-size: 20px;
-  color: #000;
-  font-weight: bold;
-}
-#dashboard .pro-sidebar-inner .pro-sidebar-layout ul {
-  padding: 0 5px;
-}
-#dashboard .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item {
-  color: #000;
-  margin: 10px 0px;
-  font-weight: bold;
-}
-#dashboard .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item .pro-icon-wrapper {
-  background-color: #fbf4cd;
-  color: #000;
-  border-radius: 3px;
-}
-#dashboard .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item .pro-icon-wrapper .pro-item-content {
-  color: #000;
-} */
-/* #dashboard .pro-sidebar-inner .pro-sidebar-layout .active {
-  background-image: linear-gradient(0deg, #fece00 0%, #ffe172 100%);
-}
-#dashboard .logo {
-  padding: 20px;
-} */
-
-/* @media only screen and (max-width: 720px) {
-  html {
-    overflow: hidden;
   }
-} */
+  .subtitle {
+    font-size: 18px;
+  }
+}
+.stuck {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  max-height: 100%;
+  width: 190px;
+  background-color: #eee;
+  overflow-y: scroll;
+}
+.stuck p {
+  margin: 10px;
+}
+.not-stuck {
+  margin-left: 200px;
+}
+
+.side-container {
+  overflow: auto;
+  max-height: 100%;
+  /* min-height: 100%;
+  height: 100%; */
+}
+
+/* sidebar */
+.sidebar {
+  max-width: 200px;
+  min-width: 200px;
+  height: 100vh;
+  border: 0px 1px 1px 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 2rem;
+  margin-right: 2rem;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  /* overflow-y: scroll; */
+}
+
+.sidebar:hover {
+  overflow-y: scroll;
+  position: -webkit-sticky;
+  /* position: sticky; */
+}
+
+.sidebar-item {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+  align-items: center;
+}
+
+.sidebar-item-content {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 2rem;
+}
+
+.sidebar-item-icon {
+  margin-right: 10px;
+}
+
+.sidebar-item-text {
+  width: 100%;
+}
+
+.sidebar-item-expand-arrow {
+  font-size: 1.2rem !important;
+}
+
+.sidebar-item-expand-arrow-expanded {
+  color: #09bb12;
+  font-weight: bold;
+}

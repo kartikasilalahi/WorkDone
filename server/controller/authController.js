@@ -36,7 +36,8 @@ module.exports = {
         if (email && password) {
             let sql = `SELECT 
             u.id, 
-            u.fullname, 
+            u.nama_depan,
+            u.nama_belakang, 
             u.email, 
             r.name as role, 
             j.name as jabatan, 
@@ -61,15 +62,15 @@ module.exports = {
         } else if (id) {
             let sql = `SELECT 
             u.id, 
-            u.fullname, 
+            u.nama_depan,
+            u.nama_belakang, 
             u.email, 
             r.name as role, 
             j.name as jabatan, 
             d.name as departemen 
             from user u JOIN role r ON u.idrole = r.id 
             JOIN jabatan j ON u.idjabatan=j.id 
-            JOIN departemen d ON j.iddepartemen=d.id 
-            WHERE u.id=${id}`
+            JOIN departemen d ON j.iddepartemen=d.id `
             mysql.query(sql, (error, result) => {
                 if (error) res.status(500).send({ error })
 
@@ -86,14 +87,17 @@ module.exports = {
         let { id } = req.params
         let sql = `SELECT 
         u.id, 
-        u.fullname, 
+        u.nama_depan,
+        u.nama_belakang, 
         u.email, 
         r.name as role, 
         j.name as jabatan, 
         d.name as departemen 
+        l.name as level
         from user u JOIN role r ON u.idrole = r.id 
         JOIN jabatan j ON u.idjabatan=j.id 
         JOIN departemen d ON j.iddepartemen=d.id 
+        JOIN level l ON l.id=u.idlevel
         WHERE u.id=${id}`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
@@ -139,7 +143,6 @@ module.exports = {
     },
     // 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
     getListDepartemen: (req, res) => {
-        console.log("masuk")
         let sql = `SELECT * from departemen`
         console.log(">>s", sql)
         mysql.query(sql, (error, result) => {
