@@ -23,15 +23,13 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
     }
     if (onClickProp) {
       onClickProp(e, item);
-      console.log(label)
       if (label === "Logout") {
         swal({
           title: "Anda yakin logout?",
-          // text: "You will not be able to recover this imaginary file!",
-          icon: "warning",
+          icon: "info",
           buttons: [
-            'Tidak',
-            'Ya'
+            'Cancel',
+            'Yes'
           ],
           dangerMode: true,
         }).then((value) => {
@@ -42,12 +40,9 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
             }
           }
         })
-
       } else {
         history.push(`${item.name}`);
       }
-      //   setTimeout(() => {
-      //   }, 2000);
     }
   }
 
@@ -83,7 +78,7 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
             paddingLeft: `${depth * depthStep > 0 ? `${depth * depthStep}px` : "2rem"}`
           }}
         >
-          {Icon && <Icon className="sidebar-item-icon" fontSize="small" />}
+          {Icon && <Icon className="sidebar-item-icon" fontSize="small" style={{ fill: `${active === item.name ? "#51AC56" : "#2F2E41"}` }} />}
           <div className="sidebar-item-text" style={{ color: `${active === item.name ? "#51AC56" : "#2F2E41"}`, fontWeight: `${active === item.name ? "bold" : "normal"}` }} >{label}</div>
           {expandIcon}
         </div>

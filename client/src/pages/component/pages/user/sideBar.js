@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HomeIcon from "@material-ui/icons/Home";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -14,9 +14,22 @@ import { useRouteMatch } from "react-router-dom";
 function SideBar() {
   const { path } = useRouteMatch();
   const [activeMenu, setactiveMenu] = useState(path);
+  const [label, setlabel] = useState("Home");
+  if (path === null) {
+    localStorage.setItem("path", "Home")
+  }
+  useEffect(() => {
+
+    if (path === null) {
+      localStorage.setItem("path", "Home")
+    }
+    localStorage.setItem("path", label)
+  }, [label])
 
   const onClick = (e, item) => {
     setactiveMenu(path)
+    localStorage.setItem("path", item.label)
+    setlabel(item.label)
   }
 
   const items = [

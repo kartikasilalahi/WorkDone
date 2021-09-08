@@ -132,10 +132,10 @@ a {
 
 /* sidebar */
 .sidebar {
-  max-width: 200px;
-  min-width: 200px;
+  /* max-width: 220px; */
+  min-width: 225px;
   height: 100vh;
-  border: 0px 1px 1px 1px solid rgba(0, 0, 0, 0.1);
+  border-right:  2px solid rgba(0, 0, 0, 0.1);
   padding-bottom: 2rem;
   margin-right: 2rem;
   position: fixed;
@@ -189,10 +189,15 @@ a {
 }
 
 .topbar{
-  min-height: 60px;
+  min-height: 80px;
+  height: 80px;
   overflow: hidden;
   background-color: #EDF8F1;
   position: fixed;
   top: 0;
   width: 100%;
+}
+
+.container-content{
+  padding-top: 8rem;
 }

@@ -3,7 +3,7 @@ import { Box, Divider, Grid } from '@material-ui/core'
 import SideBar from '../../component/pages/user/sideBar'
 import TopBar from '../../component/pages/user/topBar'
 
-export default function dashboardUser() {
+export default function task() {
     return (
         <div>
             <Grid container>
@@ -14,16 +14,8 @@ export default function dashboardUser() {
                 <Grid item md={10}>
                     <TopBar />
                     <Box px={2} className="container-content" pb={5}>
-                        <Box>You have 2 unread messages</Box>
-                        <Box pb={3} className="new-notif">
-                            <Box pt={2}>New</Box>
-                            <Box></Box>
-
-                        </Box>
-                        <Divider />
-                        <Box pb={3} className="new-notif">
-                            <Box pt={2}>Before That</Box>
-                            <Box></Box>
+                        ALL TASK
+                        <Box pb={2}>
 
                         </Box>
                     </Box>
