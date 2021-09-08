@@ -1,12 +1,13 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import Collapse from "@material-ui/core/Collapse";
-import {Box, Avatar, Link} from '@material-ui/core'
+import { Box, Avatar, Link } from '@material-ui/core'
 import { useHistory } from "react-router-dom";
+import swal from 'sweetalert'
 
 function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...rest }) {
   const [collapsed, setCollapsed] = React.useState(true);
@@ -22,14 +23,36 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
     }
     if (onClickProp) {
       onClickProp(e, item);
-      history.push(`${item.name}`);
-    //   setTimeout(() => {
-    //   }, 2000);
+      console.log(label)
+      if (label === "Logout") {
+        swal({
+          title: "Anda yakin logout?",
+          // text: "You will not be able to recover this imaginary file!",
+          icon: "warning",
+          buttons: [
+            'Tidak',
+            'Ya'
+          ],
+          dangerMode: true,
+        }).then((value) => {
+          if (value) {
+            localStorage.clear()
+            if (localStorage.getItem("isLogin") === null) {
+              window.location.href = '/'
+            }
+          }
+        })
+
+      } else {
+        history.push(`${item.name}`);
+      }
+      //   setTimeout(() => {
+      //   }, 2000);
     }
-}
+  }
 
   let expandIcon;
-  
+
   if (Array.isArray(items) && items.length) {
     expandIcon = !collapsed ? (
       <ExpandLessIcon
@@ -38,8 +61,8 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
         }
       />
     ) : (
-      <ExpandMoreIcon className="sidebar-item-expand-arrow" />
-    );
+        <ExpandMoreIcon className="sidebar-item-expand-arrow" />
+      );
   }
 
 
@@ -55,13 +78,14 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
         <div
           className="sidebar-item-content"
           style={{
-            borderRight:`${active===item.name ? "3px solid #51AC56" : "none"}`, 
-            backgroundColor:`${active===item.name ? "#EDF8F1" : "transparent"}`,
-            paddingLeft:`${ depth * depthStep>0 ?  `${depth * depthStep}px`: "2rem"}` }}
+            borderRight: `${active === item.name ? "3px solid #51AC56" : "none"}`,
+            backgroundColor: `${active === item.name ? "#EDF8F1" : "transparent"}`,
+            paddingLeft: `${depth * depthStep > 0 ? `${depth * depthStep}px` : "2rem"}`
+          }}
         >
           {Icon && <Icon className="sidebar-item-icon" fontSize="small" />}
-          <div className="sidebar-item-text" style={{color:`${active===item.name ? "#51AC56" : "#2F2E41"}`, fontWeight:`${active===item.name ? "bold" : "normal"}`}} >{label}</div>
-        {expandIcon}
+          <div className="sidebar-item-text" style={{ color: `${active === item.name ? "#51AC56" : "#2F2E41"}`, fontWeight: `${active === item.name ? "bold" : "normal"}` }} >{label}</div>
+          {expandIcon}
         </div>
       </ListItem>
       <Collapse in={!collapsed} timeout="auto" unmountOnExit>
@@ -70,16 +94,16 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
             {items.map((subItem, index) => (
               <React.Fragment key={`${subItem.name}${index}`}>
                 {subItem === "divider" ? (
-                  <Divider style={{ margin: "6px 0" }} /> 
+                  <Divider style={{ margin: "6px 0" }} />
                 ) : (
                     <SidebarItem
-                    depth={depth + 8}
-                    depthStep={depthStep}
-                    item={subItem}
-                    active={active}
-                
-                  />
-                )}
+                      depth={depth + 8}
+                      depthStep={depthStep}
+                      item={subItem}
+                      active={active}
+
+                    />
+                  )}
               </React.Fragment>
             ))}
           </List>
@@ -90,24 +114,24 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
 }
 
 function Sidebar({ items, depthStep, depth, expanded, active }) {
-    // console.log("active", active)
+  // console.log("active", active)
   return (
-    <div className="sidebar"> 
-    <Box pt={5} pb={1} display="flex"
+    <div className="sidebar">
+      <Box pt={5} pb={1} display="flex"
         justifyContent="center"
         alignItems="center" textAlign="center">
-        <Avatar style={{height:"100px", width:"100px"}}  src="https://minimal-kit-react.vercel.app/static/illustrations/illustration_avatar.png" />
-        </Box>
-        <Box textAlign="center" color="#51AC56" fontSize={22}>
-            {localStorage.getItem("nama_depan")} {localStorage.getItem("nama_belakang")} 
-        </Box>
-        <Box textAlign="center" color="#2F2E41" fontWeight={600}>
-            {localStorage.getItem("jabatan")} 
-        </Box>
-        <Box fontSize={14} pb={5} textAlign="center" color="#637381">
-            {localStorage.getItem("email")}
-              <Divider style={{ marginTop: "16px" }} />
-        </Box>
+        <Avatar style={{ height: "100px", width: "100px" }} src="https://minimal-kit-react.vercel.app/static/illustrations/illustration_avatar.png" />
+      </Box>
+      <Box textAlign="center" color="#2F2E41" fontSize={20} fontWeight={600}>
+        {localStorage.getItem("nama_depan")} {localStorage.getItem("nama_belakang")}
+      </Box>
+      <Box textAlign="center" color="#51AC56" fontSize={15}>
+        {localStorage.getItem("jabatan")}
+      </Box>
+      <Box fontSize={14} pb={5} textAlign="center" color="#637381">
+        {localStorage.getItem("email")}
+        <Divider style={{ marginTop: "16px" }} />
+      </Box>
 
 
       <List disablePadding dense>
@@ -116,14 +140,14 @@ function Sidebar({ items, depthStep, depth, expanded, active }) {
             {sidebarItem === "divider" ? (
               <Divider style={{ margin: "6px 0" }} />
             ) : (
-              <SidebarItem
-                depthStep={depthStep}
-                depth={depth}
-                expanded={expanded}
-                item={sidebarItem}
-                active={active}
-              />
-            )}
+                <SidebarItem
+                  depthStep={depthStep}
+                  depth={depth}
+                  expanded={expanded}
+                  item={sidebarItem}
+                  active={active}
+                />
+              )}
           </React.Fragment>
         ))}
       </List>

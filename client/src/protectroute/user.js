@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 // const Dashboard = lazy(() => import('../Pages/Component/Page/user/dashboardUser'));
 import Dashboard from '../pages/landingpage/user/dashboardUser';
-import Task from '../pages/landingpage/user/task';
+import Task from '../pages/landingpage/user/notification';
 import NotFound from './notFound';
 
 const UseRoute = () => {

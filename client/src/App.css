@@ -176,6 +176,7 @@ a {
 
 .sidebar-item-text {
   width: 100%;
+  font-size: 14px;
 }
 
 .sidebar-item-expand-arrow {
@@ -185,4 +186,13 @@ a {
 .sidebar-item-expand-arrow-expanded {
   color: #09bb12;
   font-weight: bold;
+}
+
+.topbar{
+  min-height: 60px;
+  overflow: hidden;
+  background-color: #EDF8F1;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
