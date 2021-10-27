@@ -1,12 +1,72 @@
-import React from 'react'
-import { Box, Grid, Paper } from '@material-ui/core'
+import React, { useState } from 'react'
+import { Box, Grid, Dialog, DialogTitle, DialogActions, DialogContent, TextField } from '@material-ui/core'
 import TopBar from '../../component/pages/user/topBar'
 import SideBar from '../../component/pages/user/sideBar'
+import { Button, Form, Spinner } from 'react-bootstrap';
 
 
-export default function dashboardUser() {
+
+export default function DashboardUser() {
+
+    const [open, setOpen] = useState(false);
+    const [field, setField] = useState([]);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     return (
         <div>
+            <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+                <DialogTitle><Box fontSize={14} fontWeight={700}>Add New Task</Box></DialogTitle>
+                <DialogContent>
+                    <Box>
+                        <Form noValidate >
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label>Task Name</Form.Label>
+                                <Form.Control size="sm" type="text" placeholder="Add Task Name" required />
+                            </Form.Group>
+
+                            <Form.Group controlId="formbasictask" >
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control size="sm" as="textarea" rows={2} type="text" placeholder="Description task" required />
+                            </Form.Group>
+
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label>Start</Form.Label>
+                                <Form.Control size="sm" type="date" placeholder="Add Task Name" required />
+                            </Form.Group>
+
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label>Duedate</Form.Label>
+                                <Form.Control size="sm" type="date" placeholder="Add Task Name" required />
+                            </Form.Group>
+
+                            <Form.Group controlId="formBasicSelect">
+                                <Form.Label>Assignee</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    value={field}
+                                    size="sm"
+
+                                >
+                                    <option value="DICTUM">Dictamen</option>
+                                    <option value="CONSTANCY">Constancia</option>
+                                    <option value="COMPLEMENT">Complemento</option>
+                                </Form.Control>
+                            </Form.Group>
+
+                        </Form>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>Subscribe</Button>
+                </DialogActions>
+            </Dialog>
+
             <Grid container>
                 <Grid item md={2}>
                     <SideBar />
@@ -55,7 +115,7 @@ export default function dashboardUser() {
                                                 <Box fontSize={13}> Project Name</Box>
                                             </Box>
                                             <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box fontSize={14} textAlign="center">+ Create New Task</Box>
+                                                <Box fontSize={14} textAlign="center" onClick={handleClickOpen}>+ Create New Task</Box>
                                             </Box>
                                         </Box>
                                     </Box>
