@@ -12,7 +12,7 @@ export default function dashboardUser() {
                     <SideBar />
 
                 </Grid>
-                <Grid item md={10} style={{ backgroundColor: "whitesmoke", height: "600px" }}>
+                <Grid item md={10} style={{ backgroundColor: "whitesmoke", minHeight: "600px" }}>
                     <TopBar />
 
                     <Box px={2} className="container-content" pb={5}>
@@ -32,49 +32,64 @@ export default function dashboardUser() {
                                         <Box ml={5} pt={2} pl={5}>
                                             <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
                                                 <Box>Task Name</Box>
-                                                <Box> Project Name</Box>
+                                                <Box fontSize={13}> Project Name</Box>
                                             </Box>
                                             <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
                                                 <Box>Task Name</Box>
-                                                <Box> Project Name</Box>
+                                                <Box fontSize={13}> Project Name</Box>
                                             </Box>
                                             <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
                                                 <Box>Task Name</Box>
-                                                <Box> Project Name</Box>
+                                                <Box fontSize={13}> Project Name</Box>
                                             </Box>
                                             <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
                                                 <Box>Task Name</Box>
-                                                <Box> Project Name</Box>
+                                                <Box fontSize={13}> Project Name</Box>
                                             </Box>
-
+                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
+                                                <Box>Task Name</Box>
+                                                <Box fontSize={13}> Project Name</Box>
+                                            </Box>
+                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
+                                                <Box>Task Name</Box>
+                                                <Box fontSize={13}> Project Name</Box>
+                                            </Box>
+                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
+                                                <Box fontSize={14} textAlign="center">+ Create New Task</Box>
+                                            </Box>
                                         </Box>
                                     </Box>
                                 </Grid>
                                 <Grid item xs={6} s={6} md={6} lg={6}>
-                                    <Box mx={5}>
-                                        <Box>
-                                            <Grid container justifyContent="space-around">
+                                    <Box>
+                                        <Box mr={8}>
+                                            <Grid container justifyContent="space-between">
                                                 <Grid item><Box fontWeight={600}>Project</Box></Grid>
                                                 <Grid item><Box color="#88D38B">See more</Box></Grid>
                                             </Grid>
                                         </Box>
-                                        <Box ml={5} pt={2} pl={5}>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box> Project Name</Box>
-                                            </Box>
+                                        <Box pt={2} mr={8}>
+                                            <Grid container spacing={3}>
+                                                {["1", "2", "3", "4", "5"].map((val, i) => (
+
+                                                    <Grid item xs={6} key={val}>
+                                                        {
+                                                            i === 4 ?
+                                                                <Box p={2} style={{ borderRadius: "15px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
+                                                                    <Box textAlign="center"> + </Box>
+                                                                    <Box textAlign="center" fontSize={13}> Add New</Box>
+                                                                </Box> :
+                                                                <Box p={2} style={{ borderRadius: "15px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
+                                                                    <Box>Task Name</Box>
+                                                                    <Box fontSize={13}>desc project...</Box>
+                                                                </Box>
+                                                        }
+                                                    </Grid>
+                                                )
+                                                )}
+
+
+                                            </Grid>
 
                                         </Box>
                                     </Box>
