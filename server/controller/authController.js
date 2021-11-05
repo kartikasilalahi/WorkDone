@@ -39,15 +39,17 @@ module.exports = {
             u.nama_depan,
             u.nama_belakang, 
             u.email, 
-            r.name as role, 
+            r.role_name as role, 
             j.name as jabatan, 
             d.name as departemen 
             from user u JOIN role r ON u.idrole = r.id 
             JOIN jabatan j ON u.idjabatan=j.id 
-            JOIN departemen d ON j.iddepartemen=d.id 
+            JOIN departemen d ON j.departemen_id=d.id 
             WHERE u.email='${email}' AND u.password = '${password}'`
+            console.log("sql", sql)
             mysql.query(sql, (error, result) => {
                 if (error) res.status(500).send({ error })
+                console.log("masuk, ", result)
 
                 if (result && result.length > 0) {
                     console.log('result', result)
@@ -144,7 +146,6 @@ module.exports = {
     // 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
     getListDepartemen: (req, res) => {
         let sql = `SELECT * from departemen`
-        console.log(">>s", sql)
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 
@@ -152,8 +153,6 @@ module.exports = {
                 status: 200,
                 data: result
             })
-            console.log(">>s", result)
-
         })
     },
 
@@ -161,6 +160,37 @@ module.exports = {
         let sql = `SELECT * from role`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+    // JOIN project p ON p.id = t.project_id 
+    getAllTaskUser: (req, res) => {
+        let { id } = req.params
+        let sql = `SELECT p.project_name, t.* 
+        from task_user tu  JOIN task t ON tu.id =  t.id 
+        JOIN project p ON p.id = t.project_id
+        where tu.user_id = ${id}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
+    getAllProjectUser: (req, res) => {
+        let { id } = req.params
+        let sql = `SELECT p.project_name, p.departemen_id from project_user pu JOIN project p ON pu.project_id = p.id where pu.user_id = ${id}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+
 
             res.send({
                 status: 200,
