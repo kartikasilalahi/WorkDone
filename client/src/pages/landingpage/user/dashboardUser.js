@@ -1,12 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Grid, Dialog, DialogTitle, DialogActions, DialogContent, TextField } from '@material-ui/core'
 import TopBar from '../../component/pages/user/topBar'
 import SideBar from '../../component/pages/user/sideBar'
 import { Button, Form, Spinner } from 'react-bootstrap';
-
+import { getAllTaskUser } from '../../../redux/task/actionCreator'
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from "react-router-dom";
+import Chart from "react-google-charts";
 
 
 export default function DashboardUser() {
+    const dispatch = useDispatch()
+    const history = useHistory();
+    const allTaskUser = useSelector(state => state.task.all_task_user)
+    const isLoadingTaskUser = useSelector(state => state.task.is_loading_all_task_user)
+
+
+    const [ListTaskUser, setListTaskUser] = useState([]);
 
     const [open, setOpen] = useState(false);
     const [field, setField] = useState([]);
@@ -17,6 +27,11 @@ export default function DashboardUser() {
     const handleClose = () => {
         setOpen(false);
     };
+
+    useEffect(() => {
+        dispatch(getAllTaskUser(2))
+    }, [dispatch])
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
@@ -73,75 +88,52 @@ export default function DashboardUser() {
 
                 </Grid>
                 <Grid item md={10} style={{ backgroundColor: "whitesmoke", minHeight: "600px" }}>
-                    <TopBar />
+                    {/* <TopBar /> */}
 
                     <Box px={2} className="container-content" pb={5}>
+                        <Box fontSize={20} fontWeight={600}>Hi, Welcome Back!</Box>
 
-                        <Box fontSize={22} fontWeight={600}>Hi, Wellcome Back!</Box>
-
-                        <Box py={4}>
-                            <Grid container>
-                                <Grid item xs={6} s={6} md={6} lg={6}>
-                                    <Box mx={5}>
-                                        <Box>
-                                            <Grid container justifyContent="space-around">
-                                                <Grid item><Box fontWeight={600}>Priority Task</Box></Grid>
-                                                <Grid item><Box color="#88D38B">See more</Box></Grid>
-                                            </Grid>
-                                        </Box>
-                                        <Box ml={5} pt={2} pl={5}>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box fontSize={13}> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box fontSize={13}> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box fontSize={13}> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box fontSize={13}> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box fontSize={13}> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box>Task Name</Box>
-                                                <Box fontSize={13}> Project Name</Box>
-                                            </Box>
-                                            <Box p={2} mb={2} style={{ width: "300px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                <Box fontSize={14} textAlign="center" onClick={handleClickOpen}>+ Create New Task</Box>
-                                            </Box>
-                                        </Box>
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={6} s={6} md={6} lg={6}>
+                        <Grid container justifyContent="space-between">
+                            <Grid xs={6} sm={6} lg={6}>
+                                <Box>
+                                    <Box pt={5} >
+                                        <Chart
+                                            width={'540px'}
+                                            height={'300px'}
+                                            chartType="PieChart"
+                                            loader={<div>Loading Chart</div>}
+                                            data={[
+                                                ['Done', 'Hours per Day'],
+                                                ['Inprogress', 11],
+                                                ['Decline', 2],
+                                                ['Review', 5],
+                                            ]}
+                                            options={{
+                                                title: 'My Daily Activities',
+                                            }}
+                                            rootProps={{ 'data-testid': '1' }}
+                                        /></Box>
                                     <Box>
-                                        <Box mr={8}>
+                                        <Box pt={5}>
                                             <Grid container justifyContent="space-between">
-                                                <Grid item><Box fontWeight={600}>Project</Box></Grid>
+                                                <Grid item><Box fontWeight={600}>My Project</Box></Grid>
                                                 <Grid item><Box color="#88D38B">See more</Box></Grid>
                                             </Grid>
                                         </Box>
-                                        <Box pt={2} mr={8}>
+                                        <Box pt={2}  >
                                             <Grid container spacing={3}>
                                                 {["1", "2", "3", "4", "5"].map((val, i) => (
 
                                                     <Grid item xs={6} key={val}>
                                                         {
                                                             i === 4 ?
-                                                                <Box p={2} style={{ borderRadius: "15px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
+                                                                <Box fontWeight={600} p={2} style={{ borderRadius: "15px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff', cursor: 'pointer' }}>
                                                                     <Box textAlign="center"> + </Box>
                                                                     <Box textAlign="center" fontSize={13}> Add New</Box>
                                                                 </Box> :
                                                                 <Box p={2} style={{ borderRadius: "15px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                                                    <Box>Task Name</Box>
-                                                                    <Box fontSize={13}>desc project...</Box>
+                                                                    <Box fontSize={13}>Project Name</Box>
+                                                                    <Box fontSize={11}>desc project...</Box>
                                                                 </Box>
                                                         }
                                                     </Grid>
@@ -153,15 +145,34 @@ export default function DashboardUser() {
 
                                         </Box>
                                     </Box>
-                                </Grid>
-                            </Grid>
-                        </Box>
 
-                        {/* <Box fontSize={14} py={5}>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram,</Box>
-                        <Box fontSize={14} py={5}>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram,
-                        </Box>
-                        <Box fontSize={14} py={5}>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram,
-                        </Box> */}
+                                </Box>
+                            </Grid>
+                            <Grid xs={6} sm={6} lg={6}>
+                                <Box ml={3} pt={5} >
+                                    <Box>
+                                        <Grid container justifyContent="space-between">
+                                            <Grid item><Box fontWeight={600}>My Priority Task</Box></Grid>
+                                            <Grid item><Box color="#88D38B" onClick={() => history.push('/user/all-task')} style={{ cursor: 'pointer' }}>See more</Box></Grid>
+                                        </Grid>
+                                    </Box>
+                                    <Box pt={2}>
+                                        {isLoadingTaskUser ? 'loading...' :
+                                            allTaskUser.map((task, i) => (
+                                                <Box key={i} p={1} mb={2} style={{ width: "515px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
+                                                    <Box fontSize={13}>{task.task_name}</Box>
+                                                    <Box fontSize={11} color="#2F2E41" fontWeight={500}>{task.project_name}</Box>
+                                                </Box>
+                                            ))
+                                        }
+                                        <Box p={2} mb={2} style={{ width: "515px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
+                                            <Box fontSize={14} textAlign="center" onClick={handleClickOpen} style={{ cursor: 'pointer' }} fontWeight={600}>+ Create New Task</Box>
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Grid>
+                        </Grid>
+
                     </Box>
                 </Grid>
             </Grid>

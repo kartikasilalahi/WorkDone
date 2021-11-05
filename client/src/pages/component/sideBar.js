@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
@@ -16,6 +16,11 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
   function toggleCollapse() {
     setCollapsed(prevValue => !prevValue);
   }
+  useEffect(() => {
+    if (active === '/user/all-task') {
+      setCollapsed(false)
+    }
+  }, [])
 
   function onClick(e) {
     if (Array.isArray(items)) {

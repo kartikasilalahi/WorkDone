@@ -187,7 +187,7 @@ a {
   color: #09bb12;
   font-weight: bold;
 }
-
+/* 2F2E41 */
 .topbar{
   min-height: 80px;
   height: 80px;
@@ -199,5 +199,5 @@ a {
 }
 
 .container-content{
-  padding-top: 8rem;
+  padding-top: 2rem;
 }
