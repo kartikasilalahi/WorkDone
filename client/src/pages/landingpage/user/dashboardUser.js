@@ -99,17 +99,19 @@ export default function DashboardUser() {
                                     <Box pt={5} >
                                         <Chart
                                             width={'540px'}
-                                            height={'300px'}
+                                            height={'250px'}
                                             chartType="PieChart"
                                             loader={<div>Loading Chart</div>}
                                             data={[
-                                                ['Done', 'Hours per Day'],
-                                                ['Inprogress', 11],
+                                                ['Task', 'Count'],
+                                                ['In progress', 10],
                                                 ['Decline', 2],
-                                                ['Review', 5],
+                                                ['Review', 2],
+                                                ['Done', 5],
+                                                ['To Do', 0],
                                             ]}
                                             options={{
-                                                title: 'My Daily Activities',
+                                                title: 'My Daily Progress',
                                             }}
                                             rootProps={{ 'data-testid': '1' }}
                                         /></Box>
@@ -128,8 +130,8 @@ export default function DashboardUser() {
                                                         {
                                                             i === 4 ?
                                                                 <Box fontWeight={600} p={2} style={{ borderRadius: "15px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff', cursor: 'pointer' }}>
-                                                                    <Box textAlign="center"> + </Box>
-                                                                    <Box textAlign="center" fontSize={13}> Add New</Box>
+                                                                    {/* <Box textAlign="center"> + </Box> */}
+                                                                    <Box textAlign="center" fontSize={13}> + Add New Project</Box>
                                                                 </Box> :
                                                                 <Box p={2} style={{ borderRadius: "15px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
                                                                     <Box fontSize={13}>Project Name</Box>
@@ -166,7 +168,7 @@ export default function DashboardUser() {
                                             ))
                                         }
                                         <Box p={2} mb={2} style={{ width: "515px", borderRadius: "5px", WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)", backgroundColor: '#fff' }}>
-                                            <Box fontSize={14} textAlign="center" onClick={handleClickOpen} style={{ cursor: 'pointer' }} fontWeight={600}>+ Create New Task</Box>
+                                            <Box fontSize={13} textAlign="center" onClick={handleClickOpen} style={{ cursor: 'pointer' }} fontWeight={600}>+ Create New Task</Box>
                                         </Box>
                                     </Box>
                                 </Box>
