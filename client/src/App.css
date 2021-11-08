@@ -146,6 +146,7 @@ a {
   position: fixed;
   top: 0px;
   left: 0px;
+  background-color: #0f0f19;
   /* overflow-y: scroll; */
 }
 
@@ -181,7 +182,7 @@ a {
 
 .sidebar-item-text {
   width: 100%;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .sidebar-item-expand-arrow {
@@ -205,4 +206,8 @@ a {
 
 .container-content{
   padding-top: 2rem;
+}
+
+.sidebar-item-expand-arrow{
+  color: white !important;
 }

@@ -10,6 +10,7 @@ router.get('/role', authController.getListRole)
 router.get('/departemen', authController.getListDepartemen)
 router.get('/jabatan', authController.getListJabatan)
 router.get('/alltaskuser/:id', authController.getAllTaskUser)
+router.get('/detailtask/:id', authController.getDetailTask)
 
 router.put('/ubahpassword/:id', authController.ubahPasword)
 router.put('/ubahpassword/:id', authController.ubahPasword)

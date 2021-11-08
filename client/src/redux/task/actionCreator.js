@@ -7,7 +7,10 @@ import action from './action'
 const {
     getAllTaskUserEffect,
     getAllTaskUserRequest,
-    getAllTaskUserErr
+    getAllTaskUserErr,
+    getDetailTaskRequest,
+    getDetailTaskSuccess,
+    getDetailTaskErr,
     // loginRequest,
     // loginSuccess,
     // loginErr,
@@ -39,4 +42,23 @@ const getAllTaskUser = (id) => {
     }
 }
 
-export { getAllTaskUser };
+const getDetailTask = (id) => {
+    return async dispatch => {
+        try {
+            dispatch(getDetailTaskRequest())
+            setTimeout(async () => {
+                const allTaskUser = await Axios.get(`${APIURL}auth/detailtask/${id}`)
+                if (allTaskUser.data.data) {
+                    dispatch(getDetailTaskSuccess(allTaskUser.data.data))
+                    console.log("al", allTaskUser.data.data)
+                } else {
+                    dispatch(getDetailTaskErr(allTaskUser.data.message))
+                }
+            }, 100);
+        } catch (error) {
+            dispatch(getDetailTaskErr(error))
+        }
+    }
+}
+
+export { getAllTaskUser, getDetailTask };

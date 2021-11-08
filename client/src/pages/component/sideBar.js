@@ -79,12 +79,20 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
           className="sidebar-item-content"
           style={{
             borderRight: `${active === item.name ? "3px solid #51AC56" : "none"}`,
-            backgroundColor: `${active === item.name ? "#EDF8F1" : "transparent"}`,
+            // backgroundColor: `${active === item.name ? "#EDF8F1" : "transparent"}`,
             paddingLeft: `${depth * depthStep > 0 ? `${depth * depthStep}px` : "2rem"}`
           }}
         >
-          {Icon && <Icon className="sidebar-item-icon" fontSize="small" style={{ fill: `${active === item.name ? "#51AC56" : "#2F2E41"}` }} />}
-          <div className="sidebar-item-text" style={{ color: `${active === item.name ? "#51AC56" : "#2F2E41"}`, fontWeight: `${active === item.name ? "bold" : "normal"}` }} >{label}</div>
+          {Icon &&
+            <Icon className="sidebar-item-icon" fontSize="small"
+              style={{ fill: `${active === item.name ? "#51AC56" : "#2F2E41"}` }} />
+          }
+          <div className="sidebar-item-text"
+            style={{
+              color: `${active === item.name ? "#51AC56" : "white"}`,
+              fontWeight: `${active === item.name ? "bold" : "normal"}`
+            }}
+          >{label}</div>
           {expandIcon}
         </div>
       </ListItem>
@@ -120,17 +128,19 @@ function Sidebar({ items, depthStep, depth, expanded, active }) {
       <Box pt={5} pb={1} display="flex"
         justifyContent="center"
         alignItems="center" textAlign="center">
-        <Avatar style={{ height: "100px", width: "100px" }} src="https://minimal-kit-react.vercel.app/static/illustrations/illustration_avatar.png" />
+        <Avatar
+          style={{ height: "100px", width: "100px" }}
+          src="https://minimal-kit-react.vercel.app/static/illustrations/illustration_avatar.png" />
       </Box>
-      <Box textAlign="center" color="#2F2E41" fontSize={20} fontWeight={600}>
+      <Box textAlign="center" color="white" fontSize={18} fontWeight={600}>
         {localStorage.getItem("nama_depan")} {localStorage.getItem("nama_belakang")}
       </Box>
-      <Box textAlign="center" color="#51AC56" fontSize={15}>
+      <Box textAlign="center" color="#51AC56" fontSize={13}>
         {localStorage.getItem("jabatan")}
       </Box>
-      <Box fontSize={14} pb={5} textAlign="center" color="#637381">
+      <Box fontSize={11} pb={5} textAlign="center" color="#dedede">
         {localStorage.getItem("email")}
-        <Divider style={{ marginTop: "16px" }} />
+        {/* <Divider style={{ marginTop: "16px", backgroundColor: 'gray' }} /> */}
       </Box>
 
 

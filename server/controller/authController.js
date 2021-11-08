@@ -184,6 +184,22 @@ module.exports = {
         })
     },
 
+    getDetailTask: (req, res) => {
+        let { id } = req.params
+        console.log("taskI", id)
+        let sql = `SELECT p.project_name, t.* 
+        from task_user tu  JOIN task t ON tu.id =  t.id 
+        JOIN project p ON p.id = t.project_id
+        where t.id=${id}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
     getAllProjectUser: (req, res) => {
         let { id } = req.params
         let sql = `SELECT p.project_name, p.departemen_id from project_user pu JOIN project p ON pu.project_id = p.id where pu.user_id = ${id}`

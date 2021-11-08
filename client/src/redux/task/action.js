@@ -3,9 +3,9 @@ const actions = {
     GET_ALL_TASK_USER_REQUEST: 'GET_ALL_TASK_USER_REQUEST',
     GET_ALL_TASK_USER_ERR: 'GET_ALL_TASK_USER_ERR',
 
-    // LOGOUT_REQUEST: 'LOGOUT_REQUEST',
-    // LOGOUT_SUCCESS: 'LOGOUT_SUCCESS',
-    // LOGOUT_ERR: 'LOGOUT_ERR',
+    GET_DETAIL_TASK_REQUEST: 'GET_DETAIL_TASK_REQUEST',
+    GET_DETAIL_TASK_SUCCESS: 'GET_DETAIL_TASK_SUCCESS',
+    GET_DETAIL_TASK_ERR: 'GET_DETAIL_TASK_ERR',
 
     // FORGOT_REQUEST: 'FORGOT_REQUEST',
     // FORGOT_SUCCESS: 'FORGOT_SUCCESS',
@@ -31,25 +31,25 @@ const actions = {
         };
     },
 
-    // logoutRequest: () => {
-    //     return {
-    //         type: actions.LOGOUT_REQUEST,
-    //     };
-    // },
+    getDetailTaskRequest: () => {
+        return {
+            type: actions.GET_DETAIL_TASK_REQUEST,
+        };
+    },
 
-    // logoutSuccess: data => {
-    //     return {
-    //         type: actions.LOGOUT_SUCCESS,
-    //         data,
-    //     };
-    // },
+    getDetailTaskSuccess: data => {
+        return {
+            type: actions.GET_DETAIL_TASK_SUCCESS,
+            data,
+        };
+    },
 
-    // logoutErr: err => {
-    //     return {
-    //         type: actions.LOGOUT_ERR,
-    //         err,
-    //     };
-    // },
+    getDetailTaskErr: err => {
+        return {
+            type: actions.GET_DETAIL_TASK_ERR,
+            err,
+        };
+    },
 
     // forgotRequest: () => {
     //     return {
