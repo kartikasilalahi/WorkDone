@@ -10,6 +10,8 @@ import Admin from './protectroute/admin'
 import Auth from './protectroute/auth'
 import Home from './pages/landingpage/Home'
 import Protectroute from './helper/protectRoute'
+// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import 'react-quill/dist/quill.snow.css'
 
 function App() {
   let isLoggedIn = localStorage.getItem('isLogin')
@@ -33,7 +35,7 @@ function App() {
         {
           isLoggedIn === null && (path === '/auth/login' || path === "/auth/register") ? <Protectroute path="/auth" component={Auth} />
             :
-            isLoggedIn === null && role === null  ? <Protectroute path="/" component={Home} />
+            isLoggedIn === null && role === null ? <Protectroute path="/" component={Home} />
               : isLoggedIn && role === "admin" ? <Protectroute path="/admin" component={Admin} />
                 : <Protectroute path="/user" component={User} />}
 

@@ -211,3 +211,17 @@ a {
 .sidebar-item-expand-arrow{
   color: white !important;
 }
+
+.swal2-popup {
+  font-size: 13px !important;
+  z-index: 999999999 !important;
+
+}
+
+.swal2-container {
+  z-index: 999999999 !important;
+}
+
+.react-datetime-picker{
+  width: 260px !important;
+}

@@ -1,4 +1,4 @@
-const authRouter = require('./authRouter')
+const taskmanRouter = require('./taskmanRouter')
 module.exports = {
-    authRouter
+    taskmanRouter
 }

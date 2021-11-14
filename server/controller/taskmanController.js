@@ -1,4 +1,5 @@
 const { mysql } = require('../connection')
+var moment = require('moment')
 
 module.exports = {
 
@@ -39,6 +40,7 @@ module.exports = {
             u.nama_depan,
             u.nama_belakang, 
             u.email, 
+            u.iddepartement,
             r.role_name as role, 
             j.name as jabatan, 
             d.name as departemen 
@@ -186,7 +188,6 @@ module.exports = {
 
     getDetailTask: (req, res) => {
         let { id } = req.params
-        console.log("taskI", id)
         let sql = `SELECT p.project_name, t.* 
         from task_user tu  JOIN task t ON tu.id =  t.id 
         JOIN project p ON p.id = t.project_id
@@ -202,17 +203,90 @@ module.exports = {
     },
     getAllProjectUser: (req, res) => {
         let { id } = req.params
-        let sql = `SELECT p.project_name, p.departemen_id from project_user pu JOIN project p ON pu.project_id = p.id where pu.user_id = ${id}`
+        let sql = `
+        SELECT pu.id, p.project_name, u.nama_depan, u.nama_belakang, d.name as departemen 
+        from project_user pu JOIN project p ON pu.project_id=p.id
+        JOIN user u ON pu.user_id = u.id
+        JOIN departemen d ON d.id=p.departemen_id WHERE user_id=${id}`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
-
-
-
             res.send({
                 status: 200,
                 data: result
             })
         })
     },
+
+    getDetailProject: (req, res) => {
+        let { id } = req.params
+        let sql = `
+        SELECT * FROM workdone.task where project_id=${id};`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
+
+    updateProgressTask: (req, res) => {
+        const { id, new_progress } = req.body
+        let sql = `UPDATE task SET progress='${new_progress}' WHERE id=${id}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+            res.send({
+                status: 200,
+                message: `Status Task berhasil diperbaharui`
+            })
+        })
+    },
+
+
+    addNewTask: (req, res) => {
+        // flow : tmabahkan ke tabel task dulu baru e task user
+        let { assignee, created_by, start_datetime, end_datetime, level, description, task_name } = req.body
+        let progress = 'TO DO'
+        let created_on = moment().format("YYYY-MM-DD HH:mm:ss") // =>> UTK NGAMBIL TGL HARI INI
+        let sql = `INSERT INTO task SET ?`
+        let dataTask = req.body
+        dataTask.created_on = created_on
+        dataTask.progress = progress
+
+
+        mysql.query(sql, dataTask, (err, result) => {
+            if (err) return res.status(500).send(err)
+
+            // return res.status(200).send({ data: result })
+            let dataTaskUser = {
+                task_id: result.insertId,
+                user_id: assignee
+            }
+            sql = `INSERT INTO task_user SET ?`
+            mysql.query(sql, dataTaskUser, (err2, result2) => {
+                if (err2) res.status(500).send(err2)
+
+                res.send({
+                    status: 200,
+                    message: 'Task Baru berhasil ditambahkan!'
+                })
+                // return res.status(200).send({ message: 'Task Baru berhasil ditambahkan' })
+            })
+        })
+    },
+
+
+    getUserDepartemen: (req, res) => {
+        let { id } = req.params
+        let sql = `SELECT * FROM user WHERE iddepartement=${id}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    }
 
 }

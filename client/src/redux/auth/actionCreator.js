@@ -22,7 +22,7 @@ const login = (email, password) => {
         try {
             dispatch(loginRequest())
             setTimeout(async () => {
-                const login = await Axios.get(`${APIURL}auth/login?email=${email}&password=${password}`)
+                const login = await Axios.get(`${APIURL}taskman/login?email=${email}&password=${password}`)
                 if (login.data.data) {
                     localStorage.setItem("role", login.data.data[0].role)
                     localStorage.setItem("id", login.data.data[0].id)
@@ -32,6 +32,7 @@ const login = (email, password) => {
                     localStorage.setItem("nama_belakang", login.data.data[0].nama_belakang)
                     localStorage.setItem("email", login.data.data[0].email)
                     localStorage.setItem("departemen", login.data.data[0].departemen)
+                    localStorage.setItem("iddepartemen", login.data.data[0].iddepartement)
                     localStorage.setItem("isLogin", true)
                     dispatch(loginSuccess(login.data.data[0]))
                     if (login.data.data[0].role === "admin") return window.location.href = "/admin/dashboard"

@@ -132,13 +132,13 @@ function Sidebar({ items, depthStep, depth, expanded, active }) {
           style={{ height: "100px", width: "100px" }}
           src="https://minimal-kit-react.vercel.app/static/illustrations/illustration_avatar.png" />
       </Box>
-      <Box textAlign="center" color="white" fontSize={18} fontWeight={600}>
+      <Box textAlign="center" color="white" fontSize={15} fontWeight={600}>
         {localStorage.getItem("nama_depan")} {localStorage.getItem("nama_belakang")}
       </Box>
-      <Box textAlign="center" color="#51AC56" fontSize={13}>
+      <Box textAlign="center" color="#51AC56" fontSize={12}>
         {localStorage.getItem("jabatan")}
       </Box>
-      <Box fontSize={11} pb={5} textAlign="center" color="#dedede">
+      <Box fontSize={10} pb={5} textAlign="center" color="#dedede">
         {localStorage.getItem("email")}
         {/* <Divider style={{ marginTop: "16px", backgroundColor: 'gray' }} /> */}
       </Box>

@@ -8,10 +8,30 @@ const {
     GET_DETAIL_TASK_SUCCESS,
     GET_DETAIL_TASK_REQUEST,
     GET_DETAIL_TASK_ERR,
+
+    GET_ALL_PROJECT_USER,
+    GET_ALL_PROJECT_USER_REQUEST,
+    GET_ALL_PROJECT_USER_ERR,
+
+    GET_DETAIL_PROJECT_SUCCESS,
+    GET_DETAIL_PROJECT_REQUEST,
+    GET_DETAIL_PROJECT_ERR,
+
+    UPDATE_PROGRESS_TASK_SUCCESS,
+    UPDATE_PROGRESS_TASK_REQUEST,
+    UPDATE_PROGRESS_TASK_ERR,
+
+
+    GET_USER_DEPARTEMEN_REQUEST,
+    GET_USER_DEPARTEMEN_SUCCESS,
+    GET_USER_DEPARTEMEN_ERR,
+
+    ADD_NEW_TASK_SUCCESS,
+
+
 } = action
 
 const initState = {
-    // login: auth !== null ? auth.login : false,
     all_task_user: [],
     is_loading_all_task_user: false,
     is_error_all_task_user: false,
@@ -22,6 +42,29 @@ const initState = {
     is_loading_detail_task_user: false,
     is_error_detail_task_user: false,
     message_detail_task_user: '',
+
+
+    all_project_user: [],
+    is_loading_all_project_user: false,
+    is_error_all_project_user: false,
+    message_all_project_user: '',
+
+    detail_project_user: undefined,
+    is_loading_detail_project_user: false,
+    is_error_detail_project_user: false,
+    message_detail_project_user: '',
+
+    is_loading_update_progress_task: false,
+    is_error_update_progress_task: false,
+    message_update_progress_task: '',
+
+
+    departemen_user: [],
+    is_loading_departemen_user: false,
+    is_error_departemen_user: false,
+    message_departemen_user: '',
+
+    message_add_new_task: ''
 
 };
 
@@ -75,6 +118,98 @@ const AuthReducer = (state = initState, action) => {
                 is_loading_detail_task_user: false,
                 message_detail_task_user: err
             };
+
+
+
+        // all PROJECT user
+        case GET_ALL_PROJECT_USER_REQUEST:
+            return {
+                ...state,
+                is_loading_all_project_user: true,
+                message_all_project_user: ''
+            };
+        case GET_ALL_PROJECT_USER:
+            return {
+                ...state,
+                all_project_user: data,
+                is_loading_all_project_user: false,
+                message_all_project_user: ''
+            };
+        case GET_ALL_PROJECT_USER_ERR:
+            return {
+                ...state,
+                is_loading_all_project_user: false,
+                message_all_project_user: err
+            };
+
+        // detail PROJECT
+        case GET_DETAIL_PROJECT_REQUEST:
+            return {
+                ...state,
+                is_loading_detail_project_user: true,
+                message_detail_project_user: ''
+            };
+        case GET_DETAIL_PROJECT_SUCCESS:
+            return {
+                ...state,
+                detail_project_user: data,
+                is_loading_detail_project_user: false,
+                message_detail_project_user: ''
+            };
+        case GET_DETAIL_PROJECT_ERR:
+            return {
+                ...state,
+                is_loading_detail_project_user: false,
+                message_detail_project_user: err
+            };
+
+        // update PROGRESS TASK
+        case UPDATE_PROGRESS_TASK_REQUEST:
+            return {
+                ...state,
+                is_loading_update_progress_task: true,
+                message_update_progress_task: ''
+            };
+        case UPDATE_PROGRESS_TASK_SUCCESS:
+            return {
+                ...state,
+                is_loading_update_progress_task: false,
+                message_update_progress_task: data
+            };
+        case GET_DETAIL_PROJECT_ERR:
+            return {
+                ...state,
+                is_loading_update_progress_task: false,
+                message_update_progress_task: err
+            };
+
+        // USER IN DEPARTEMEN
+        case GET_USER_DEPARTEMEN_REQUEST:
+            return {
+                ...state,
+                is_loading_departemen_user: true,
+                message_departemen_user: ''
+            };
+        case GET_USER_DEPARTEMEN_SUCCESS:
+            return {
+                ...state,
+                departemen_user: data,
+                is_loading_departemen_user: false,
+                message_departemen_user: ''
+            };
+        case GET_USER_DEPARTEMEN_ERR:
+            return {
+                ...state,
+                is_loading_departemen_user: false,
+                message_departemen_user: err
+            };
+
+
+        case ADD_NEW_TASK_SUCCESS:
+            return {
+                ...state,
+                message_add_new_task: data
+            }
 
         default:
             return state;

@@ -1,6 +1,6 @@
-const authController = require('./authController')
+const taskmanController = require('./taskmanController')
 
 
 module.exports = {
-    authController
+    taskmanController
 }
