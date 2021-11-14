@@ -251,6 +251,8 @@ module.exports = {
         let created_on = moment().format("YYYY-MM-DD HH:mm:ss") // =>> UTK NGAMBIL TGL HARI INI
         let sql = `INSERT INTO task SET ?`
         let dataTask = req.body
+        dataTask.start_datetime = moment(start_datetime).format('YYYY-MM-DD HH:mm:ss')
+        dataTask.end_datetime = moment(end_datetime).format('YYYY-MM-DD HH:mm:ss')
         dataTask.created_on = created_on
         dataTask.progress = progress
 

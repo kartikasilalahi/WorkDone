@@ -148,12 +148,12 @@ const addNewTask = (data) => {
             dispatch(addNewTaskRequest())
             const newTask = await Axios.post(`${APIURL}taskman/addnewtask`, data)
             if (newTask.data.message) {
-                dispatch(addNewTaskRequest(newTask.data.message))
+                dispatch(addNewTaskSuccess(newTask.data.message))
                 dispatch(getAllTaskUser(data.assignee))
             }
 
         } catch (error) {
-            dispatch(addNewTask(error))
+            dispatch(addNewTaskErr(error))
 
         }
     }

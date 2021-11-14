@@ -73,8 +73,8 @@ export default function DashboardUser() {
 
     const onSaveNewTask = () => {
         let data = dataNewTask
-        data.start_datetime = moment(dataNewTask).format('YYYY-MM-DD HH:mm:ss')
-        data.end_datetime = moment(dataNewTask).format('YYYY-MM-DD HH:mm:ss')
+        // data.start_datetime = moment(dataNewTask).format('YYYY-MM-DD HH:mm:ss')
+        // data.end_datetime = moment(dataNewTask).format('YYYY-MM-DD HH:mm:ss')
         // console.log(data)
         dispatch(addNewTask(data))
 
@@ -123,7 +123,7 @@ export default function DashboardUser() {
                 icon: 'success',
                 title: messageSuccess
             })
-            handleClosePopupCreateTask()
+            setOpenPopupCreateTask(false);
         }
     }, [messageSuccess])
 
@@ -199,7 +199,6 @@ export default function DashboardUser() {
 
     let modules = {
         toolbar: [
-            [{ header: [1, 2, false] }],
             ["bold", "italic", "underline", "strike", "blockquote"],
             [{ list: "ordered" }, { list: "bullet" }],
             ["link", "image"]
@@ -207,7 +206,6 @@ export default function DashboardUser() {
     };
 
     let formats = [
-        "header",
         "bold",
         "italic",
         "underline",
@@ -371,49 +369,74 @@ export default function DashboardUser() {
                     {detailTask ? (
                         <Box fontSize={11}>
                             <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Id</Grid>
-                                <Grid item lg={6}>: {detailTask[0].id}</Grid>
+                                <Grid item lg={5}>Id</Grid>
+                                <Grid item lg={7}>: {detailTask[0].id}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Task Name</Grid>
-                                <Grid item lg={6}>: {detailTask[0].task_name}</Grid>
+                                <Grid item lg={5}>Task Name</Grid>
+                                <Grid item lg={7}>: {detailTask[0].task_name}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Project Name</Grid>
-                                <Grid item lg={6}>: {detailTask[0].project_name}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Created On</Grid>
-                                <Grid item lg={6}>: {moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm')}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Start On</Grid>
-                                <Grid item lg={6}>: {moment(detailTask[0].start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Due date</Grid>
-                                <Grid item lg={6}>: {moment(detailTask[0].end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Last Update</Grid>
-                                <Grid item lg={6}>: {detailTask[0].last_update === null ? moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') : moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={5}>Project Name</Grid>
+                                <Grid item lg={7}>: {detailTask[0].project_name}</Grid>
                             </Grid>
 
                             <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Created by</Grid>
-                                <Grid item lg={6}>: {detailTask[0].created_by}</Grid>
+                                <Grid item lg={5}>Descriptions</Grid>
+                                <Grid item lg={7}>:
+                                {/* <ReactQuill value={detailTask[0].description} /> */}
+                                    <ReactQuill
+                                        theme="snow"
+                                        modules={modules}
+                                        formats={formats}
+                                        value={detailTask[0].description}
+                                    />
+                                    {/* <Box style={{ border: '0.8px solid #dedede', borderRadius: '5px', paddingRight: '4px', paddingLeft: '4px' }}>
+                                    <div dangerouslySetInnerHTML={{ __html: detailTask[0].description }} />
+                                </Box> */}
+                                </Grid>
+                                {/* <Grid item lg={6} dangerouslySetInnerHTML={{ __html: detailTask[0].description }} /> */}
+                            </Grid>
+
+                            {/* <Box>
+                                <Box>Description: </Box>
+                                <Box pl={10}>
+
+                                    <div dangerouslySetInnerHTML={{ __html: detailTask[0].description }} />
+                                </Box>
+                            </Box> */}
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={5}>Created On</Grid>
+                                <Grid item lg={7}>: {moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Assignee</Grid>
-                                <Grid item lg={6}>: {detailTask[0].assignee}</Grid>
+                                <Grid item lg={5}>Start On</Grid>
+                                <Grid item lg={7}>: {moment(detailTask[0].start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={6}>Level of difficult</Grid>
-                                <Grid item lg={6}>: {detailTask[0].level}</Grid>
+                                <Grid item lg={5}>Due date</Grid>
+                                <Grid item lg={7}>: {moment(detailTask[0].end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={5}>Last Update</Grid>
+                                <Grid item lg={7}>: {detailTask[0].last_update === null ? moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') : moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={5}>Created by</Grid>
+                                <Grid item lg={7}>: {detailTask[0].created_by}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={5}>Assignee</Grid>
+                                <Grid item lg={7}>: {detailTask[0].assignee}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={5}>Level of difficult</Grid>
+                                <Grid item lg={7}>: {detailTask[0].level}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2} alignItems="center">
-                                <Grid item lg={6}>Status</Grid>
-                                <Grid item lg={6} >
+                                <Grid item lg={5}>Status</Grid>
+                                <Grid item lg={7} >
                                     <Dropdown onSelect={(e) => {
                                         setCurrentProgress(e)
                                         dispatch(updateProgressTask({ id: detailTask[0].id, new_progress: e }))
@@ -476,7 +499,7 @@ export default function DashboardUser() {
                     <SideBar />
 
                 </Grid>
-                <Grid item md={10} style={{ backgroundColor: "whitesmoke", minHeight: "800px", height: '100vh' }}>
+                <Grid item md={10} style={{ backgroundColor: "whitesmoke", minHeight: "100vh", height: '100vh' }}>
                     {/* <TopBar /> */}
 
                     <Box px={2} className="container-content" pb={5}>
