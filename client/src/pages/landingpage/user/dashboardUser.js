@@ -5,7 +5,8 @@ import {
     Dialog,
     DialogTitle,
     DialogActions,
-    DialogContent
+    DialogContent,
+    Divider
 } from '@material-ui/core'
 // import TopBar from '../../component/pages/user/topBar'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -30,6 +31,9 @@ import Swal from 'sweetalert2'
 import moment from 'moment';
 import DateTimePicker from 'react-datetime-picker';
 import ReactQuill from 'react-quill'
+import DoneIcon from '@mui/icons-material/Done';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
 
 export default function DashboardUser() {
     const dispatch = useDispatch()
@@ -143,7 +147,7 @@ export default function DashboardUser() {
             }
         }],
         labels: [`To Do`, `In progress`, `Review`, `Done`, `Decline`],
-        colors: ['#6C757D', '#F8B032', '#008FFB', '#51AC56', '#EF4D5F'],
+        colors: ['#6C757D', '#F8B032', '#57D8E5', '#6BE497', '#EF4D5F'],
         title: {
             text: 'My Task',
             align: 'left',
@@ -369,74 +373,22 @@ export default function DashboardUser() {
                     {detailTask ? (
                         <Box fontSize={11}>
                             <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Id</Grid>
-                                <Grid item lg={7}>: {detailTask[0].id}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Task Name</Grid>
-                                <Grid item lg={7}>: {detailTask[0].task_name}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Project Name</Grid>
-                                <Grid item lg={7}>: {detailTask[0].project_name}</Grid>
-                            </Grid>
-
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Descriptions</Grid>
-                                <Grid item lg={7}>:
-                                {/* <ReactQuill value={detailTask[0].description} /> */}
-                                    <ReactQuill
-                                        theme="snow"
-                                        modules={modules}
-                                        formats={formats}
-                                        value={detailTask[0].description}
-                                    />
-                                    {/* <Box style={{ border: '0.8px solid #dedede', borderRadius: '5px', paddingRight: '4px', paddingLeft: '4px' }}>
-                                    <div dangerouslySetInnerHTML={{ __html: detailTask[0].description }} />
-                                </Box> */}
+                                <Grid item lg={3}>Id</Grid>
+                                <Grid item lg={9}>
+                                    <Form.Control
+                                        style={{ fontSize: '11px' }}
+                                        size="sm"
+                                        type="text"
+                                        placeholder="Add Task Name"
+                                        value={detailTask[0].id}
+                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        disabled
+                                        required />
                                 </Grid>
-                                {/* <Grid item lg={6} dangerouslySetInnerHTML={{ __html: detailTask[0].description }} /> */}
-                            </Grid>
-
-                            {/* <Box>
-                                <Box>Description: </Box>
-                                <Box pl={10}>
-
-                                    <div dangerouslySetInnerHTML={{ __html: detailTask[0].description }} />
-                                </Box>
-                            </Box> */}
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Created On</Grid>
-                                <Grid item lg={7}>: {moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm')}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Start On</Grid>
-                                <Grid item lg={7}>: {moment(detailTask[0].start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Due date</Grid>
-                                <Grid item lg={7}>: {moment(detailTask[0].end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Last Update</Grid>
-                                <Grid item lg={7}>: {detailTask[0].last_update === null ? moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') : moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')}</Grid>
-                            </Grid>
-
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Created by</Grid>
-                                <Grid item lg={7}>: {detailTask[0].created_by}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Assignee</Grid>
-                                <Grid item lg={7}>: {detailTask[0].assignee}</Grid>
-                            </Grid>
-                            <Grid container justifyContent="space-between" spacing={2}>
-                                <Grid item lg={5}>Level of difficult</Grid>
-                                <Grid item lg={7}>: {detailTask[0].level}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2} alignItems="center">
-                                <Grid item lg={5}>Status</Grid>
-                                <Grid item lg={7} >
+                                <Grid item lg={3}>Status</Grid>
+                                <Grid item lg={9} >
                                     <Dropdown onSelect={(e) => {
                                         setCurrentProgress(e)
                                         dispatch(updateProgressTask({ id: detailTask[0].id, new_progress: e }))
@@ -444,12 +396,12 @@ export default function DashboardUser() {
                                         {
                                             isLoadingUpdateProgressTask ?
                                                 <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                    style={{ fontSize: '11px' }} >
+                                                    style={{ fontSize: '10px' }} >
                                                     loading..
                                                 </Dropdown.Toggle>
                                                 :
                                                 <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                    style={{ fontSize: '11px' }}
+                                                    style={{ fontSize: '10px' }}
                                                     variant={currentProgress === 'TO DO' ? 'secondary'
                                                         : currentProgress === 'IN PROGRESS' ? 'warning'
                                                             // : currentProgress === 'DONE' ? 'success'
@@ -478,12 +430,88 @@ export default function DashboardUser() {
                                 </Grid>
                             </Grid>
 
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Task Name</Grid>
+                                <Grid item lg={9}>
+                                    {/* : {detailTask[0].task_name} */}
+                                    <Form.Control
+                                        style={{ fontSize: '11px' }}
+                                        size="sm"
+                                        type="text"
+                                        value={detailTask[0].task_name}
+                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        required />
+                                </Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Project Name</Grid>
+                                <Grid item lg={9}>
+                                    <Form.Control
+                                        style={{ fontSize: '11px' }}
+                                        size="sm"
+                                        type="text"
+                                        value={detailTask[0].project_name}
+                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        required />
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Descriptions</Grid>
+                                <Grid item lg={9}>
+                                    {/* <ReactQuill value={detailTask[0].description} /> */}
+                                    <ReactQuill
+                                        theme="snow"
+                                        modules={modules}
+                                        formats={formats}
+                                        value={detailTask[0].description}
+                                    />
+
+                                </Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Created On</Grid>
+                                <Grid item lg={9}>: {moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Start On</Grid>
+                                <Grid item lg={9}>: {moment(detailTask[0].start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Due date</Grid>
+                                <Grid item lg={9}>: {moment(detailTask[0].end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Last Update</Grid>
+                                <Grid item lg={9}>: {detailTask[0].last_update === null ? moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') : moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Created by</Grid>
+                                <Grid item lg={9}>: {detailTask[0].created_by}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Assignee</Grid>
+                                <Grid item lg={9}>: {detailTask[0].assignee}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Level of difficult</Grid>
+                                <Grid item lg={9}>: {detailTask[0].level}</Grid>
+                            </Grid>
+
                         </Box>
                     ) :
                         'loading...'}
 
                 </DialogContent>
                 <DialogActions>
+
+                    <Button size="sm" variant="info" onClick={() => setIdTask(0)}
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Update</Button>
                     <Button size="sm" onClick={() => setIdTask(0)}
                         style={{
                             fontSize: '11px',
@@ -499,21 +527,26 @@ export default function DashboardUser() {
                     <SideBar />
 
                 </Grid>
-                <Grid item md={10} style={{ backgroundColor: "whitesmoke", minHeight: "100vh", height: '100vh' }}>
+                <Grid item md={10} style={{ backgroundColor: "whitesmoke", minHeight: "100vh" }}>
                     {/* <TopBar /> */}
 
                     <Box px={2} className="container-content" pb={5}>
-                        <Box fontSize={18} fontWeight={600}>Welcome Back!</Box>
+
+                        {/* <Box fontSize={18} fontWeight={600}>Welcome Back!</Box> */}
 
                         <Grid container justifyContent="space-between">
                             <Grid xs={6} sm={6} lg={6}>
                                 <Box>
-                                    <Box pt={5} pl={5}>
+                                    <Box pb={1} >Welcome back,</Box>
+                                    <Box fontSize={12} fontWeight='bold'>
+                                        {moment().format('DD MMMM YYYY, hh:mm')}
+                                    </Box>
+                                    <Box mt={7} py={3} pl={5} style={{ backgroundColor: 'white', }}>
                                         <Chart
                                             options={options}
                                             series={series}
                                             type="donut"
-                                            width="390"
+                                            width="380"
                                         />
                                     </Box>
                                     <Box>
@@ -537,7 +570,7 @@ export default function DashboardUser() {
                                                                         boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
                                                                         backgroundColor: '#fff'
                                                                     }}>
-                                                                    <Box fontSize={13}>{project.project_name}</Box>
+                                                                    <Box fontSize={12}>{project.project_name}</Box>
                                                                     <Box fontSize={11}>{project.departemen}</Box>
                                                                 </Box>
                                                             }
@@ -566,8 +599,8 @@ export default function DashboardUser() {
                                 </Box>
                             </Grid>
                             <Grid xs={6} sm={6} lg={6}>
-                                <Box ml={3} pt={5} >
-                                    <Box>
+                                <Box ml={3} pt={2} >
+                                    <Box pt={8}>
                                         <Grid container justifyContent="space-between">
                                             <Grid item><Box fontSize={14} fontWeight={600}>My Task</Box></Grid>
                                             <Grid item>
@@ -575,6 +608,61 @@ export default function DashboardUser() {
                                                     onClick={() => history.push('/user/all-task')}
                                                     style={{ cursor: 'pointer' }}>See more</Box></Grid>
                                         </Grid>
+                                        <Box fontSize={9} pt={1}>
+                                            <Grid container>
+                                                <Grid item >
+                                                    <Box width={165} px={1} py={1} style={{ backgroundColor: '#6C757D', color: 'white', borderRadius: '5px' }}>
+                                                        <Grid container alignItems="center">
+                                                            <Grid item>
+                                                                <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                    <AvTimerIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                </Box>
+                                                            </Grid>
+                                                            <Grid item>
+                                                                <Box pl={2}>
+                                                                    <Box color="white">To Do</Box>
+                                                                    <Box color="white">2 task</Box>
+                                                                </Box>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Box>
+                                                </Grid>
+                                                <Grid item >
+                                                    <Box width={165} mx={1} px={1} py={1} style={{ backgroundColor: '#F8B032', color: 'white', borderRadius: '5px' }}>
+                                                        <Grid container alignItems="center">
+                                                            <Grid item>
+                                                                <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                    <RateReviewIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                </Box>
+                                                            </Grid>
+                                                            <Grid item>
+                                                                <Box pl={2}>
+                                                                    <Box color="white">Review</Box>
+                                                                    <Box color="white">2 task</Box>
+                                                                </Box>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Box>
+                                                </Grid>
+                                                <Grid item >
+                                                    <Box width={165} px={1} py={1} style={{ backgroundColor: '#51AC56', color: 'white', borderRadius: '5px' }}>
+                                                        <Grid container alignItems="center">
+                                                            <Grid item>
+                                                                <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                    <DoneIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                </Box>
+                                                            </Grid>
+                                                            <Grid item>
+                                                                <Box pl={2}>
+                                                                    <Box color="white">Done</Box>
+                                                                    <Box color="white">12 task</Box>
+                                                                </Box>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Box>
+                                                </Grid>
+                                            </Grid>
+                                        </Box>
                                     </Box>
                                     <Box pt={2}>
                                         {isLoadingTaskUser ? 'loading...' :
@@ -589,7 +677,7 @@ export default function DashboardUser() {
                                                         backgroundColor: '#fff',
                                                         cursor: 'pointer'
                                                     }}>
-                                                    <Box fontSize={13}>
+                                                    <Box fontSize={11}>
                                                         <Grid container justifyContent="space-between" alignItems="center">
                                                             <Grid item lg={6}>{task.task_name}
                                                                 <Box
@@ -625,9 +713,6 @@ export default function DashboardUser() {
                 </Grid>
             </Grid>
 
-            <Box py={5}>
-                {/* <Editor editorState={editorState} /> */}
-            </Box>
         </div >
     )
 }
