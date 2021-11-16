@@ -33,80 +33,6 @@ import RateReviewIcon from '@mui/icons-material/RateReview';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 
 
-const columns = [
-    {
-        title: 'Progress',
-        dataIndex: 'progress',
-        filters: [
-            {
-                text: 'Done',
-                value: 'DONE',
-            },
-            {
-                text: 'Decline',
-                value: 'DECLINE',
-            },
-            {
-                text: 'In Progress',
-                value: 'IN PROGRESS',
-            },
-            {
-                text: 'Review',
-                value: 'REVIEW',
-            },
-            {
-                text: 'Todo',
-                value: 'TO DO',
-            },
-            // {
-            //     text: 'Submenu',
-            //     value: 'Submenu',
-            //     children: [
-            //         {
-            //             text: 'Green',
-            //             value: 'Green',
-            //         },
-            //         {
-            //             text: 'Black',
-            //             value: 'Black',
-            //         },
-            //     ],
-            // },
-        ],
-        // specify the condition of filtering result record.progress.indexOf(value) === 0
-        // here is that finding the name started with `value`
-        onFilter: (value, record) => record.progress.props.children.indexOf(value) === 0,
-        // sorter: (a, b) => a.name.length - b.name.length,
-        // sortDirections: ['descend'],
-
-    },
-    {
-        title: 'Task Name',
-        dataIndex: 'task_name',
-        defaultSortOrder: 'descend',
-        // sorter: (a, b) => a.age - b.age,
-    },
-    {
-        title: 'Project',
-        dataIndex: 'project_name',
-        defaultSortOrder: 'descend',
-        // sorter: (a, b) => a.age - b.age,
-    },
-    {
-        title: 'Start Datetime',
-        dataIndex: 'start_datetime',
-        // onFilter: (value, record) => record.address.indexOf(value) === 0,
-    },
-    {
-        title: 'End Datetime',
-        dataIndex: 'end_datetime',
-        // onFilter: (value, record) => record.address.indexOf(value) === 0,
-    },
-    {
-        title: 'Action',
-        dataIndex: 'action'
-    }
-];
 
 
 export default function Task() {
@@ -127,6 +53,8 @@ export default function Task() {
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
 
     const [listTask, setListTask] = useState([]);
+    const [listProject, setListProject] = useState([]);
+
 
     const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
     const [idTask, setIdTask] = useState();
@@ -146,7 +74,6 @@ export default function Task() {
         end_datetime: new Date(),
         start_datetime: new Date(),
     });
-
 
     const handleClickOpen = () => {
         setOpenPopupCreateTask(true);
@@ -265,6 +192,16 @@ export default function Task() {
         }
     }, [allTaskUser])
 
+    useEffect(() => {
+        if (allProjectUser && !isLoadingProjectUser) {
+            let listproject = []
+            allProjectUser.map((project) => {
+                const { id, project_name } = project
+                return (listproject.push({ value: project_name, text: project_name }))
+            })
+            setListProject(listproject)
+        }
+    }, [allProjectUser])
 
     useEffect(() => {
         dispatch(getUserDepartemen(iddepartemen))
@@ -307,6 +244,82 @@ export default function Task() {
         "image"
     ];
 
+    const columns = [
+        {
+            title: 'Progress',
+            dataIndex: 'progress',
+            filters: [
+                {
+                    text: 'Done',
+                    value: 'DONE',
+                },
+                {
+                    text: 'Decline',
+                    value: 'DECLINE',
+                },
+                {
+                    text: 'In Progress',
+                    value: 'IN PROGRESS',
+                },
+                {
+                    text: 'Review',
+                    value: 'REVIEW',
+                },
+                {
+                    text: 'Todo',
+                    value: 'TO DO',
+                },
+                // {
+                //     text: 'Submenu',
+                //     value: 'Submenu',
+                //     children: [
+                //         {
+                //             text: 'Green',
+                //             value: 'Green',
+                //         },
+                //         {
+                //             text: 'Black',
+                //             value: 'Black',
+                //         },
+                //     ],
+                // },
+            ],
+            // specify the condition of filtering result record.progress.indexOf(value) === 0
+            // here is that finding the name started with `value`
+            onFilter: (value, record) => record.progress.props.children.indexOf(value) === 0,
+            // sorter: (a, b) => a.name.length - b.name.length,
+            // sortDirections: ['descend'],
+
+        },
+        {
+            title: 'Task Name',
+            dataIndex: 'task_name',
+            defaultSortOrder: 'descend',
+            // sorter: (a, b) => a.age - b.age,
+        },
+        {
+            title: 'Project',
+            dataIndex: 'project_name',
+            defaultSortOrder: 'descend',
+            filters: listProject,
+            onFilter: (value, record) => record.project_name.indexOf(value) === 0,
+            // sorter: (a, b) => a.age - b.age,
+        },
+        {
+            title: 'Start Datetime',
+            dataIndex: 'start_datetime',
+            // onFilter: (value, record) => record.address.indexOf(value) === 0,
+        },
+        {
+            title: 'End Datetime',
+            dataIndex: 'end_datetime',
+            // onFilter: (value, record) => record.address.indexOf(value) === 0,
+        },
+        {
+            title: 'Action',
+            dataIndex: 'action'
+        }
+    ];
 
     return (
         <div>
