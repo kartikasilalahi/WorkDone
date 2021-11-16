@@ -30,6 +30,9 @@ const actions = {
     ADD_NEW_TASK_SUCCESS: 'ADD_NEW_TASK_SUCCESS',
     ADD_NEW_TASK_ERR: 'ADD_NEW_TASK_ERR',
 
+    GET_TOTAL_TASK_SUCCESS: 'GET_TOTAL_TASK_SUCCESS',
+    GET_TOTAL_TASK_REQUEST: 'GET_TOTAL_TASK_REQUEST',
+    GET_TOTAL_TASK_ERR: 'GET_TOTAL_TASK_ERR',
 
 
     getAllTaskUserEffect: (data) => {
@@ -191,6 +194,27 @@ const actions = {
 
 
     // ----------------------------
+
+    getTotalTaskSuccess: (data) => {
+        return {
+            type: actions.GET_TOTAL_TASK_SUCCESS,
+            data
+        }
+    },
+
+    getTotalTaskRequest: () => {
+        return {
+            type: actions.GET_TOTAL_TASK_REQUEST,
+        }
+    },
+
+    getTotalTaskErr: (data) => {
+        return {
+            type: actions.GET_TOTAL_TASK_SUCCESS,
+            data
+        }
+    },
+
 
 };
 

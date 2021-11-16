@@ -28,6 +28,8 @@ const {
 
     ADD_NEW_TASK_SUCCESS,
 
+    GET_TOTAL_TASK_SUCCESS
+
 
 } = action
 
@@ -64,7 +66,9 @@ const initState = {
     is_error_departemen_user: false,
     message_departemen_user: '',
 
-    message_add_new_task: ''
+    message_add_new_task: '',
+
+    total_task: [0, 0, 0, 0, 0],
 
 };
 
@@ -209,6 +213,12 @@ const AuthReducer = (state = initState, action) => {
             return {
                 ...state,
                 message_add_new_task: data
+            }
+
+        case GET_TOTAL_TASK_SUCCESS:
+            return {
+                ...state,
+                total_task: data
             }
 
         default:

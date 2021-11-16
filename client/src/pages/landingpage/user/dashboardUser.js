@@ -8,7 +8,6 @@ import {
     DialogContent,
     Divider
 } from '@material-ui/core'
-// import TopBar from '../../component/pages/user/topBar'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import SideBar from '../../component/pages/user/sideBar'
 import { Button, Form, Dropdown } from 'react-bootstrap';
@@ -24,9 +23,6 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import Chart from "react-apexcharts";
-// import { Editor } from 'react-draft-wysiwyg';
-// import Chart from "react-google-charts";
-// import { EditorState } from 'draft-js';
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import DateTimePicker from 'react-datetime-picker';
@@ -43,17 +39,20 @@ export default function DashboardUser() {
     const detailTask = useSelector(state => state.task.detail_task_user)
     const allProjectUser = useSelector(state => state.task.all_project_user)
     const isLoadingProjectUser = useSelector(state => state.task.is_loading_all_project_user)
-    // const detailProject = useSelector(state => state.task.detail_project_user)
     const isLoadingUpdateProgressTask = useSelector(state => state.task.is_loading_update_progress_task)
     const messageUpdateProgressTask = useSelector(state => state.task.message_update_progress_task)
     const listUserDepartemen = useSelector(state => state.task.departemen_user)
     const messageSuccess = useSelector(state => state.task.message_add_new_task)
+    const ListTotalTask = useSelector(state => state.task.total_task)
 
     const id = Number(localStorage.getItem('id'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
     const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
     const [idTask, setIdTask] = useState();
     const [idProject, setIdProject] = useState();
+    const [isUpdate, setIsUpdate] = useState(false);
+    const [idUpdateTask, setIdUpdateTask] = useState(0);
+    const [Newprogress, setNewprogress] = useState('');
     const [currentProgress, setCurrentProgress] = useState('');
     const [dataNewTask, setDataNewTask] = useState({
         assignee: id,
@@ -67,6 +66,8 @@ export default function DashboardUser() {
         start_datetime: new Date(),
     });
 
+    console.log('lisy', ListTotalTask)
+
     const handleClickOpen = () => {
         setOpenPopupCreateTask(true);
     };
@@ -77,9 +78,6 @@ export default function DashboardUser() {
 
     const onSaveNewTask = () => {
         let data = dataNewTask
-        // data.start_datetime = moment(dataNewTask).format('YYYY-MM-DD HH:mm:ss')
-        // data.end_datetime = moment(dataNewTask).format('YYYY-MM-DD HH:mm:ss')
-        // console.log(data)
         dispatch(addNewTask(data))
 
 
@@ -88,7 +86,9 @@ export default function DashboardUser() {
     useEffect(() => {
         dispatch(getAllTaskUser(id))
         dispatch(getAllProjectUser(id))
+
     }, [dispatch])
+
 
     useEffect(() => {
         dispatch(getUserDepartemen(iddepartemen))
@@ -118,6 +118,8 @@ export default function DashboardUser() {
                 icon: 'success',
                 title: messageUpdateProgressTask
             })
+            setIsUpdate(false)
+
         }
     }, [isLoadingUpdateProgressTask, messageUpdateProgressTask])
 
@@ -129,7 +131,13 @@ export default function DashboardUser() {
             })
             setOpenPopupCreateTask(false);
         }
-    }, [messageSuccess])
+    }, [messageSuccess, dispatch])
+
+    useEffect(() => {
+        if (isUpdate) {
+            dispatch(updateProgressTask({ id: idUpdateTask, new_progress: Newprogress, idUser: id }))
+        }
+    }, [isUpdate])
 
     let options = {
         chart: {
@@ -187,7 +195,6 @@ export default function DashboardUser() {
         }
     }
 
-    let series = [8, 4, 2, 3, 2]
 
     const Toast = Swal.mixin({
         toast: true,
@@ -372,6 +379,123 @@ export default function DashboardUser() {
                 <DialogContent>
                     {detailTask ? (
                         <Box fontSize={11}>
+                            {/* <Grid container justifyContent="flex-end">
+                                <Box py={1}>
+                                    {
+                                        currentProgress === "DONE" || currentProgress === "DECLINE" ?
+                                            <Button size="sm" variant={currentProgress === 'DONE' ? 'success'
+                                                : 'danger'
+                                            }
+                                                style={{
+                                                    fontSize: '10px',
+                                                }}><Box px={1} color='white'>{currentProgress}</Box></Button>
+                                            :
+                                            <Dropdown onSelect={(e) => {
+                                                setCurrentProgress(e)
+                                                setIsUpdate(true)
+                                                setIdUpdateTask(detailTask[0].id)
+                                                setNewprogress((e))
+                                                
+                                            }}>
+                                                {
+                                                    isLoadingUpdateProgressTask ?
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }} >
+                                                            loading..
+                                                    </Dropdown.Toggle>
+                                                        :
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }}
+                                                            variant={currentProgress === 'TO DO' ? 'secondary'
+                                                                : currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                    : currentProgress === 'REVIEW' ? 'info' : 'primary'
+                                                            }>
+                                                            {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                        </Dropdown.Toggle>
+                                                }
+
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                    }
+                                </Box>
+                            </Grid> */}
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Status</Grid>
+                                <Grid item lg={9}>
+                                    {
+                                        currentProgress === "DECLINE" ?
+                                            // <Button size="sm" variant='danger'
+                                            //     style={{
+                                            //         fontSize: '10px',
+                                            //     }}
+                                            //     onClick={}
+                                            //     ><Box px={1} color='white'>{currentProgress}</Box>
+                                            //     </Button>
+                                            <Dropdown onSelect={(e) => {
+                                                setCurrentProgress(e)
+                                                setIsUpdate(true)
+                                                setIdUpdateTask(detailTask[0].id)
+                                                setNewprogress((e))
+                                            }}>
+                                                {
+                                                    isLoadingUpdateProgressTask ?
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }} >
+                                                            loading..
+                                                    </Dropdown.Toggle>
+                                                        :
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }}
+                                                            variant='danger'
+                                                        >
+                                                            {currentProgress}
+                                                        </Dropdown.Toggle>
+                                                }
+
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item
+                                                        style={{ fontSize: '11px' }}
+                                                        eventKey="IN PROGRESS" >
+                                                        RE-DO &#10137; (IN PROGRESS)</Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                            :
+                                            <Dropdown onSelect={(e) => {
+                                                setCurrentProgress(e)
+                                                setIsUpdate(true)
+                                                setIdUpdateTask(detailTask[0].id)
+                                                setNewprogress((e))
+                                            }}>
+                                                {
+                                                    isLoadingUpdateProgressTask ?
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }} >
+                                                            loading..
+                                                    </Dropdown.Toggle>
+                                                        :
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }}
+                                                            variant={currentProgress === 'TO DO' ? 'secondary'
+                                                                : currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                    : currentProgress === 'REVIEW' ? 'info' : 'primary'
+                                                            }>
+                                                            {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                        </Dropdown.Toggle>
+                                                }
+
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                    }
+                                </Grid>
+                            </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Id</Grid>
                                 <Grid item lg={9}>
@@ -386,51 +510,8 @@ export default function DashboardUser() {
                                         required />
                                 </Grid>
                             </Grid>
-                            <Grid container justifyContent="space-between" spacing={2} alignItems="center">
-                                <Grid item lg={3}>Status</Grid>
-                                <Grid item lg={9} >
-                                    <Dropdown onSelect={(e) => {
-                                        setCurrentProgress(e)
-                                        dispatch(updateProgressTask({ id: detailTask[0].id, new_progress: e }))
-                                    }}>
-                                        {
-                                            isLoadingUpdateProgressTask ?
-                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                    style={{ fontSize: '10px' }} >
-                                                    loading..
-                                                </Dropdown.Toggle>
-                                                :
-                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                    style={{ fontSize: '10px' }}
-                                                    variant={currentProgress === 'TO DO' ? 'secondary'
-                                                        : currentProgress === 'IN PROGRESS' ? 'warning'
-                                                            // : currentProgress === 'DONE' ? 'success'
-                                                            : currentProgress === 'REVIEW' ? 'info' : 'primary'
-                                                    }>
-                                                    {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
-                                                </Dropdown.Toggle>
-                                        }
 
-                                        <Dropdown.Menu>
-                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
-                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
-                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
-                                            {/* <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'DONE'} eventKey="DONE" >DONE</Dropdown.Item> */}
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-
-                                    {/* <Button size="sm" style={{ fontSize: '10px', borderRadius: '20px' }}
-                                    variant={detailTask[0].progress === 'TO DO' ? 'secondary'
-                                        : detailTask[0].progress === 'IN PROGRESS' ? 'warning'
-                                            : detailTask[0].progress === 'DONE' ? 'success'
-                                                : detailTask[0].progress === 'REVIEW' ? 'info' : 'primary'
-                                    }
-                                ><Box px={1} fontWeight={600} color='white' >{detailTask[0].progress}</Box>
-                                </Button> */}
-                                </Grid>
-                            </Grid>
-
-                            <Grid container justifyContent="space-between" spacing={2}>
+                            <Grid container justifyContent="space-between" spacing={2} >
                                 <Grid item lg={3}>Task Name</Grid>
                                 <Grid item lg={9}>
                                     {/* : {detailTask[0].task_name} */}
@@ -442,7 +523,7 @@ export default function DashboardUser() {
                                         // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
                                         required />
                                 </Grid>
-                            </Grid>
+                            </ Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Project Name</Grid>
                                 <Grid item lg={9}>
@@ -499,11 +580,12 @@ export default function DashboardUser() {
                                 <Grid item lg={9}>: {detailTask[0].level}</Grid>
                             </Grid>
 
-                        </Box>
+                        </Box >
                     ) :
-                        'loading...'}
+                        'loading...'
+                    }
 
-                </DialogContent>
+                </DialogContent >
                 <DialogActions>
 
                     <Button size="sm" variant="info" onClick={() => setIdTask(0)}
@@ -520,7 +602,7 @@ export default function DashboardUser() {
                         }}>Close</Button>
                 </DialogActions>
 
-            </Dialog>
+            </Dialog >
 
             <Grid container>
                 <Grid item md={2}>
@@ -544,7 +626,7 @@ export default function DashboardUser() {
                                     <Box mt={7} py={3} pl={5} style={{ backgroundColor: 'white', }}>
                                         <Chart
                                             options={options}
-                                            series={series}
+                                            series={ListTotalTask}
                                             type="donut"
                                             width="380"
                                         />
@@ -621,7 +703,7 @@ export default function DashboardUser() {
                                                             <Grid item>
                                                                 <Box pl={2}>
                                                                     <Box color="white">To Do</Box>
-                                                                    <Box color="white">2 task</Box>
+                                                                    <Box color="white">{ListTotalTask[0]} task</Box>
                                                                 </Box>
                                                             </Grid>
                                                         </Grid>
@@ -638,7 +720,7 @@ export default function DashboardUser() {
                                                             <Grid item>
                                                                 <Box pl={2}>
                                                                     <Box color="white">Review</Box>
-                                                                    <Box color="white">2 task</Box>
+                                                                    <Box color="white">{ListTotalTask[2]} task</Box>
                                                                 </Box>
                                                             </Grid>
                                                         </Grid>
@@ -655,7 +737,7 @@ export default function DashboardUser() {
                                                             <Grid item>
                                                                 <Box pl={2}>
                                                                     <Box color="white">Done</Box>
-                                                                    <Box color="white">12 task</Box>
+                                                                    <Box color="white">{ListTotalTask[3]} task</Box>
                                                                 </Box>
                                                             </Grid>
                                                         </Grid>
@@ -666,7 +748,7 @@ export default function DashboardUser() {
                                     </Box>
                                     <Box pt={2}>
                                         {isLoadingTaskUser ? 'loading...' :
-                                            allTaskUser.map((task, i) => (
+                                            allTaskUser.filter(tasks => tasks.progress !== 'DONE').map((task, i) => (
                                                 <Box key={i} p={1} mb={2}
                                                     onClick={() => setIdTask(task.id)}
                                                     style={{

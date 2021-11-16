@@ -56,12 +56,13 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
   if (Array.isArray(items) && items.length) {
     expandIcon = !collapsed ? (
       <ExpandLessIcon
+        style={{ fill: 'white' }}
         className={
           "sidebar-item-expand-arrow" + " sidebar-item-expand-arrow-expanded"
         }
       />
     ) : (
-        <ExpandMoreIcon className="sidebar-item-expand-arrow" />
+        <ExpandMoreIcon style={{ fill: 'white' }} className="sidebar-item-expand-arrow" />
       );
   }
 

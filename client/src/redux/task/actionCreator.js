@@ -31,6 +31,10 @@ const {
     addNewTaskSuccess,
     addNewTaskRequest,
     addNewTaskErr,
+
+    getTotalTaskSuccess,
+    getTotalTaskRequest,
+    getTotalTaskErr,
 } = action
 
 let iddepartemen = localStorage.getItem('iddepartemen')
@@ -43,6 +47,7 @@ const getAllTaskUser = (id) => {
             const allTaskUser = await Axios.get(`${APIURL}taskman/alltaskuser/${id}`)
             if (allTaskUser.data.data) {
                 dispatch(getAllTaskUserEffect(allTaskUser.data.data))
+                dispatch(getTotalTask(allTaskUser.data.data))
             } else {
                 dispatch(getAllTaskUserErr(allTaskUser.data.message))
             }
@@ -109,15 +114,16 @@ const getDetailProject = (id) => {
     }
 }
 
-const updateProgressTask = ({ id, new_progress }) => {
+const updateProgressTask = ({ id, new_progress, idUser }) => {
     return async dispatch => {
         try {
             dispatch(updateProgressTaskRequest())
             const updateProgress = await Axios.post(`${APIURL}taskman/updateprogress`, { id, new_progress })
             // console.log(updateProgress.data.data)
             if (updateProgress.data.message) {
-                dispatch(updateProgressTaskSuccess(updateProgress.data.message))
                 dispatch(getDetailTask(id))
+                dispatch(getAllTaskUser(idUser))
+                dispatch(updateProgressTaskSuccess(updateProgress.data.message))
             }
         } catch (error) {
             dispatch(updateProgressTaskErr(error))
@@ -142,14 +148,13 @@ const getUserDepartemen = (id) => {
 }
 
 const addNewTask = (data) => {
-    console.log('data', data)
     return async dispatch => {
         try {
             dispatch(addNewTaskRequest())
             const newTask = await Axios.post(`${APIURL}taskman/addnewtask`, data)
             if (newTask.data.message) {
-                dispatch(addNewTaskSuccess(newTask.data.message))
                 dispatch(getAllTaskUser(data.assignee))
+                dispatch(addNewTaskSuccess(newTask.data.message))
             }
 
         } catch (error) {
@@ -159,4 +164,39 @@ const addNewTask = (data) => {
     }
 }
 
-export { getAllTaskUser, getDetailTask, getAllProjectUser, getDetailProject, updateProgressTask, getUserDepartemen, addNewTask };
+const getTotalTask = (allTaskUser) => {
+
+    return async dispatch => {
+        try {
+            dispatch(getTotalTaskRequest())
+            let totalTodo = 0;
+            let totalReview = 0;
+            let totalDone = 0;
+            let totalDecline = 0;
+            let totalInProgress = 0;
+
+            let task = allTaskUser.find((task, i) => {
+                if (task.progress === 'TO DO') {
+                    totalTodo++
+                } else if (task.progress === 'IN PROGRESS') {
+                    totalInProgress++
+                } else if (task.progress === 'REVIEW') {
+                    totalReview++
+                } else if (task.progress === 'DONE') {
+                    totalDone++
+                } else if (task.progress === 'DECLINE') {
+                    totalDecline++
+                }
+            });
+
+            dispatch(getTotalTaskSuccess([totalTodo, totalInProgress, totalReview, totalDone, totalDecline]))
+        } catch (error) {
+            dispatch(getTotalTaskErr(error))
+        }
+    }
+
+
+    // return [totalTodo, totalInProgress, totalReview, totalDone, totalDecline]
+}
+
+export { getAllTaskUser, getDetailTask, getAllProjectUser, getDetailProject, updateProgressTask, getUserDepartemen, addNewTask, getTotalTask };
