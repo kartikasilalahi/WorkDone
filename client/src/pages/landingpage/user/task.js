@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Divider, Grid } from '@material-ui/core'
+import {
+    Box, Divider, Grid, Dialog,
+    DialogTitle,
+    DialogActions,
+    DialogContent,
+} from '@material-ui/core'
 import SideBar from '../../component/pages/user/sideBar'
 import TopBar from '../../component/pages/user/topBar'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 import { Table } from 'antd';
 import moment from 'moment'
-
+import IconEdit from '../../../Assets/img/icon/edit.png'
+import IconDetail from '../../../Assets/img/icon/info.png'
 import {
     getAllTaskUser,
     getDetailTask,
@@ -17,7 +23,15 @@ import {
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
-import { Button } from '@mui/material';
+import { Button, Form, Dropdown } from 'react-bootstrap';
+import Chart from "react-apexcharts";
+import Swal from 'sweetalert2'
+import DateTimePicker from 'react-datetime-picker';
+import ReactQuill from 'react-quill'
+import DoneIcon from '@mui/icons-material/Done';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
+
 
 const columns = [
     {
@@ -116,6 +130,10 @@ const columns = [
         // ],
         // onFilter: (value, record) => record.address.indexOf(value) === 0,
     },
+    {
+        title: 'Action',
+        dataIndex: 'action'
+    }
 ];
 
 
@@ -138,9 +156,96 @@ export default function Task() {
 
     const [listTask, setListTask] = useState([]);
 
-    // let dataTask = isLoadingTaskUser && allTaskUser.map((tas,i)=>{
+    const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
+    const [idTask, setIdTask] = useState();
+    const [idProject, setIdProject] = useState();
+    const [isUpdate, setIsUpdate] = useState(false);
+    const [idUpdateTask, setIdUpdateTask] = useState(0);
+    const [Newprogress, setNewprogress] = useState('');
+    const [currentProgress, setCurrentProgress] = useState('');
+    const [dataNewTask, setDataNewTask] = useState({
+        assignee: id,
+        created_by: id,
+        reviewer: '',
+        level: '',
+        description: '',
+        task_name: '',
+        project_id: '',
+        end_datetime: new Date(),
+        start_datetime: new Date(),
+    });
 
-    // })
+
+    const handleClickOpen = () => {
+        setOpenPopupCreateTask(true);
+    };
+
+    const handleClosePopupCreateTask = () => {
+        setOpenPopupCreateTask(false);
+    };
+
+    const onSaveNewTask = () => {
+        let data = dataNewTask
+        dispatch(addNewTask(data))
+
+
+    }
+
+    useEffect(() => {
+        dispatch(getAllTaskUser(id))
+        dispatch(getAllProjectUser(id))
+
+    }, [dispatch])
+
+
+    useEffect(() => {
+        dispatch(getUserDepartemen(iddepartemen))
+    }, [iddepartemen])
+
+    useEffect(() => {
+        if (idTask > 0) {
+            dispatch(getDetailTask(idTask))
+        }
+    }, [idTask])
+
+    useEffect(() => {
+        if (idProject > 0) {
+            dispatch(getDetailProject(idProject))
+        }
+    }, [idProject])
+
+    useEffect(() => {
+        if (detailTask) {
+            setCurrentProgress(detailTask[0].progress)
+        }
+    }, [detailTask])
+
+    useEffect(() => {
+        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false) {
+            Toast.fire({
+                icon: 'success',
+                title: messageUpdateProgressTask
+            })
+            setIsUpdate(false)
+
+        }
+    }, [isLoadingUpdateProgressTask, messageUpdateProgressTask])
+
+    useEffect(() => {
+        if (messageSuccess === 'Task Baru berhasil ditambahkan!') {
+            Toast.fire({
+                icon: 'success',
+                title: messageSuccess
+            })
+            setOpenPopupCreateTask(false);
+        }
+    }, [messageSuccess, dispatch])
+
+    useEffect(() => {
+        if (isUpdate) {
+            dispatch(updateProgressTask({ id: idUpdateTask, new_progress: Newprogress, idUser: id }))
+        }
+    }, [isUpdate])
 
     useEffect(() => {
         dispatch(getAllTaskUser(id))
@@ -161,7 +266,7 @@ export default function Task() {
                                     : progress === 'IN PROGRESS' ? '#F8B032'
                                         : progress === 'REVIEW' ? '#57D8E5'
                                             : progress == 'TO DO' ? '#6C757D' : '#EF4D5F'}`,
-                                borderRadius: '5px',
+                                borderRadius: '25px',
                                 textAlign: 'center',
                                 paddingTop: '5px',
                                 paddingBottom: '5px',
@@ -175,10 +280,13 @@ export default function Task() {
                         end_datetime: moment(end_datetime).format('DD MMM YYYY, h:mm'),
                         task_name,
                         project_name,
+                        action: <div>
+                            <img style={{ cursor: 'pointer' }} onClick={() => setIdTask(id)} src={IconEdit} width="30px" /> {' '}
+                            <img style={{ cursor: 'pointer' }} src={IconDetail} width="30px" />
+                        </div>
                     })
                 )
             })
-            console.log('dayaaa', datatask)
 
             setListTask(datatask)
         }
@@ -194,8 +302,412 @@ export default function Task() {
         console.log('params', pagination, filters, sorter, extra);
     }
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    let modules = {
+        toolbar: [
+            ["bold", "italic", "underline", "strike", "blockquote"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["link", "image"]
+        ]
+    };
+
+    let formats = [
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "blockquote",
+        "list",
+        "bullet",
+        "indent",
+        "link",
+        "image"
+    ];
+
+
     return (
         <div>
+            <Dialog open={openPopupCreateTask} onClose={handleClosePopupCreateTask} maxWidth="sm" fullWidth>
+                <DialogTitle><Box fontSize={14} fontWeight={700}>Add New Task</Box></DialogTitle>
+                <DialogContent>
+                    <Box fontSize={11}>
+                        <Form noValidate onSubmit={(e) => console.log(e)} >
+                            <Form.Group controlId="formBasicSelect">
+                                <Form.Label>Reviewer</Form.Label>
+                                <Form.Control
+                                    style={{ fontSize: '11px' }}
+                                    as="select"
+                                    value={dataNewTask.project_id}
+                                    size="sm"
+                                    onChange={(e) => setDataNewTask({ ...dataNewTask, project_id: Number(e.target.value) })}
+                                >
+                                    <option value="" selected disabled>Select Project..</option>
+                                    {
+                                        allProjectUser && allProjectUser.map((project) => (
+                                            <option value={project.id} key={project.id}>{project.project_name}</option>
+                                        ))
+                                    }
+                                </Form.Control>
+                            </Form.Group>
+                            <Form.Group controlId="formBasicEmail">
+                                <Form.Label>Task Name</Form.Label>
+                                <Form.Control
+                                    style={{ fontSize: '11px' }}
+                                    size="sm"
+                                    type="text"
+                                    placeholder="Add Task Name"
+                                    value={dataNewTask.task_name}
+                                    onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                    required />
+                            </Form.Group>
+
+                            <Form.Group controlId="formbasictask" >
+                                <Form.Label>Description</Form.Label>
+                                <Box>
+                                    <ReactQuill
+                                        theme="snow"
+                                        modules={modules}
+                                        formats={formats}
+                                        value={dataNewTask.description}
+                                        onChange={(e) => setDataNewTask({ ...dataNewTask, description: e })}
+                                    />
+                                </Box>
+                            </Form.Group>
+
+                            <Grid container justifyContent='space-between'>
+                                <Grid item lg={6}>
+                                    <Form.Group controlId="formBasicDate">
+                                        <Form.Label>Start:</Form.Label>
+                                        <Box>
+                                            <DateTimePicker
+                                                onChange={(e) => setDataNewTask({ ...dataNewTask, start_datetime: e })}
+                                                value={dataNewTask.start_datetime}
+                                                minDate={new Date()}
+                                            />
+                                        </Box>
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item lg={6}>
+                                    <Form.Group controlId="formBasicDate">
+                                        <Form.Label>Duedate: </Form.Label>
+                                        <Box>
+                                            <DateTimePicker
+                                                onChange={(e) => setDataNewTask({ ...dataNewTask, end_datetime: e })}
+                                                value={dataNewTask.end_datetime}
+                                                minDate={dataNewTask.start_datetime}
+                                            />
+                                        </Box>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+
+                            <Form.Group controlId="formBasicSelect">
+                                <Form.Label>Assignee</Form.Label>
+                                <Form.Control
+                                    style={{ fontSize: '11px' }}
+                                    type="text"
+                                    value='Assigned To Me'
+                                    size="sm"
+                                    disabled
+                                />
+                            </Form.Group>
+
+                            <Form.Group controlId="formBasicSelect1">
+                                <Form.Label>Reviewer</Form.Label>
+                                <Form.Control
+                                    style={{ fontSize: '11px' }}
+                                    as="select"
+                                    value={dataNewTask.reviewer}
+                                    size="sm"
+                                    onChange={(e) => {
+                                        setDataNewTask({ ...dataNewTask, reviewer: Number(e.target.value) })
+                                    }}
+                                >
+                                    <option value="" selected disabled>Select Reviewer..</option>
+                                    {
+                                        listUserDepartemen && listUserDepartemen.map((user) => (
+                                            <option value={user.id} key={user.id}>{user.nama_depan} {user.nama_belakang}</option>
+                                        ))
+                                    }
+                                </Form.Control>
+                            </Form.Group>
+
+                            <Form.Group controlId="formBasicSelect2">
+                                <Form.Label>Level of Difficult</Form.Label>
+                                <Form.Control
+                                    style={{ fontSize: '11px' }}
+                                    as="select"
+                                    value={dataNewTask.level}
+                                    size="sm"
+                                    onChange={(e) => setDataNewTask({ ...dataNewTask, level: (e.target.value) })}
+                                >
+                                    <option value="" selected disabled>Select Level..</option>
+                                    <option value="Difficult">Difficult</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </Form.Control>
+                            </Form.Group>
+
+                        </Form>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="danger" size="sm" onClick={handleClosePopupCreateTask}
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Cancel</Button>
+                    <Button variant="success" size="sm" onClick={onSaveNewTask}
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Save</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* popup detail task */}
+            <Dialog open={idTask > 0 && detailTask} onClose={() => setIdTask(0)} maxWidth="sm" fullWidth>
+                <DialogTitle><Box fontSize={14} fontWeight={700}>Detail Task</Box></DialogTitle>
+                <DialogContent>
+                    {detailTask ? (
+                        <Box fontSize={11}>
+                            {/* <Grid container justifyContent="flex-end">
+                                <Box py={1}>
+                                    {
+                                        currentProgress === "DONE" || currentProgress === "DECLINE" ?
+                                            <Button size="sm" variant={currentProgress === 'DONE' ? 'success'
+                                                : 'danger'
+                                            }
+                                                style={{
+                                                    fontSize: '10px',
+                                                }}><Box px={1} color='white'>{currentProgress}</Box></Button>
+                                            :
+                                            <Dropdown onSelect={(e) => {
+                                                setCurrentProgress(e)
+                                                setIsUpdate(true)
+                                                setIdUpdateTask(detailTask[0].id)
+                                                setNewprogress((e))
+                                                
+                                            }}>
+                                                {
+                                                    isLoadingUpdateProgressTask ?
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }} >
+                                                            loading..
+                                                    </Dropdown.Toggle>
+                                                        :
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }}
+                                                            variant={currentProgress === 'TO DO' ? 'secondary'
+                                                                : currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                    : currentProgress === 'REVIEW' ? 'info' : 'primary'
+                                                            }>
+                                                            {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                        </Dropdown.Toggle>
+                                                }
+
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                    }
+                                </Box>
+                            </Grid> */}
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Status</Grid>
+                                <Grid item lg={9}>
+                                    {
+                                        currentProgress === "DECLINE" ?
+                                            // <Button size="sm" variant='danger'
+                                            //     style={{
+                                            //         fontSize: '10px',
+                                            //     }}
+                                            //     onClick={}
+                                            //     ><Box px={1} color='white'>{currentProgress}</Box>
+                                            //     </Button>
+                                            <Dropdown onSelect={(e) => {
+                                                setCurrentProgress(e)
+                                                setIsUpdate(true)
+                                                setIdUpdateTask(detailTask[0].id)
+                                                setNewprogress((e))
+                                            }}>
+                                                {
+                                                    isLoadingUpdateProgressTask ?
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }} >
+                                                            loading..
+                                                    </Dropdown.Toggle>
+                                                        :
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }}
+                                                            variant='danger'
+                                                        >
+                                                            {currentProgress}
+                                                        </Dropdown.Toggle>
+                                                }
+
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item
+                                                        style={{ fontSize: '11px' }}
+                                                        eventKey="IN PROGRESS" >
+                                                        RE-DO &#10137; (IN PROGRESS)</Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                            :
+                                            <Dropdown onSelect={(e) => {
+                                                setCurrentProgress(e)
+                                                setIsUpdate(true)
+                                                setIdUpdateTask(detailTask[0].id)
+                                                setNewprogress((e))
+                                            }}>
+                                                {
+                                                    isLoadingUpdateProgressTask ?
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }} >
+                                                            loading..
+                                                    </Dropdown.Toggle>
+                                                        :
+                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                            style={{ fontSize: '10px' }}
+                                                            variant={currentProgress === 'TO DO' ? 'secondary'
+                                                                : currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                    : currentProgress === 'REVIEW' ? 'info' : 'primary'
+                                                            }>
+                                                            {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                        </Dropdown.Toggle>
+                                                }
+
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                    }
+                                </Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Id</Grid>
+                                <Grid item lg={9}>
+                                    <Form.Control
+                                        style={{ fontSize: '11px' }}
+                                        size="sm"
+                                        type="text"
+                                        placeholder="Add Task Name"
+                                        value={detailTask[0].id}
+                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        disabled
+                                        required />
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent="space-between" spacing={2} >
+                                <Grid item lg={3}>Task Name</Grid>
+                                <Grid item lg={9}>
+                                    {/* : {detailTask[0].task_name} */}
+                                    <Form.Control
+                                        style={{ fontSize: '11px' }}
+                                        size="sm"
+                                        type="text"
+                                        value={detailTask[0].task_name}
+                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        required />
+                                </Grid>
+                            </ Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Project Name</Grid>
+                                <Grid item lg={9}>
+                                    <Form.Control
+                                        style={{ fontSize: '11px' }}
+                                        size="sm"
+                                        type="text"
+                                        value={detailTask[0].project_name}
+                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        required />
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Descriptions</Grid>
+                                <Grid item lg={9}>
+                                    {/* <ReactQuill value={detailTask[0].description} /> */}
+                                    <ReactQuill
+                                        theme="snow"
+                                        modules={modules}
+                                        formats={formats}
+                                        value={detailTask[0].description}
+                                    />
+
+                                </Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Created On</Grid>
+                                <Grid item lg={9}>: {moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Start On</Grid>
+                                <Grid item lg={9}>: {moment(detailTask[0].start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Due date</Grid>
+                                <Grid item lg={9}>: {moment(detailTask[0].end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Last Update</Grid>
+                                <Grid item lg={9}>: {detailTask[0].last_update === null ? moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') : moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')}</Grid>
+                            </Grid>
+
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Created by</Grid>
+                                <Grid item lg={9}>: {detailTask[0].created_by}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Assignee</Grid>
+                                <Grid item lg={9}>: {detailTask[0].assignee}</Grid>
+                            </Grid>
+                            <Grid container justifyContent="space-between" spacing={2}>
+                                <Grid item lg={3}>Level of difficult</Grid>
+                                <Grid item lg={9}>: {detailTask[0].level}</Grid>
+                            </Grid>
+
+                        </Box >
+                    ) :
+                        'loading...'
+                    }
+
+                </DialogContent >
+                <DialogActions>
+
+                    <Button size="sm" variant="info" onClick={() => setIdTask(0)}
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Update</Button>
+                    <Button size="sm" onClick={() => setIdTask(0)}
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Close</Button>
+                </DialogActions>
+
+            </Dialog >
             <Grid container>
                 <Grid item md={2}>
                     <SideBar />

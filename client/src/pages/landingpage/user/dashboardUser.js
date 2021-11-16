@@ -66,7 +66,6 @@ export default function DashboardUser() {
         start_datetime: new Date(),
     });
 
-    console.log('lisy', ListTotalTask)
 
     const handleClickOpen = () => {
         setOpenPopupCreateTask(true);
