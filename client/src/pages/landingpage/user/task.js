@@ -73,19 +73,11 @@ const columns = [
             //     ],
             // },
         ],
-        // specify the condition of filtering result
+        // specify the condition of filtering result record.progress.indexOf(value) === 0
         // here is that finding the name started with `value`
-        onFilter: (value, record) => record.progress.indexOf(value) === 0,
+        onFilter: (value, record) => record.progress.props.children.indexOf(value) === 0,
         // sorter: (a, b) => a.name.length - b.name.length,
         // sortDirections: ['descend'],
-        // render(text, record) {
-        //     return {
-        //         props: {
-        //             style: { color: text === 'Done' ? "red" : "green" }
-        //         },
-        //         children: <div>{text}</div>
-        //     };
-        // }
 
     },
     {
@@ -103,31 +95,11 @@ const columns = [
     {
         title: 'Start Datetime',
         dataIndex: 'start_datetime',
-        // filters: [
-        //     {
-        //         text: 'London',
-        //         value: 'London',
-        //     },
-        //     {
-        //         text: 'New York',
-        //         value: 'New York',
-        //     },
-        // ],
         // onFilter: (value, record) => record.address.indexOf(value) === 0,
     },
     {
         title: 'End Datetime',
         dataIndex: 'end_datetime',
-        // filters: [
-        //     {
-        //         text: 'London',
-        //         value: 'London',
-        //     },
-        //     {
-        //         text: 'New York',
-        //         value: 'New York',
-        //     },
-        // ],
         // onFilter: (value, record) => record.address.indexOf(value) === 0,
     },
     {
@@ -250,11 +222,13 @@ export default function Task() {
     useEffect(() => {
         dispatch(getAllTaskUser(id))
         dispatch(getAllProjectUser(id))
-        if (allTaskUser) {
+
+
+    }, [dispatch])
+
+    useEffect(() => {
+        if (allTaskUser && !isLoadingTaskUser) {
             let datatask = []
-            // for (var i = 0; i < allTaskUser.length; i++) {
-            //     datatask.push(allTaskUser[i])
-            // }
             allTaskUser.map((task) => {
                 const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
                 return (
@@ -287,11 +261,9 @@ export default function Task() {
                     })
                 )
             })
-
             setListTask(datatask)
         }
-
-    }, [dispatch])
+    }, [allTaskUser])
 
 
     useEffect(() => {
@@ -342,7 +314,7 @@ export default function Task() {
                 <DialogTitle><Box fontSize={14} fontWeight={700}>Add New Task</Box></DialogTitle>
                 <DialogContent>
                     <Box fontSize={11}>
-                        <Form noValidate onSubmit={(e) => console.log(e)} >
+                        <Form noValidate >
                             <Form.Group controlId="formBasicSelect">
                                 <Form.Label>Reviewer</Form.Label>
                                 <Form.Control
@@ -484,62 +456,11 @@ export default function Task() {
                 <DialogContent>
                     {detailTask ? (
                         <Box fontSize={11}>
-                            {/* <Grid container justifyContent="flex-end">
-                                <Box py={1}>
-                                    {
-                                        currentProgress === "DONE" || currentProgress === "DECLINE" ?
-                                            <Button size="sm" variant={currentProgress === 'DONE' ? 'success'
-                                                : 'danger'
-                                            }
-                                                style={{
-                                                    fontSize: '10px',
-                                                }}><Box px={1} color='white'>{currentProgress}</Box></Button>
-                                            :
-                                            <Dropdown onSelect={(e) => {
-                                                setCurrentProgress(e)
-                                                setIsUpdate(true)
-                                                setIdUpdateTask(detailTask[0].id)
-                                                setNewprogress((e))
-                                                
-                                            }}>
-                                                {
-                                                    isLoadingUpdateProgressTask ?
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }} >
-                                                            loading..
-                                                    </Dropdown.Toggle>
-                                                        :
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }}
-                                                            variant={currentProgress === 'TO DO' ? 'secondary'
-                                                                : currentProgress === 'IN PROGRESS' ? 'warning'
-                                                                    : currentProgress === 'REVIEW' ? 'info' : 'primary'
-                                                            }>
-                                                            {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
-                                                        </Dropdown.Toggle>
-                                                }
-
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                    }
-                                </Box>
-                            </Grid> */}
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Status</Grid>
                                 <Grid item lg={9}>
                                     {
                                         currentProgress === "DECLINE" ?
-                                            // <Button size="sm" variant='danger'
-                                            //     style={{
-                                            //         fontSize: '10px',
-                                            //     }}
-                                            //     onClick={}
-                                            //     ><Box px={1} color='white'>{currentProgress}</Box>
-                                            //     </Button>
                                             <Dropdown onSelect={(e) => {
                                                 setCurrentProgress(e)
                                                 setIsUpdate(true)
@@ -569,35 +490,40 @@ export default function Task() {
                                                 </Dropdown.Menu>
                                             </Dropdown>
                                             :
-                                            <Dropdown onSelect={(e) => {
-                                                setCurrentProgress(e)
-                                                setIsUpdate(true)
-                                                setIdUpdateTask(detailTask[0].id)
-                                                setNewprogress((e))
-                                            }}>
-                                                {
-                                                    isLoadingUpdateProgressTask ?
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }} >
-                                                            loading..
+                                            currentProgress === "DONE" ?
+                                                <Button variant="success">
+                                                    <Box px={1} fontSize={10} color="white">{currentProgress}</Box>
+                                                </Button>
+                                                :
+                                                <Dropdown onSelect={(e) => {
+                                                    setCurrentProgress(e)
+                                                    setIsUpdate(true)
+                                                    setIdUpdateTask(detailTask[0].id)
+                                                    setNewprogress((e))
+                                                }}>
+                                                    {
+                                                        isLoadingUpdateProgressTask ?
+                                                            <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                style={{ fontSize: '10px' }} >
+                                                                loading..
                                                     </Dropdown.Toggle>
-                                                        :
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }}
-                                                            variant={currentProgress === 'TO DO' ? 'secondary'
-                                                                : currentProgress === 'IN PROGRESS' ? 'warning'
-                                                                    : currentProgress === 'REVIEW' ? 'info' : 'primary'
-                                                            }>
-                                                            {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
-                                                        </Dropdown.Toggle>
-                                                }
+                                                            :
+                                                            <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                style={{ fontSize: '10px' }}
+                                                                variant={currentProgress === 'TO DO' ? 'secondary'
+                                                                    : currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                        : currentProgress === 'REVIEW' ? 'info' : 'primary'
+                                                                }>
+                                                                {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                            </Dropdown.Toggle>
+                                                    }
 
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
                                     }
                                 </Grid>
                             </Grid>
@@ -693,12 +619,12 @@ export default function Task() {
                 </DialogContent >
                 <DialogActions>
 
-                    <Button size="sm" variant="info" onClick={() => setIdTask(0)}
+                    {currentProgress !== 'DONE' && <Button size="sm" variant="info" onClick={() => setIdTask(0)}
                         style={{
                             fontSize: '11px',
                             paddingLeft: '25px',
                             paddingRight: '25px'
-                        }}>Update</Button>
+                        }}>Update</Button>}
                     <Button size="sm" onClick={() => setIdTask(0)}
                         style={{
                             fontSize: '11px',
@@ -718,7 +644,8 @@ export default function Task() {
                     <Box px={2} className="container-content" pb={5}>
                         ALL TASK
                         <Box pb={2}>
-                            <Table columns={columns} dataSource={listTask} />
+                            {isLoadingTaskUser ? 'loading..' :
+                                <Table columns={columns} dataSource={listTask} />}
                         </Box>
                     </Box>
                 </Grid>
