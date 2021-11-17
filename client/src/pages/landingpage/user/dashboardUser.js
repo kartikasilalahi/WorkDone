@@ -31,6 +31,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 import TopBar from '../../component/pages/user/topBar'
+import Clock from 'react-digital-clock';
 
 export default function DashboardUser() {
     const dispatch = useDispatch()
@@ -379,62 +380,11 @@ export default function DashboardUser() {
                 <DialogContent>
                     {detailTask ? (
                         <Box fontSize={11}>
-                            {/* <Grid container justifyContent="flex-end">
-                                <Box py={1}>
-                                    {
-                                        currentProgress === "DONE" || currentProgress === "DECLINE" ?
-                                            <Button size="sm" variant={currentProgress === 'DONE' ? 'success'
-                                                : 'danger'
-                                            }
-                                                style={{
-                                                    fontSize: '10px',
-                                                }}><Box px={1} color='white'>{currentProgress}</Box></Button>
-                                            :
-                                            <Dropdown onSelect={(e) => {
-                                                setCurrentProgress(e)
-                                                setIsUpdate(true)
-                                                setIdUpdateTask(detailTask[0].id)
-                                                setNewprogress((e))
-                                                
-                                            }}>
-                                                {
-                                                    isLoadingUpdateProgressTask ?
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }} >
-                                                            loading..
-                                                    </Dropdown.Toggle>
-                                                        :
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }}
-                                                            variant={currentProgress === 'TO DO' ? 'secondary'
-                                                                : currentProgress === 'IN PROGRESS' ? 'warning'
-                                                                    : currentProgress === 'REVIEW' ? 'info' : 'primary'
-                                                            }>
-                                                            {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
-                                                        </Dropdown.Toggle>
-                                                }
-
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                    }
-                                </Box>
-                            </Grid> */}
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Status</Grid>
                                 <Grid item lg={9}>
                                     {
                                         currentProgress === "DECLINE" ?
-                                            // <Button size="sm" variant='danger'
-                                            //     style={{
-                                            //         fontSize: '10px',
-                                            //     }}
-                                            //     onClick={}
-                                            //     ><Box px={1} color='white'>{currentProgress}</Box>
-                                            //     </Button>
                                             <Dropdown onSelect={(e) => {
                                                 setCurrentProgress(e)
                                                 setIsUpdate(true)
@@ -610,20 +560,15 @@ export default function DashboardUser() {
 
                 </Grid>
                 <Grid item md={10} style={{ backgroundColor: "whitesmoke", minHeight: "100vh" }}>
-                    <TopBar label='Home' />
+                    <TopBar label='Dashboard' />
 
                     <Box px={2} className="container-content" pb={5}>
-                        {/* <TopBar /> */}
-
-                        {/* <Box fontSize={18} fontWeight={600}>Welcome Back!</Box> */}
-
                         <Grid container justifyContent="space-between">
                             <Grid xs={6} sm={6} lg={6}>
                                 <Box>
-                                    <Box pb={1} >Welcome back,</Box>
-                                    <Box fontSize={12} fontWeight='bold'>
-                                        {moment().format('DD MMMM YYYY, hh:mm')}
-                                    </Box>
+                                    <Box pb={1} fontSize={14}>Welcome back,</Box>
+                                    <Box color="#0F0F19" fontSize={13}>Don't forget to take attendance. And Enjoy your work!&#128522; </Box>
+
                                     <Box mt={7} py={3} pl={5} style={{ backgroundColor: 'white', }}>
                                         <Chart
                                             options={options}
@@ -682,8 +627,18 @@ export default function DashboardUser() {
                                 </Box>
                             </Grid>
                             <Grid xs={6} sm={6} lg={6}>
-                                <Box ml={3} pt={2} >
-                                    <Box pt={8}>
+                                <Box ml={3}  >
+                                    <Box textAlign="right" pb={3}>
+                                        <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
+                                            <Box px={2} color="white" fontSize={11}>Clockin</Box>
+                                        </Button>
+
+                                        <Box fontSize={12} pt={1} fontWeight='bold'>
+                                            {moment().format('DD MMMM YYYY,')}
+                                            <Box pl={59}> <Clock hour12={false} /></Box>
+                                        </Box>
+                                    </Box>
+                                    <Box pt={1}>
                                         <Grid container justifyContent="space-between">
                                             <Grid item><Box fontSize={14} fontWeight={600}>My Task</Box></Grid>
                                             <Grid item>

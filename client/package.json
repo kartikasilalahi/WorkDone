@@ -37,6 +37,7 @@
     "react-bootstrap": "^1.5.2",
     "react-chartjs-2": "^3.3.0",
     "react-datetime-picker": "^3.4.2",
+    "react-digital-clock": "^0.1.2",
     "react-dom": "^17.0.1",
     "react-draft-wysiwyg": "^1.14.7",
     "react-google-charts": "^3.0.15",

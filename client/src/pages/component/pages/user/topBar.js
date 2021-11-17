@@ -329,8 +329,8 @@ const TopBar = ({ label }) => {
                         </Grid>
                         <Grid item xs={6} sm={6} md={5} lg={5} xl={5}>
                             <Box style={{ float: 'right', }} >
-                                <Grid container alignItems="center" justifyContent="flex-end">
-                                    <Dropdown>
+                                <Grid container alignItems="center" justifyContent="flex-end" >
+                                    <Dropdown style={{ marginRight: '10px' }}>
                                         <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
@@ -360,7 +360,8 @@ const TopBar = ({ label }) => {
                                             </ul>
                                         </Dropdown.Menu>
                                     </Dropdown>
-                                    <Dropdown>
+                                    {' '}
+                                    <Dropdown style={{ marginRight: '10px' }}>
                                         <Dropdown.Toggle as={AvaToggle} id="dropdown-custom-components">
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
