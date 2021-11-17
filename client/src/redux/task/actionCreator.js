@@ -45,23 +45,18 @@ const {
     markReadTaskErr,
 } = action
 
-let iddepartemen = localStorage.getItem('iddepartemen')
 
-
-const getAllTaskUser = (id) => {
+const getAllTaskUser = (id, keyword) => {
     return async dispatch => {
         try {
             dispatch(getAllTaskUserRequest())
-            const allTaskUser = await Axios.get(`${APIURL}taskman/alltaskuser/${id}`)
-            // console.log('allTaskUser.data.data', allTaskUser.data)
+            const allTaskUser = await Axios.get(`${APIURL}taskman/alltaskuser?id=${id}&keyword=${keyword}`)
             if (allTaskUser.data.data) {
                 dispatch(getAllTaskUserEffect(allTaskUser.data.data))
                 dispatch(getTotalTask(allTaskUser.data.data))
             } else {
                 dispatch(getAllTaskUserErr(allTaskUser.data.message))
             }
-            // setTimeout(async () => {
-            // }, 100);
         } catch (error) {
             dispatch(getAllTaskUserErr(error))
         }
@@ -78,8 +73,6 @@ const getDetailTask = (id) => {
             } else {
                 dispatch(getDetailTaskErr(allTaskUser.data.message))
             }
-            // setTimeout(async () => {
-            // }, 100);
         } catch (error) {
             dispatch(getDetailTaskErr(error))
         }
@@ -97,8 +90,6 @@ const getAllProjectUser = (id) => {
             } else {
                 dispatch(getAllProjectUserErr(allTaskUser.data.message))
             }
-            // setTimeout(async () => {
-            // }, 100);
         } catch (error) {
             dispatch(getAllProjectUserErr(error))
         }
@@ -115,8 +106,6 @@ const getDetailProject = (id) => {
             } else {
                 dispatch(getDetailProjectErr(allTaskUser.data.message))
             }
-            // setTimeout(async () => {
-            // }, 100);
         } catch (error) {
             dispatch(getDetailProjectErr(error))
         }
@@ -128,10 +117,9 @@ const updateProgressTask = ({ id, new_progress, idUser }) => {
         try {
             dispatch(updateProgressTaskRequest())
             const updateProgress = await Axios.post(`${APIURL}taskman/updateprogress`, { id, new_progress })
-            // console.log(updateProgress.data.data)
             if (updateProgress.data.message) {
                 dispatch(getDetailTask(id))
-                dispatch(getAllTaskUser(idUser))
+                dispatch(getAllTaskUser(idUser, ''))
                 dispatch(updateProgressTaskSuccess(updateProgress.data.message))
             }
         } catch (error) {
@@ -162,7 +150,7 @@ const addNewTask = (data) => {
             dispatch(addNewTaskRequest())
             const newTask = await Axios.post(`${APIURL}taskman/addnewtask`, data)
             if (newTask.data.message) {
-                dispatch(getAllTaskUser(data.assignee))
+                dispatch(getAllTaskUser(data.assignee, ''))
                 dispatch(addNewTaskSuccess(newTask.data.message))
             }
 
@@ -203,9 +191,6 @@ const getTotalTask = (allTaskUser) => {
             dispatch(getTotalTaskErr(error))
         }
     }
-
-
-    // return [totalTodo, totalInProgress, totalReview, totalDone, totalDecline]
 }
 
 
@@ -214,16 +199,12 @@ const getNotifTaskUser = (id) => {
         try {
             dispatch(getNotifTaskRequest())
             const getnotif = await Axios.get(`${APIURL}taskman/getnotif/${id}`)
-            console.log('getnotif.data.data', getnotif.data)
-
             if (getnotif.data.data) {
                 dispatch(getNotifTaskSuccess(getnotif.data.data))
                 dispatch(getTotalTask(getnotif.data.data))
             } else {
                 dispatch(getNotifTaskErr(getnotif.data.message))
             }
-            // setTimeout(async () => {
-            // }, 100);
         } catch (error) {
             dispatch(getNotifTaskErr(error))
         }
@@ -236,11 +217,9 @@ const markReadTask = ({ id, idUser }) => {
         try {
             dispatch(markReadTaskRequest())
             const markTask = await Axios.post(`${APIURL}taskman/markreadtask/${id}`)
-            // console.log(markTask.data.data)
-            console.log("markTa", markTask.data)
             if (markTask.data.message) {
                 dispatch(getNotifTaskUser(idUser))
-                dispatch(getAllTaskUser(idUser))
+                dispatch(getAllTaskUser(idUser, ''))
                 dispatch(markReadTaskSuccess(markTask.data.message))
             }
         } catch (error) {

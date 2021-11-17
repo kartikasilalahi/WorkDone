@@ -85,7 +85,7 @@ export default function DashboardUser() {
     }
 
     useEffect(() => {
-        dispatch(getAllTaskUser(id))
+        dispatch(getAllTaskUser(id, ''))
         dispatch(getAllProjectUser(id))
 
     }, [dispatch])

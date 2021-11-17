@@ -171,11 +171,11 @@ module.exports = {
     },
     // JOIN project p ON p.id = t.project_id 
     getAllTaskUser: (req, res) => {
-        let { id } = req.params
+        let { id, keyword } = req.query
         let sql = `SELECT p.project_name, t.* 
         from task_user tu  JOIN task t ON tu.id =  t.id 
         JOIN project p ON p.id = t.project_id
-        where tu.user_id = ${id}`
+        where tu.user_id = ${id} AND t.task_name LIKE '%${keyword}%'`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 
@@ -185,8 +185,6 @@ module.exports = {
             })
         })
     },
-
-
 
     getDetailTask: (req, res) => {
         let { id } = req.params

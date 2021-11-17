@@ -28,9 +28,9 @@ import Chart from "react-apexcharts";
 import Swal from 'sweetalert2'
 import DateTimePicker from 'react-datetime-picker';
 import ReactQuill from 'react-quill'
-// import DoneIcon from '@mui/icons-material/Done';
-// import RateReviewIcon from '@mui/icons-material/RateReview';
-// import AvTimerIcon from '@mui/icons-material/AvTimer';
+import { Input } from 'antd';
+
+const { Search } = Input
 
 
 
@@ -74,6 +74,7 @@ export default function Task() {
         end_datetime: new Date(),
         start_datetime: new Date(),
     });
+    const [searchField, setSearchField] = useState('');
 
     const handleClickOpen = () => {
         setOpenPopupCreateTask(true);
@@ -91,7 +92,7 @@ export default function Task() {
     }
 
     useEffect(() => {
-        dispatch(getAllTaskUser(id))
+        dispatch(getAllTaskUser(id, ''))
         dispatch(getAllProjectUser(id))
 
     }, [dispatch])
@@ -147,11 +148,14 @@ export default function Task() {
     }, [isUpdate])
 
     useEffect(() => {
-        dispatch(getAllTaskUser(id))
-        dispatch(getAllProjectUser(id))
+        // dispatch(getAllTaskUser(id, ''))
+        // dispatch(getAllProjectUser(id))
+        if (searchField.length > 0) {
+            dispatch(getAllTaskUser(id, searchField))
+        }
 
 
-    }, [dispatch])
+    }, [searchField])
 
     useEffect(() => {
         if (allTaskUser && !isLoadingTaskUser) {
@@ -653,6 +657,9 @@ export default function Task() {
                 <Grid item md={10}>
                     <TopBar label="My Task" />
                     <Box px={2} className="container-content" pb={5}>
+                        <Box pb={2} textAlign="right">
+                            <Search placeholder="Search Task Name" onChange={(e) => setSearchField(e.target.value)} allowClear style={{ width: 400 }} />
+                        </Box>
                         <Box pb={2}>
                             {isLoadingTaskUser ? 'loading..' :
                                 <Table columns={columns} dataSource={listTask} />}
