@@ -35,6 +35,15 @@ const actions = {
     GET_TOTAL_TASK_ERR: 'GET_TOTAL_TASK_ERR',
 
 
+    GET_NOTIF_TASK_SUCCESS: 'GET_NOTIF_TASK_SUCCESS',
+    GET_NOTIF_TASK_REQUEST: 'GET_NOTIF_TASK_REQUEST',
+    GET_NOTIF_TASK_ERR: 'GET_NOTIF_TASK_ERR',
+
+    MARK_READ_TASK_SUCCESS: 'MARK_READ_TASK_SUCCESS',
+    MARK_READ_TASK_REQUEST: 'MARK_READ_TASK_REQUEST',
+    MARK_READ_TASK_ERR: 'MARK_READ_TASK_ERR',
+
+
     getAllTaskUserEffect: (data) => {
         return {
             type: actions.GET_ALL_TASK_USER,
@@ -215,6 +224,55 @@ const actions = {
         }
     },
 
+
+
+    // ----------------------------
+
+    getNotifTaskSuccess: (data) => {
+        return {
+            type: actions.GET_NOTIF_TASK_SUCCESS,
+            data
+        }
+    },
+
+    getNotifTaskRequest: () => {
+        return {
+            type: actions.GET_NOTIF_TASK_REQUEST,
+        }
+    },
+
+    getNotifTaskErr: (data) => {
+        return {
+            type: actions.GET_NOTIF_TASK_ERR,
+            data
+        }
+    },
+
+
+
+
+
+    // ----------------------------
+
+    markReadTaskSuccess: (data) => {
+        return {
+            type: actions.MARK_READ_TASK_SUCCESS,
+            data
+        }
+    },
+
+    markReadTaskRequest: () => {
+        return {
+            type: actions.MARK_READ_TASK_REQUEST,
+        }
+    },
+
+    markReadTaskErr: (data) => {
+        return {
+            type: actions.MARK_READ_TASK_ERR,
+            data
+        }
+    },
 
 };
 

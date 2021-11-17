@@ -186,6 +186,8 @@ module.exports = {
         })
     },
 
+
+
     getDetailTask: (req, res) => {
         let { id } = req.params
         let sql = `SELECT p.project_name, t.* 
@@ -289,6 +291,36 @@ module.exports = {
                 data: result
             })
         })
-    }
+    },
+
+    getNotif: (req, res) => {
+        let { id } = req.params
+        let isread = 0
+        let sql = `SELECT p.project_name, t.* 
+        from task_user tu  JOIN task t ON tu.id =  t.id 
+        JOIN project p ON p.id = t.project_id
+        where tu.user_id = ${id} AND t.isread=${isread}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
+    markReadTask: (req, res) => {
+        const { id } = req.params
+        let isread = 1;
+        let sql = `UPDATE task SET isread=${isread} WHERE id=${id}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+            res.send({
+                status: 200,
+                message: `Task sudah dibaca`
+            })
+        })
+    },
 
 }

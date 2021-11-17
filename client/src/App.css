@@ -195,13 +195,12 @@ a {
 }
 /* 2F2E41 */
 .topbar{
-  min-height: 80px;
-  height: 80px;
-  overflow: hidden;
+  min-height: 60px;
+  height: 60px;
   background-color: #88d38b;
-  position: fixed;
-  top: 0;
   width: 100%;
+  /* position: relative; */
+  z-index: 999;
 }
 
 .container-content{
@@ -227,3 +226,34 @@ a {
 }
 
 .ant-table table { font-size: 10px; }
+
+.notifications .container{
+  margin-top: 0 !important;
+}
+
+/* .dropdown-toggle {
+  width: 400px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+} */
+
+.dropdown-item{
+  white-space: normal !important;
+  word-break: break-word !important;
+  font-size: 11px;
+}
+
+.count-notif{
+  position: absolute;
+  right: -5px;
+  top: -7px;
+  background-color: red;
+  font-weight: bold;
+  font-size: 8px;
+  text-align: center;
+  padding:3px 4px 0px 4px !important;
+  color: white;
+  border-radius: 25px;
+}
+
+/* .navbar .nav li .dropdown-menu li a {white-space: normal !important;} */

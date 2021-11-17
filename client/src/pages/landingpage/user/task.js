@@ -28,9 +28,9 @@ import Chart from "react-apexcharts";
 import Swal from 'sweetalert2'
 import DateTimePicker from 'react-datetime-picker';
 import ReactQuill from 'react-quill'
-import DoneIcon from '@mui/icons-material/Done';
-import RateReviewIcon from '@mui/icons-material/RateReview';
-import AvTimerIcon from '@mui/icons-material/AvTimer';
+// import DoneIcon from '@mui/icons-material/Done';
+// import RateReviewIcon from '@mui/icons-material/RateReview';
+// import AvTimerIcon from '@mui/icons-material/AvTimer';
 
 
 
@@ -120,7 +120,7 @@ export default function Task() {
     }, [detailTask])
 
     useEffect(() => {
-        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false) {
+        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false && isUpdate) {
             Toast.fire({
                 icon: 'success',
                 title: messageUpdateProgressTask
@@ -287,8 +287,6 @@ export default function Task() {
             // specify the condition of filtering result record.progress.indexOf(value) === 0
             // here is that finding the name started with `value`
             onFilter: (value, record) => record.progress.props.children.indexOf(value) === 0,
-            // sorter: (a, b) => a.name.length - b.name.length,
-            // sortDirections: ['descend'],
 
         },
         {
@@ -464,7 +462,7 @@ export default function Task() {
             </Dialog>
 
             {/* popup detail task */}
-            <Dialog open={idTask > 0 && detailTask} onClose={() => setIdTask(0)} maxWidth="sm" fullWidth>
+            <Dialog open={idTask > 0} onClose={() => setIdTask(0)} maxWidth="sm" fullWidth>
                 <DialogTitle><Box fontSize={14} fontWeight={700}>Detail Task</Box></DialogTitle>
                 <DialogContent>
                     {detailTask ? (
@@ -653,9 +651,8 @@ export default function Task() {
 
                 </Grid>
                 <Grid item md={10}>
-                    {/* <TopBar /> */}
+                    <TopBar label="My Task" />
                     <Box px={2} className="container-content" pb={5}>
-                        ALL TASK
                         <Box pb={2}>
                             {isLoadingTaskUser ? 'loading..' :
                                 <Table columns={columns} dataSource={listTask} />}

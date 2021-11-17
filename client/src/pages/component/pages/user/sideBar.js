@@ -34,12 +34,12 @@ function SideBar() {
 
   const items = [
     { name: "/user/dashboard", label: "Home", Icon: HomeIcon, onClick },
-    {
-      name: "/user/notifications",
-      label: "Notifications",
-      Icon: NotificationsIcon,
-      onClick
-    },
+    // {
+    //   name: "/user/notifications",
+    //   label: "Notifications",
+    //   Icon: NotificationsIcon,
+    //   onClick
+    // },
     {
       name: "task",
       label: "Tasks",
@@ -57,7 +57,7 @@ function SideBar() {
       Icon: SettingsIcon,
       items: [
         { name: "/user/profile", label: "Profile", onClick },
-        { name: "/user/insurance", label: "Insurance", onClick },
+        { name: "/user/change-password", label: "Change Password", onClick },
         "divider",
         ,
 

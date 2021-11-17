@@ -28,7 +28,11 @@ const {
 
     ADD_NEW_TASK_SUCCESS,
 
-    GET_TOTAL_TASK_SUCCESS
+    GET_TOTAL_TASK_SUCCESS,
+
+    GET_NOTIF_TASK_SUCCESS,
+    GET_NOTIF_TASK_REQUEST,
+    GET_NOTIF_TASK_ERR,
 
 
 } = action
@@ -69,6 +73,13 @@ const initState = {
     message_add_new_task: '',
 
     total_task: [0, 0, 0, 0, 0],
+
+    all_notif_task_user: [],
+    is_loading_all_notif_task_user: false,
+    is_error_all_notif_task_user: false,
+    message_all_notif_task_user: '',
+
+
 
 };
 
@@ -220,6 +231,27 @@ const AuthReducer = (state = initState, action) => {
                 ...state,
                 total_task: data
             }
+
+        // GET NOTIF
+        case GET_NOTIF_TASK_REQUEST:
+            return {
+                ...state,
+                is_loading_all_notif_task_user: true,
+                message_all_notif_task_user: ''
+            };
+        case GET_NOTIF_TASK_SUCCESS:
+            return {
+                ...state,
+                all_notif_task_user: data,
+                is_loading_all_notif_task_user: false,
+                message_all_notif_task_user: ''
+            };
+        case GET_NOTIF_TASK_ERR:
+            return {
+                ...state,
+                is_loading_all_notif_task_user: false,
+                message_all_notif_task_user: err
+            };
 
         default:
             return state;

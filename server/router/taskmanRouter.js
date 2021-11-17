@@ -14,12 +14,14 @@ router.get('/detailtask/:id', taskmanController.getDetailTask)
 router.get('/allprojectuser/:id', taskmanController.getAllProjectUser)
 router.get('/detailproject/:id', taskmanController.getDetailProject)
 router.get('/getuserdepartemen/:id', taskmanController.getUserDepartemen)
+router.get('/getnotif/:id', taskmanController.getNotif)
 
 router.put('/ubahpassword/:id', taskmanController.ubahPasword)
 
 router.post('/register', taskmanController.register)
 router.post('/updateprogress', taskmanController.updateProgressTask)
 router.post('/addnewtask', taskmanController.addNewTask)
+router.post('/markreadtask/:id', taskmanController.markReadTask)
 
 
 

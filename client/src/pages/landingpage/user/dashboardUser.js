@@ -30,6 +30,7 @@ import ReactQuill from 'react-quill'
 import DoneIcon from '@mui/icons-material/Done';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
+import TopBar from '../../component/pages/user/topBar'
 
 export default function DashboardUser() {
     const dispatch = useDispatch()
@@ -112,7 +113,7 @@ export default function DashboardUser() {
     }, [detailTask])
 
     useEffect(() => {
-        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false) {
+        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false && isUpdate) {
             Toast.fire({
                 icon: 'success',
                 title: messageUpdateProgressTask
@@ -609,9 +610,10 @@ export default function DashboardUser() {
 
                 </Grid>
                 <Grid item md={10} style={{ backgroundColor: "whitesmoke", minHeight: "100vh" }}>
-                    {/* <TopBar /> */}
+                    <TopBar label='Home' />
 
                     <Box px={2} className="container-content" pb={5}>
+                        {/* <TopBar /> */}
 
                         {/* <Box fontSize={18} fontWeight={600}>Welcome Back!</Box> */}
 

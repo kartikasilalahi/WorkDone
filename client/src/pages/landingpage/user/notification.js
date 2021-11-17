@@ -12,7 +12,7 @@ export default function dashboardUser() {
 
                 </Grid>
                 <Grid item md={10}>
-                    {/* <TopBar /> */}
+                    <TopBar label="Notification" />
                     <Box px={2} className="container-content" pb={5}>
                         <Box>You have 2 unread messages</Box>
                         <Box pb={3} className="new-notif">
