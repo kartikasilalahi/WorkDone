@@ -233,7 +233,8 @@ module.exports = {
 
     updateProgressTask: (req, res) => {
         const { id, new_progress } = req.body
-        let sql = `UPDATE task SET progress='${new_progress}' WHERE id=${id}`
+        let isread = 1
+        let sql = `UPDATE task SET progress='${new_progress}', isread=${isread} WHERE id=${id}`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
             res.send({

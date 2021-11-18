@@ -120,6 +120,7 @@ const updateProgressTask = ({ id, new_progress, idUser }) => {
             if (updateProgress.data.message) {
                 dispatch(getDetailTask(id))
                 dispatch(getAllTaskUser(idUser, ''))
+                dispatch(getNotifTaskUser(idUser))
                 dispatch(updateProgressTaskSuccess(updateProgress.data.message))
             }
         } catch (error) {

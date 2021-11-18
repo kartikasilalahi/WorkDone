@@ -59,6 +59,7 @@ export default function Task() {
     const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
     const [idTask, setIdTask] = useState();
     const [idProject, setIdProject] = useState();
+    const [isAddNewTask, setIsAddNewTask] = useState(false);
     const [isUpdate, setIsUpdate] = useState(false);
     const [idUpdateTask, setIdUpdateTask] = useState(0);
     const [Newprogress, setNewprogress] = useState('');
@@ -78,6 +79,7 @@ export default function Task() {
 
     const handleClickOpen = () => {
         setOpenPopupCreateTask(true);
+        setIsAddNewTask(true)
     };
 
     const handleClosePopupCreateTask = () => {
@@ -130,12 +132,24 @@ export default function Task() {
     }, [isLoadingUpdateProgressTask, messageUpdateProgressTask])
 
     useEffect(() => {
-        if (messageSuccess === 'Task Baru berhasil ditambahkan!') {
+        if (messageSuccess === 'Task Baru berhasil ditambahkan!' && openPopupCreateTask) {
             Toast.fire({
                 icon: 'success',
                 title: messageSuccess
             })
             setOpenPopupCreateTask(false);
+            setDataNewTask({
+                assignee: id,
+                created_by: id,
+                reviewer: '',
+                level: '',
+                description: '',
+                task_name: '',
+                project_id: '',
+                end_datetime: new Date(),
+                start_datetime: new Date(),
+            })
+            setIsAddNewTask(false)
         }
     }, [messageSuccess, dispatch])
 
@@ -169,8 +183,9 @@ export default function Task() {
                                 borderColor: 'whitesmoke'
                             }}
                         >{progress}</div>,
-                        start_datetime: moment(start_datetime).format('DD MMM YYYY, h:mm'),
-                        end_datetime: moment(end_datetime).format('DD MMM YYYY, h:mm'),
+                        // start_datetime: start_datetime,
+                        start_datetime: moment(start_datetime).format('DD MMM YYYY, hh:mm:ss'),
+                        end_datetime: moment(end_datetime).format('DD MMM YYYY, h:mm:ss'),
                         task_name,
                         project_name,
                         action: <div>
@@ -299,10 +314,14 @@ export default function Task() {
             title: 'Start Datetime',
             dataIndex: 'start_datetime',
             // onFilter: (value, record) => record.address.indexOf(value) === 0,
+            sorter: (a, b) => new Date(a.start_datetime) - new Date(b.start_datetime),
+            defaultSortOrder: 'ascend'
         },
         {
             title: 'End Datetime',
             dataIndex: 'end_datetime',
+            sorter: (a, b) => new Date(a.end_datetime) - new Date(b.end_datetime),
+
             // onFilter: (value, record) => record.address.indexOf(value) === 0,
         },
         {

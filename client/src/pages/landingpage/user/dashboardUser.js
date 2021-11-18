@@ -125,7 +125,7 @@ export default function DashboardUser() {
     }, [isLoadingUpdateProgressTask, messageUpdateProgressTask])
 
     useEffect(() => {
-        if (messageSuccess === 'Task Baru berhasil ditambahkan!') {
+        if (messageSuccess === 'Task Baru berhasil ditambahkan!' && openPopupCreateTask) {
             Toast.fire({
                 icon: 'success',
                 title: messageSuccess
@@ -630,7 +630,7 @@ export default function DashboardUser() {
                                 <Box ml={3}  >
                                     <Box textAlign="right" pb={3}>
                                         <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
-                                            <Box px={2} color="white" fontSize={11}>Clockin</Box>
+                                            <Box px={1} color="white" fontSize={11}>Live Attendance</Box>
                                         </Button>
 
                                         <Box fontSize={12} pt={1} fontWeight='bold'>
