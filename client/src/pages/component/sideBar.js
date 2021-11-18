@@ -20,6 +20,10 @@ function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...res
     if (active === '/user/all-task') {
       setCollapsed(false)
     }
+    if (active === '/user/change-password') {
+      setCollapsed(false)
+    }
+
   }, [])
 
   function onClick(e) {

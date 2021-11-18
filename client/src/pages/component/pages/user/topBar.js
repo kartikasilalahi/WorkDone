@@ -2,7 +2,7 @@ import React, { useEffect, useState, forwardRef } from 'react'
 import { Box, Grid, Avatar, Divider } from '@material-ui/core'
 import IconNotif from '../../../../Assets/img/icon/notif.png'
 import { useHistory } from "react-router-dom";
-import { getNotifTaskUser, markReadTask, getDetailTask } from '../../../../redux/task/actionCreator'
+import { getNotifTaskUser, markReadTask, getDetailTask, updateProgressTask } from '../../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import {
@@ -59,6 +59,23 @@ const TopBar = ({ label }) => {
             setCurrentProgress(detailTask[0].progress)
         }
     }, [detailTask])
+
+    useEffect(() => {
+        if (isUpdate) {
+            dispatch(updateProgressTask({ id: idUpdateTask, new_progress: Newprogress, idUser: id }))
+        }
+    }, [isUpdate])
+
+    useEffect(() => {
+        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false && isUpdate) {
+            Toast.fire({
+                icon: 'success',
+                title: messageUpdateProgressTask
+            })
+            setIsUpdate(false)
+
+        }
+    }, [isLoadingUpdateProgressTask, messageUpdateProgressTask])
 
     const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
         <a

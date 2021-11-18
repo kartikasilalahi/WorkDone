@@ -6,6 +6,8 @@ import Dashboard from '../pages/landingpage/user/dashboardUser';
 import Notification from '../pages/landingpage/user/notification';
 import Task from '../pages/landingpage/user/task';
 import NotFound from './notFound';
+import ChangePassword from '../pages/landingpage/user/changePassword';
+
 
 const UseRoute = () => {
   const { path } = useRouteMatch();
@@ -15,6 +17,7 @@ const UseRoute = () => {
       <Route path={`${path}/dashboard`} component={Dashboard} />
       <Route path={`${path}/notifications`} component={Notification} />
       <Route path={`${path}/all-task`} component={Task} />
+      <Route path={`${path}/change-password`} component={ChangePassword} />
       <Route exact path="*" component={NotFound} />
 
     </Switch>

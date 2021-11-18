@@ -24,7 +24,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import { Button, Form, Dropdown } from 'react-bootstrap';
-import Chart from "react-apexcharts";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Swal from 'sweetalert2'
 import DateTimePicker from 'react-datetime-picker';
 import ReactQuill from 'react-quill'
@@ -47,7 +47,7 @@ export default function Task() {
     const messageUpdateProgressTask = useSelector(state => state.task.message_update_progress_task)
     const listUserDepartemen = useSelector(state => state.task.departemen_user)
     const messageSuccess = useSelector(state => state.task.message_add_new_task)
-    const ListTotalTask = useSelector(state => state.task.total_task)
+    // const ListTotalTask = useSelector(state => state.task.total_task)
 
     const id = Number(localStorage.getItem('id'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
@@ -74,7 +74,7 @@ export default function Task() {
         end_datetime: new Date(),
         start_datetime: new Date(),
     });
-    const [searchField, setSearchField] = useState('');
+    // const [searchField, setSearchField] = useState('');
 
     const handleClickOpen = () => {
         setOpenPopupCreateTask(true);
@@ -87,8 +87,6 @@ export default function Task() {
     const onSaveNewTask = () => {
         let data = dataNewTask
         dispatch(addNewTask(data))
-
-
     }
 
     useEffect(() => {
@@ -146,16 +144,6 @@ export default function Task() {
             dispatch(updateProgressTask({ id: idUpdateTask, new_progress: Newprogress, idUser: id }))
         }
     }, [isUpdate])
-
-    useEffect(() => {
-        // dispatch(getAllTaskUser(id, ''))
-        // dispatch(getAllProjectUser(id))
-        if (searchField.length > 0) {
-            dispatch(getAllTaskUser(id, searchField))
-        }
-
-
-    }, [searchField])
 
     useEffect(() => {
         if (allTaskUser && !isLoadingTaskUser) {
@@ -657,9 +645,26 @@ export default function Task() {
                 <Grid item md={10}>
                     <TopBar label="My Task" />
                     <Box px={2} className="container-content" pb={5}>
-                        <Box pb={2} textAlign="right">
-                            <Search placeholder="Search Task Name" onChange={(e) => setSearchField(e.target.value)} allowClear style={{ width: 400 }} />
-                        </Box>
+                        <Grid container justifyContent='space-between' alignItems="center">
+                            <Grid lg={6} item>
+                                <Box pb={3} pl={2}>
+                                    <Button size="small" variant="outline-primary"
+                                        style={{ fontSize: '11px', paddingRight: '30px', paddingLeft: '30px' }}
+                                        onClick={handleClickOpen}>
+                                        New Task
+                            </Button>
+                                </Box>
+                            </Grid>
+                            <Grid lg={6} item>
+                                <Box pb={3} textAlign="right" >
+                                    <Search placeholder="Search Task Name"
+                                        onChange={(e) => dispatch(getAllTaskUser(id, e.target.value))}
+                                        allowClear
+                                        style={{ width: 350 }} />
+                                </Box>
+                            </Grid>
+
+                        </Grid>
                         <Box pb={2}>
                             {isLoadingTaskUser ? 'loading..' :
                                 <Table columns={columns} dataSource={listTask} />}

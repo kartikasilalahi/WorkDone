@@ -255,6 +255,7 @@ module.exports = {
         dataTask.end_datetime = moment(end_datetime).format('YYYY-MM-DD HH:mm:ss')
         dataTask.created_on = created_on
         dataTask.progress = progress
+        dataTask.isread = 0;
 
 
         mysql.query(sql, dataTask, (err, result) => {

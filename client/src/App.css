@@ -245,13 +245,13 @@ a {
 
 .count-notif{
   position: absolute;
-  right: -5px;
-  top: -7px;
+  right: -6px;
+  top: -10px;
   background-color: red;
   font-weight: bold;
-  font-size: 8px;
+  font-size: 10px;
   text-align: center;
-  padding:3px 4px 0px 4px !important;
+  padding:3px 6px 1px 6px !important;
   color: white;
   border-radius: 25px;
 }

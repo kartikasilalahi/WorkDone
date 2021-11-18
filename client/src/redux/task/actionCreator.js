@@ -152,6 +152,7 @@ const addNewTask = (data) => {
             if (newTask.data.message) {
                 dispatch(getAllTaskUser(data.assignee, ''))
                 dispatch(addNewTaskSuccess(newTask.data.message))
+                dispatch(getNotifTaskUser(data.assignee))
             }
 
         } catch (error) {
