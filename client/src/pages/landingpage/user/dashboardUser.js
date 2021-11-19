@@ -644,7 +644,7 @@ export default function DashboardUser() {
                                             <Grid item>
                                                 <Box color="#88D38B" fontSize={12} mr={2}
                                                     onClick={() => history.push('/user/all-task')}
-                                                    style={{ cursor: 'pointer' }}>See more</Box></Grid>
+                                                    style={{ cursor: 'pointer' }}>See all</Box></Grid>
                                         </Grid>
                                         <Box fontSize={9} pt={1}>
                                             <Grid container>

@@ -34,6 +34,10 @@ const {
     GET_NOTIF_TASK_REQUEST,
     GET_NOTIF_TASK_ERR,
 
+    UPDATE_TASK_SUCCESS,
+    UPDATE_TASK_REQUEST,
+    UPDATE_TASK_ERR,
+
 
 } = action
 
@@ -79,6 +83,9 @@ const initState = {
     is_error_all_notif_task_user: false,
     message_all_notif_task_user: '',
 
+    is_loading_update_task: false,
+    is_error_update_task: false,
+    message_update_task: '',
 
 
 };
@@ -251,6 +258,26 @@ const AuthReducer = (state = initState, action) => {
                 ...state,
                 is_loading_all_notif_task_user: false,
                 message_all_notif_task_user: err
+            };
+
+        // update TASK
+        case UPDATE_TASK_REQUEST:
+            return {
+                ...state,
+                is_loading_update_task: true,
+                message_update_task: ''
+            };
+        case UPDATE_TASK_SUCCESS:
+            return {
+                ...state,
+                is_loading_update_task: false,
+                message_update_task: data
+            };
+        case GET_DETAIL_PROJECT_ERR:
+            return {
+                ...state,
+                is_loading_update_task: false,
+                message_update_task: err
             };
 
         default:

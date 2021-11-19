@@ -43,6 +43,10 @@ const actions = {
     MARK_READ_TASK_REQUEST: 'MARK_READ_TASK_REQUEST',
     MARK_READ_TASK_ERR: 'MARK_READ_TASK_ERR',
 
+    UPDATE_TASK_SUCCESS: 'UPDATE_TASK_SUCCESS',
+    UPDATE_TASK_REQUEST: 'UPDATE_TASK_REQUEST',
+    UPDATE_TASK_ERR: 'UPDATE_TASK_ERR',
+
 
     getAllTaskUserEffect: (data) => {
         return {
@@ -270,6 +274,29 @@ const actions = {
     markReadTaskErr: (data) => {
         return {
             type: actions.MARK_READ_TASK_ERR,
+            data
+        }
+    },
+
+
+    // ----------------------------
+
+    updateTaskSuccess: (data) => {
+        return {
+            type: actions.UPDATE_TASK_SUCCESS,
+            data
+        }
+    },
+
+    updateTaskRequest: () => {
+        return {
+            type: actions.UPDATE_TASK_REQUEST,
+        }
+    },
+
+    updateTaskErr: (data) => {
+        return {
+            type: actions.UPDATE_TASK_ERR,
             data
         }
     },

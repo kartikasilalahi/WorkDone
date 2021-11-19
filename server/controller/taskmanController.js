@@ -234,7 +234,8 @@ module.exports = {
     updateProgressTask: (req, res) => {
         const { id, new_progress } = req.body
         let isread = 1
-        let sql = `UPDATE task SET progress='${new_progress}', isread=${isread} WHERE id=${id}`
+        let last_update = moment().format("YYYY-MM-DD HH:mm:ss") // =>> UTK NGAMBIL TGL HARI INI
+        let sql = `UPDATE task SET progress='${new_progress}', isread=${isread}, last_update='${last_update}' WHERE id=${id}`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
             res.send({
@@ -250,19 +251,19 @@ module.exports = {
         let { assignee, created_by, start_datetime, end_datetime, level, description, task_name } = req.body
         let progress = 'TO DO'
         let created_on = moment().format("YYYY-MM-DD HH:mm:ss") // =>> UTK NGAMBIL TGL HARI INI
+        let last_update = moment().format("YYYY-MM-DD HH:mm:ss") // =>> UTK NGAMBIL TGL HARI INI
         let sql = `INSERT INTO task SET ?`
         let dataTask = req.body
         dataTask.start_datetime = moment(start_datetime).format('YYYY-MM-DD HH:mm:ss')
         dataTask.end_datetime = moment(end_datetime).format('YYYY-MM-DD HH:mm:ss')
         dataTask.created_on = created_on
+        dataTask.last_update = last_update
         dataTask.progress = progress
         dataTask.isread = 0;
 
 
         mysql.query(sql, dataTask, (err, result) => {
             if (err) return res.status(500).send(err)
-
-            // return res.status(200).send({ data: result })
             let dataTaskUser = {
                 task_id: result.insertId,
                 user_id: assignee
@@ -275,7 +276,6 @@ module.exports = {
                     status: 200,
                     message: 'Task Baru berhasil ditambahkan!'
                 })
-                // return res.status(200).send({ message: 'Task Baru berhasil ditambahkan' })
             })
         })
     },
@@ -322,5 +322,22 @@ module.exports = {
             })
         })
     },
+
+    updateTask: (req, res) => {
+        let data = req.body
+        let last_update = moment().format("YYYY-MM-DD HH:mm:ss") // =>> UTK NGAMBIL TGL HARI INI
+        data.last_update = last_update
+
+        let sql = `UPDATE task SET ? WHERE id=${data.id}`
+        console.log(req.body)
+        mysql.query(sql, data, (err, result) => {
+            if (err) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                message: `Task berhasil diperbaharui`
+            })
+        })
+    }
 
 }

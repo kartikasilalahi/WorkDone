@@ -43,6 +43,10 @@ const {
     markReadTaskSuccess,
     markReadTaskRequest,
     markReadTaskErr,
+
+    updateTaskSuccess,
+    updateTaskRequest,
+    updateTaskErr,
 } = action
 
 
@@ -230,6 +234,24 @@ const markReadTask = ({ id, idUser }) => {
     }
 }
 
+
+const updateTask = ({ idUser, id, task_name, description }) => {
+    return async dispatch => {
+        try {
+            dispatch(updateTaskRequest())
+            const update = await Axios.post(`${APIURL}taskman/updatetask`, { id, task_name, description })
+            if (update.data.message) {
+                dispatch(getDetailTask(id))
+                dispatch(getAllTaskUser(idUser, ''))
+                dispatch(getNotifTaskUser(idUser))
+                dispatch(updateTaskSuccess(update.data.message))
+            }
+        } catch (error) {
+            dispatch(updateTaskErr(error))
+        }
+    }
+}
+
 export {
     getAllTaskUser,
     getDetailTask,
@@ -240,5 +262,6 @@ export {
     addNewTask,
     getTotalTask,
     getNotifTaskUser,
-    markReadTask
+    markReadTask,
+    updateTask
 };

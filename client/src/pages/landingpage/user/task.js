@@ -19,12 +19,12 @@ import {
     getDetailProject,
     updateProgressTask,
     getUserDepartemen,
-    addNewTask
+    addNewTask,
+    updateTask
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import { Button, Form, Dropdown } from 'react-bootstrap';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Swal from 'sweetalert2'
 import DateTimePicker from 'react-datetime-picker';
 import ReactQuill from 'react-quill'
@@ -47,6 +47,7 @@ export default function Task() {
     const messageUpdateProgressTask = useSelector(state => state.task.message_update_progress_task)
     const listUserDepartemen = useSelector(state => state.task.departemen_user)
     const messageSuccess = useSelector(state => state.task.message_add_new_task)
+    const messageUpdateTask = useSelector(state => state.task.message_update_task)
     // const ListTotalTask = useSelector(state => state.task.total_task)
 
     const id = Number(localStorage.getItem('id'));
@@ -60,7 +61,8 @@ export default function Task() {
     const [idTask, setIdTask] = useState();
     const [idProject, setIdProject] = useState();
     const [isAddNewTask, setIsAddNewTask] = useState(false);
-    const [isUpdate, setIsUpdate] = useState(false);
+    const [isUpdateProgress, setIsUpdateProgress] = useState(false);
+    const [isUpdateTask, setIsUpdateTask] = useState(false);
     const [idUpdateTask, setIdUpdateTask] = useState(0);
     const [Newprogress, setNewprogress] = useState('');
     const [currentProgress, setCurrentProgress] = useState('');
@@ -75,7 +77,10 @@ export default function Task() {
         end_datetime: new Date(),
         start_datetime: new Date(),
     });
-    // const [searchField, setSearchField] = useState('');
+    const [selectedTask, setSelectedTask] = useState({});
+    const [openPopupDetail, setOpenPopupDetail] = useState(false);
+    const [idDetail, setIdDetail] = useState(0);
+
 
     const handleClickOpen = () => {
         setOpenPopupCreateTask(true);
@@ -104,9 +109,13 @@ export default function Task() {
 
     useEffect(() => {
         if (idTask > 0) {
+            // setSelectedTask(allTaskUser[idTask - 0])
             dispatch(getDetailTask(idTask))
         }
-    }, [idTask])
+        if ((openPopupDetail && idDetail > 0)) {
+            dispatch(getDetailTask(idDetail))
+        }
+    }, [idTask, openPopupDetail, idDetail])
 
     useEffect(() => {
         if (idProject > 0) {
@@ -121,15 +130,26 @@ export default function Task() {
     }, [detailTask])
 
     useEffect(() => {
-        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false && isUpdate) {
+        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false && isUpdateProgress) {
             Toast.fire({
                 icon: 'success',
                 title: messageUpdateProgressTask
             })
-            setIsUpdate(false)
+            setIsUpdateProgress(false)
 
         }
     }, [isLoadingUpdateProgressTask, messageUpdateProgressTask])
+
+    useEffect(() => {
+        if (messageUpdateTask && isUpdateTask) {
+            Toast.fire({
+                icon: 'success',
+                title: messageUpdateTask
+            })
+            setIsUpdateTask(false)
+
+        }
+    }, [messageUpdateTask, isUpdateTask])
 
     useEffect(() => {
         if (messageSuccess === 'Task Baru berhasil ditambahkan!' && openPopupCreateTask) {
@@ -154,15 +174,15 @@ export default function Task() {
     }, [messageSuccess, dispatch])
 
     useEffect(() => {
-        if (isUpdate) {
+        if (isUpdateProgress) {
             dispatch(updateProgressTask({ id: idUpdateTask, new_progress: Newprogress, idUser: id }))
         }
-    }, [isUpdate])
+    }, [isUpdateProgress])
 
     useEffect(() => {
         if (allTaskUser && !isLoadingTaskUser) {
             let datatask = []
-            allTaskUser.map((task) => {
+            allTaskUser.map((task, i) => {
                 const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
                 return (
                     datatask.push({
@@ -189,8 +209,19 @@ export default function Task() {
                         task_name,
                         project_name,
                         action: <div>
-                            <img style={{ cursor: 'pointer' }} onClick={() => setIdTask(id)} src={IconEdit} width="30px" /> {' '}
-                            <img style={{ cursor: 'pointer' }} src={IconDetail} width="30px" />
+                            <img style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                    setIdTask(id)
+                                    setSelectedTask(allTaskUser[i])
+                                }} src={IconEdit} width="30px" /> {' '}
+                            <img
+                                onClick={() => {
+                                    setIdDetail(id)
+                                    setOpenPopupDetail(true)
+                                }}
+                                style={{ cursor: 'pointer' }}
+                                src={IconDetail}
+                                width="30px" />
                         </div>
                     })
                 )
@@ -276,23 +307,7 @@ export default function Task() {
                     text: 'Todo',
                     value: 'TO DO',
                 },
-                // {
-                //     text: 'Submenu',
-                //     value: 'Submenu',
-                //     children: [
-                //         {
-                //             text: 'Green',
-                //             value: 'Green',
-                //         },
-                //         {
-                //             text: 'Black',
-                //             value: 'Black',
-                //         },
-                //     ],
-                // },
             ],
-            // specify the condition of filtering result record.progress.indexOf(value) === 0
-            // here is that finding the name started with `value`
             onFilter: (value, record) => record.progress.props.children.indexOf(value) === 0,
 
         },
@@ -300,29 +315,23 @@ export default function Task() {
             title: 'Task Name',
             dataIndex: 'task_name',
             defaultSortOrder: 'descend',
-            // sorter: (a, b) => a.age - b.age,
         },
         {
             title: 'Project',
             dataIndex: 'project_name',
-            defaultSortOrder: 'descend',
             filters: listProject,
             onFilter: (value, record) => record.project_name.indexOf(value) === 0,
-            // sorter: (a, b) => a.age - b.age,
         },
         {
             title: 'Start Datetime',
             dataIndex: 'start_datetime',
-            // onFilter: (value, record) => record.address.indexOf(value) === 0,
             sorter: (a, b) => new Date(a.start_datetime) - new Date(b.start_datetime),
-            defaultSortOrder: 'ascend'
         },
         {
             title: 'End Datetime',
             dataIndex: 'end_datetime',
+            defaultSortOrder: 'ascend',
             sorter: (a, b) => new Date(a.end_datetime) - new Date(b.end_datetime),
-
-            // onFilter: (value, record) => record.address.indexOf(value) === 0,
         },
         {
             title: 'Action',
@@ -472,11 +481,11 @@ export default function Task() {
                 </DialogActions>
             </Dialog>
 
-            {/* popup detail task */}
+            {/* popup edit task */}
             <Dialog open={idTask > 0} onClose={() => setIdTask(0)} maxWidth="sm" fullWidth>
-                <DialogTitle><Box fontSize={14} fontWeight={700}>Detail Task</Box></DialogTitle>
+                <DialogTitle><Box fontSize={14} fontWeight={700}>Edit Task</Box></DialogTitle>
                 <DialogContent>
-                    {detailTask ? (
+                    {selectedTask ? (
                         <Box fontSize={11}>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Status</Grid>
@@ -485,8 +494,8 @@ export default function Task() {
                                         currentProgress === "DECLINE" ?
                                             <Dropdown onSelect={(e) => {
                                                 setCurrentProgress(e)
-                                                setIsUpdate(true)
-                                                setIdUpdateTask(detailTask[0].id)
+                                                setIsUpdateProgress(true)
+                                                setIdUpdateTask(selectedTask.id)
                                                 setNewprogress((e))
                                             }}>
                                                 {
@@ -519,8 +528,8 @@ export default function Task() {
                                                 :
                                                 <Dropdown onSelect={(e) => {
                                                     setCurrentProgress(e)
-                                                    setIsUpdate(true)
-                                                    setIdUpdateTask(detailTask[0].id)
+                                                    setIsUpdateProgress(true)
+                                                    setIdUpdateTask(selectedTask.id)
                                                     setNewprogress((e))
                                                 }}>
                                                     {
@@ -541,9 +550,9 @@ export default function Task() {
                                                     }
 
                                                     <Dropdown.Menu>
-                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
-                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
-                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
                                                     </Dropdown.Menu>
                                                 </Dropdown>
                                     }
@@ -557,8 +566,7 @@ export default function Task() {
                                         size="sm"
                                         type="text"
                                         placeholder="Add Task Name"
-                                        value={detailTask[0].id}
-                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        value={selectedTask && selectedTask.id}
                                         disabled
                                         required />
                                 </Grid>
@@ -572,8 +580,9 @@ export default function Task() {
                                         style={{ fontSize: '11px' }}
                                         size="sm"
                                         type="text"
-                                        value={detailTask[0].task_name}
-                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        value={selectedTask && selectedTask.task_name}
+                                        // onChange={(e) => setDataUpdateTask({ ...dataUpdateTask, task_name: e.target.value })}
+                                        onChange={(e) => setSelectedTask({ ...selectedTask, task_name: e.target.value })}
                                         required />
                                 </Grid>
                             </ Grid>
@@ -584,8 +593,8 @@ export default function Task() {
                                         style={{ fontSize: '11px' }}
                                         size="sm"
                                         type="text"
-                                        value={detailTask[0].project_name}
-                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        disabled
+                                        value={selectedTask.project_name}
                                         required />
                                 </Grid>
                             </Grid>
@@ -593,44 +602,45 @@ export default function Task() {
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Descriptions</Grid>
                                 <Grid item lg={9}>
-                                    {/* <ReactQuill value={detailTask[0].description} /> */}
+                                    {/* <ReactQuill value={selectedTask.description} /> */}
                                     <ReactQuill
                                         theme="snow"
                                         modules={modules}
                                         formats={formats}
-                                        value={detailTask[0].description}
+                                        value={selectedTask && selectedTask.description}
+                                        onChange={(e) => setSelectedTask({ ...selectedTask, description: e })}
                                     />
 
                                 </Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Created On</Grid>
-                                <Grid item lg={9}>: {moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={9}>: {moment(selectedTask.created_on).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Start On</Grid>
-                                <Grid item lg={9}>: {moment(detailTask[0].start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={9}>: {moment(selectedTask.start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Due date</Grid>
-                                <Grid item lg={9}>: {moment(detailTask[0].end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={9}>: {moment(selectedTask.end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Last Update</Grid>
-                                <Grid item lg={9}>: {detailTask[0].last_update === null ? moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') : moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={9}>: {selectedTask.last_update === null ? moment(selectedTask.created_on).format('DD MMM YYYY, h:mm') : moment(selectedTask.last_update).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
 
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Created by</Grid>
-                                <Grid item lg={9}>: {detailTask[0].created_by}</Grid>
+                                <Grid item lg={9}>: {selectedTask.created_by}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Assignee</Grid>
-                                <Grid item lg={9}>: {detailTask[0].assignee}</Grid>
+                                <Grid item lg={9}>: {selectedTask.assignee}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Level of difficult</Grid>
-                                <Grid item lg={9}>: {detailTask[0].level}</Grid>
+                                <Grid item lg={9}>: {selectedTask.level}</Grid>
                             </Grid>
 
                         </Box >
@@ -641,7 +651,17 @@ export default function Task() {
                 </DialogContent >
                 <DialogActions>
 
-                    {currentProgress !== 'DONE' && <Button size="sm" variant="info" onClick={() => setIdTask(0)}
+                    {currentProgress !== 'DONE' && <Button size="sm" variant="info"
+                        // onClick={() => setIdTask(0)}
+                        onClick={() => {
+                            dispatch(updateTask({
+                                idUser: id,
+                                id: selectedTask.id,
+                                task_name: selectedTask && selectedTask.task_name,
+                                description: selectedTask && selectedTask.description
+                            }))
+                            setIsUpdateTask(true)
+                        }}
                         style={{
                             fontSize: '11px',
                             paddingLeft: '25px',
@@ -656,6 +676,58 @@ export default function Task() {
                 </DialogActions>
 
             </Dialog >
+
+            {/* popup detail */}
+            <Dialog
+                maxWidth="sm" fullWidth
+                open={openPopupDetail}
+                onClose={() => {
+                    setOpenPopupDetail(false)
+                    setIdDetail(0)
+                }}>
+                <DialogTitle><Box fontSize={14} fontWeight={700}>Detail Task</Box></DialogTitle>
+                <DialogContent>
+                    {
+                        detailTask && (
+                            <>
+                                <Box fontSize={11} color="#276A71" fontWeight={600}>Task Name:</Box>
+                                <Box fontSize={12}>{detailTask[0].task_name} </Box>
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Project:</Box>
+                                <Box fontSize={12}>{detailTask[0].project_name} </Box>
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Description:</Box>
+                                <Box fontSize={12}
+                                    p={1}
+                                    dangerouslySetInnerHTML={{ __html: detailTask[0].description }}
+                                    style={{ border: '1px solid #dedede', borderRadius: '5px' }} />
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Progress:</Box>
+                                <Box fontSize={12}>{detailTask[0].progress} </Box>
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Start:</Box>
+                                <Box fontSize={12}>{moment(detailTask[0].start_datetime).format('DD MMM YYYY, hh:mm:ss')} </Box>
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Due Date:</Box>
+                                <Box fontSize={12}>{moment(detailTask[0].end_datetime).format('DD MMM YYYY, hh:mm:ss')} </Box>
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Last Update:</Box>
+                                <Box fontSize={12}>{detailTask[0].last_update === null ?
+                                    moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') :
+                                    moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')} </Box>
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Level Of Difficult:</Box>
+                                <Box fontSize={12}>{detailTask[0].level} </Box>
+                            </>
+                        )
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Button size="sm" onClick={() => {
+                        setOpenPopupDetail(false)
+                        setIdDetail(0)
+                    }}
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Close</Button>
+                </DialogActions>
+            </Dialog>
+
             <Grid container>
                 <Grid item md={2}>
                     <SideBar />
@@ -675,22 +747,22 @@ export default function Task() {
                                 </Box>
                             </Grid>
                             <Grid lg={6} item>
-                                <Box pb={3} textAlign="right" >
+                                <Box pb={3} textAlign="right" pr={4} >
                                     <Search placeholder="Search Task Name"
                                         onChange={(e) => dispatch(getAllTaskUser(id, e.target.value))}
                                         allowClear
                                         style={{ width: 350 }} />
                                 </Box>
                             </Grid>
-
                         </Grid>
+                        <Box textAlign="right" fontSize={12} pr={4} color="gray" >Total {listTask.length} Task</Box>
                         <Box pb={2}>
                             {isLoadingTaskUser ? 'loading..' :
-                                <Table columns={columns} dataSource={listTask} />}
+                                <Table columns={columns} dataSource={listTask} pagination />}
                         </Box>
                     </Box>
                 </Grid>
             </Grid>
-        </div>
+        </div >
     )
 }

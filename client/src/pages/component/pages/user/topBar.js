@@ -95,8 +95,6 @@ const TopBar = ({ label }) => {
         </a>
     ));
 
-    console.log("allNotif.length ", allNotif.length)
-
     const AvaToggle = React.forwardRef(({ children, onClick }, ref) => (
         <a
             href=""

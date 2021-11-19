@@ -22,6 +22,8 @@ router.post('/register', taskmanController.register)
 router.post('/updateprogress', taskmanController.updateProgressTask)
 router.post('/addnewtask', taskmanController.addNewTask)
 router.post('/markreadtask/:id', taskmanController.markReadTask)
+router.post('/updatetask', taskmanController.updateTask)
+
 
 
 
