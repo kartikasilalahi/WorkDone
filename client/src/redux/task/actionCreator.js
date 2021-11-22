@@ -3,6 +3,8 @@
 import Axios from 'axios'
 import { APIURL, API_FILES } from '../../helper/api'
 import action from './action'
+import moment from 'moment'
+import Task from '../../pages/landingpage/user/task'
 
 const {
     getAllTaskUserEffect,
@@ -47,6 +49,10 @@ const {
     updateTaskSuccess,
     updateTaskRequest,
     updateTaskErr,
+
+    sendReportSuccess,
+    sendReportRequest,
+    sendReportErr
 } = action
 
 
@@ -56,8 +62,39 @@ const getAllTaskUser = (id, keyword) => {
             dispatch(getAllTaskUserRequest())
             const allTaskUser = await Axios.get(`${APIURL}taskman/alltaskuser?id=${id}&keyword=${keyword}`)
             if (allTaskUser.data.data) {
-                dispatch(getAllTaskUserEffect(allTaskUser.data.data))
+                // var start = moment('2021-01-20T01:14:07.000Z'); //todays date
+                // var end = moment("2021-01-30T01:14:07.000Z"); // another date
+                // var duration = moment.duration(end.diff(start));
+                // var hour = duration.asHours();
+                // console.log("hour", hour)
+                let Tasks = allTaskUser.data.data
+                // Tasks.sort(function (a, b) {
+                //     return moment.duration(moment(a.end_datetime.diff(a.start_datetimee))) - moment.duration(moment(b.end_datetime.diff(b.start_datetimee)))
+                // });
+
+                // console.log("Tas".Tasks)
+                // console.log("all".allTaskUser.data.data)
+                // let ass = []
+                // for (var i = 0; i < Tasks.length; i++) {
+                //     for (let j = 0; j <  Tasks.length; j++) {
+                //         var now = moment(new Date)
+                //         var start = moment(Tasks[i].start_datetime); //start date
+                //         var end = moment(Tasks[i].end_datetime); // another date
+                //         var duration1 = moment.duration(end.diff(start));
+                //         var duration2 = moment.duration(end.diff(now));
+                //         var hour1 = duration1.asHours();
+                //         var hour2= duration2.asHours();
+                //         let level = Task[i].level === "Low" ? 1 : Task[i].level === "Medium" ? 2 : 3
+                //         let P = S / (hour1+hour2)
+                //         if (inputArr[j] > inputArr[j + 1]) {
+                //             let tmp = inputArr[j];
+                //             inputArr[j] = inputArr[j + 1];
+                //             inputArr[j + 1] = tmp;
+                //         }
+                //     }
+                // }
                 dispatch(getTotalTask(allTaskUser.data.data))
+                dispatch(getAllTaskUserEffect(allTaskUser.data.data))
             } else {
                 dispatch(getAllTaskUserErr(allTaskUser.data.message))
             }
@@ -71,11 +108,11 @@ const getDetailTask = (id) => {
     return async dispatch => {
         try {
             dispatch(getDetailTaskRequest())
-            const allTaskUser = await Axios.get(`${APIURL}taskman/detailtask/${id}`)
-            if (allTaskUser.data.data) {
-                dispatch(getDetailTaskSuccess(allTaskUser.data.data))
+            const detailTask = await Axios.get(`${APIURL}taskman/detailtask/${id}`)
+            if (detailTask.data.data) {
+                dispatch(getDetailTaskSuccess(detailTask.data.data))
             } else {
-                dispatch(getDetailTaskErr(allTaskUser.data.message))
+                dispatch(getDetailTaskErr(detailTask.data.message))
             }
         } catch (error) {
             dispatch(getDetailTaskErr(error))
@@ -119,6 +156,7 @@ const getDetailProject = (id) => {
 const updateProgressTask = ({ id, new_progress, idUser }) => {
     return async dispatch => {
         try {
+            console.log("id", id)
             dispatch(updateProgressTaskRequest())
             const updateProgress = await Axios.post(`${APIURL}taskman/updateprogress`, { id, new_progress })
             if (updateProgress.data.message) {
@@ -207,7 +245,7 @@ const getNotifTaskUser = (id) => {
             const getnotif = await Axios.get(`${APIURL}taskman/getnotif/${id}`)
             if (getnotif.data.data) {
                 dispatch(getNotifTaskSuccess(getnotif.data.data))
-                dispatch(getTotalTask(getnotif.data.data))
+                // dispatch(getTotalTask(getnotif.data.data))
             } else {
                 dispatch(getNotifTaskErr(getnotif.data.message))
             }
@@ -252,6 +290,20 @@ const updateTask = ({ idUser, id, task_name, description }) => {
     }
 }
 
+const sendReport = ({ iduser, iddepartemen, data }) => {
+    return async dispatch => {
+        try {
+            dispatch(sendReportRequest())
+            const report = await Axios.post(`${APIURL}taskman/sendreport`, { iduser, iddepartemen, data })
+            if (report.data.message) {
+                dispatch(sendReportSuccess(report.data.message))
+            }
+        } catch (error) {
+            dispatch(sendReportErr(error))
+        }
+    }
+}
+
 export {
     getAllTaskUser,
     getDetailTask,
@@ -263,5 +315,6 @@ export {
     getTotalTask,
     getNotifTaskUser,
     markReadTask,
-    updateTask
+    updateTask,
+    sendReport
 };

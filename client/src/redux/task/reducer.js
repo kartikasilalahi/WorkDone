@@ -38,6 +38,10 @@ const {
     UPDATE_TASK_REQUEST,
     UPDATE_TASK_ERR,
 
+    SEND_REPORT_SUCCESS,
+    SEND_REPORT_REQUEST,
+    SEND_REPORT_ERR,
+
 
 } = action
 
@@ -87,6 +91,8 @@ const initState = {
     is_error_update_task: false,
     message_update_task: '',
 
+    is_loading_send_report: false,
+    message_send_report: '',
 
 };
 
@@ -140,8 +146,6 @@ const AuthReducer = (state = initState, action) => {
                 is_loading_detail_task_user: false,
                 message_detail_task_user: err
             };
-
-
 
         // all PROJECT user
         case GET_ALL_PROJECT_USER_REQUEST:
@@ -226,7 +230,7 @@ const AuthReducer = (state = initState, action) => {
                 message_departemen_user: err
             };
 
-
+        // add new task
         case ADD_NEW_TASK_SUCCESS:
             return {
                 ...state,
@@ -279,6 +283,22 @@ const AuthReducer = (state = initState, action) => {
                 is_loading_update_task: false,
                 message_update_task: err
             };
+
+        // send report
+        case SEND_REPORT_REQUEST:
+            return {
+                ...state,
+                is_loading_send_report: true,
+                message_send_report: ''
+            }
+
+        case SEND_REPORT_SUCCESS: {
+            return {
+                ...state,
+                is_loading_send_report: false,
+                message_send_report: data
+            }
+        }
 
         default:
             return state;

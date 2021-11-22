@@ -18,7 +18,8 @@ import {
     getDetailProject,
     updateProgressTask,
     getUserDepartemen,
-    addNewTask
+    addNewTask,
+    updateTask
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
@@ -46,13 +47,16 @@ export default function DashboardUser() {
     const listUserDepartemen = useSelector(state => state.task.departemen_user)
     const messageSuccess = useSelector(state => state.task.message_add_new_task)
     const ListTotalTask = useSelector(state => state.task.total_task)
+    const messageUpdateTask = useSelector(state => state.task.message_update_task)
 
     const id = Number(localStorage.getItem('id'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
     const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
     const [idTask, setIdTask] = useState();
     const [idProject, setIdProject] = useState();
-    const [isUpdate, setIsUpdate] = useState(false);
+    const [isUpdateProgress, setIsUpdateProgress] = useState(false);
+    const [isUpdateTask, setIsUpdateTask] = useState(false);
+
     const [idUpdateTask, setIdUpdateTask] = useState(0);
     const [Newprogress, setNewprogress] = useState('');
     const [currentProgress, setCurrentProgress] = useState('');
@@ -67,6 +71,7 @@ export default function DashboardUser() {
         end_datetime: new Date(),
         start_datetime: new Date(),
     });
+    const [selectedTask, setSelectedTask] = useState({});
 
 
     const handleClickOpen = () => {
@@ -114,15 +119,26 @@ export default function DashboardUser() {
     }, [detailTask])
 
     useEffect(() => {
-        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false && isUpdate) {
+        if (messageUpdateProgressTask && isLoadingUpdateProgressTask === false && isUpdateProgress) {
             Toast.fire({
                 icon: 'success',
                 title: messageUpdateProgressTask
             })
-            setIsUpdate(false)
+            setIsUpdateProgress(false)
 
         }
     }, [isLoadingUpdateProgressTask, messageUpdateProgressTask])
+
+    useEffect(() => {
+        if (messageUpdateTask && isUpdateTask) {
+            Toast.fire({
+                icon: 'success',
+                title: messageUpdateTask
+            })
+            setIsUpdateTask(false)
+
+        }
+    }, [messageUpdateTask, isUpdateTask])
 
     useEffect(() => {
         if (messageSuccess === 'Task Baru berhasil ditambahkan!' && openPopupCreateTask) {
@@ -135,10 +151,10 @@ export default function DashboardUser() {
     }, [messageSuccess, dispatch])
 
     useEffect(() => {
-        if (isUpdate) {
+        if (isUpdateProgress) {
             dispatch(updateProgressTask({ id: idUpdateTask, new_progress: Newprogress, idUser: id }))
         }
-    }, [isUpdate])
+    }, [isUpdateProgress])
 
     let options = {
         chart: {
@@ -229,7 +245,6 @@ export default function DashboardUser() {
         "link",
         "image"
     ];
-
 
 
     return (
@@ -375,10 +390,10 @@ export default function DashboardUser() {
             </Dialog>
 
             {/* popup detail task */}
-            <Dialog open={idTask > 0 && detailTask} onClose={() => setIdTask(0)} maxWidth="sm" fullWidth>
+            <Dialog open={idTask > 0} onClose={() => setIdTask(0)} maxWidth="sm" fullWidth>
                 <DialogTitle><Box fontSize={14} fontWeight={700}>Detail Task</Box></DialogTitle>
                 <DialogContent>
-                    {detailTask ? (
+                    {selectedTask ? (
                         <Box fontSize={11}>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Status</Grid>
@@ -387,8 +402,8 @@ export default function DashboardUser() {
                                         currentProgress === "DECLINE" ?
                                             <Dropdown onSelect={(e) => {
                                                 setCurrentProgress(e)
-                                                setIsUpdate(true)
-                                                setIdUpdateTask(detailTask[0].id)
+                                                setIsUpdateProgress(true)
+                                                setIdUpdateTask(selectedTask.id)
                                                 setNewprogress((e))
                                             }}>
                                                 {
@@ -416,8 +431,8 @@ export default function DashboardUser() {
                                             :
                                             <Dropdown onSelect={(e) => {
                                                 setCurrentProgress(e)
-                                                setIsUpdate(true)
-                                                setIdUpdateTask(detailTask[0].id)
+                                                setIsUpdateProgress(true)
+                                                setIdUpdateTask(selectedTask.id)
                                                 setNewprogress((e))
                                             }}>
                                                 {
@@ -438,9 +453,9 @@ export default function DashboardUser() {
                                                 }
 
                                                 <Dropdown.Menu>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown>
                                     }
@@ -454,7 +469,7 @@ export default function DashboardUser() {
                                         size="sm"
                                         type="text"
                                         placeholder="Add Task Name"
-                                        value={detailTask[0].id}
+                                        value={selectedTask.id}
                                         // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
                                         disabled
                                         required />
@@ -464,13 +479,13 @@ export default function DashboardUser() {
                             <Grid container justifyContent="space-between" spacing={2} >
                                 <Grid item lg={3}>Task Name</Grid>
                                 <Grid item lg={9}>
-                                    {/* : {detailTask[0].task_name} */}
+                                    {/* : {selectedTask.task_name} */}
                                     <Form.Control
                                         style={{ fontSize: '11px' }}
                                         size="sm"
                                         type="text"
-                                        value={detailTask[0].task_name}
-                                        // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
+                                        value={selectedTask.task_name}
+                                        onChange={(e) => setSelectedTask({ ...selectedTask, task_name: e.target.value })}
                                         required />
                                 </Grid>
                             </ Grid>
@@ -481,7 +496,7 @@ export default function DashboardUser() {
                                         style={{ fontSize: '11px' }}
                                         size="sm"
                                         type="text"
-                                        value={detailTask[0].project_name}
+                                        value={selectedTask.project_name}
                                         // onChange={(e) => setDataNewTask({ ...dataNewTask, task_name: e.target.value })}
                                         required />
                                 </Grid>
@@ -490,44 +505,45 @@ export default function DashboardUser() {
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Descriptions</Grid>
                                 <Grid item lg={9}>
-                                    {/* <ReactQuill value={detailTask[0].description} /> */}
+                                    {/* <ReactQuill value={selectedTask.description} /> */}
                                     <ReactQuill
                                         theme="snow"
                                         modules={modules}
                                         formats={formats}
-                                        value={detailTask[0].description}
+                                        value={selectedTask.description}
+                                        onChange={(e) => setSelectedTask({ ...selectedTask, description: e })}
                                     />
 
                                 </Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Created On</Grid>
-                                <Grid item lg={9}>: {moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={9}>: {moment(selectedTask.created_on).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Start On</Grid>
-                                <Grid item lg={9}>: {moment(detailTask[0].start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={9}>: {moment(selectedTask.start_datetime).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Due date</Grid>
-                                <Grid item lg={9}>: {moment(detailTask[0].end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={9}>: {moment(selectedTask.end_datetime).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Last Update</Grid>
-                                <Grid item lg={9}>: {detailTask[0].last_update === null ? moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') : moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')}</Grid>
+                                <Grid item lg={9}>: {selectedTask.last_update === null ? moment(selectedTask.created_on).format('DD MMM YYYY, h:mm') : moment(selectedTask.last_update).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
 
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Created by</Grid>
-                                <Grid item lg={9}>: {detailTask[0].created_by}</Grid>
+                                <Grid item lg={9}>: {selectedTask.created_by}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Assignee</Grid>
-                                <Grid item lg={9}>: {detailTask[0].assignee}</Grid>
+                                <Grid item lg={9}>: {selectedTask.assignee}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Level of difficult</Grid>
-                                <Grid item lg={9}>: {detailTask[0].level}</Grid>
+                                <Grid item lg={9}>: {selectedTask.level}</Grid>
                             </Grid>
 
                         </Box >
@@ -538,7 +554,17 @@ export default function DashboardUser() {
                 </DialogContent >
                 <DialogActions>
 
-                    <Button size="sm" variant="info" onClick={() => setIdTask(0)}
+                    <Button size="sm" variant="info"
+                        // onClick={() => setIdTask(0)}
+                        onClick={() => {
+                            dispatch(updateTask({
+                                idUser: id,
+                                id: selectedTask.id,
+                                task_name: selectedTask && selectedTask.task_name,
+                                description: selectedTask && selectedTask.description
+                            }))
+                            setIsUpdateTask(true)
+                        }}
                         style={{
                             fontSize: '11px',
                             paddingLeft: '25px',
@@ -704,9 +730,14 @@ export default function DashboardUser() {
                                     </Box>
                                     <Box pt={2}>
                                         {isLoadingTaskUser ? 'loading...' :
-                                            allTaskUser.filter(tasks => tasks.progress !== 'DONE').map((task, i) => (
+                                            allTaskUser.filter(tasks => tasks.progress !== 'DONE').slice(0, 10).map((task, i) => (
                                                 <Box key={i} p={1} mb={2}
-                                                    onClick={() => setIdTask(task.id)}
+                                                    onClick={() => {
+                                                        console.log("iddt", task.id)
+                                                        setIdTask(task.id)
+                                                        // setSelectedTask(allTaskUser[i])
+                                                        setSelectedTask(allTaskUser.filter(tasks => tasks.progress !== 'DONE')[i])
+                                                    }}
                                                     style={{
                                                         width: "515px",
                                                         borderRadius: "5px",
@@ -731,7 +762,7 @@ export default function DashboardUser() {
                                                 </Box>
                                             ))
                                         }
-                                        <Box p={2} mb={2}
+                                        {/* <Box p={2} mb={2}
                                             style={{
                                                 width: "515px",
                                                 borderRadius: "5px",
@@ -741,7 +772,7 @@ export default function DashboardUser() {
                                             }}>
                                             <Box fontSize={12} textAlign="center" onClick={handleClickOpen}
                                                 style={{ cursor: 'pointer' }} fontWeight={600}>+ Create New Task</Box>
-                                        </Box>
+                                        </Box> */}
                                     </Box>
                                 </Box>
                             </Grid>

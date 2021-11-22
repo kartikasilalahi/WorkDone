@@ -256,4 +256,8 @@ a {
   border-radius: 25px;
 }
 
+.box-quil .ql-editor {
+  min-height: 27em;
+}
+
 /* .navbar .nav li .dropdown-menu li a {white-space: normal !important;} */

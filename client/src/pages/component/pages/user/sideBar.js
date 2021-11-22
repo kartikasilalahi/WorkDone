@@ -46,7 +46,7 @@ function SideBar() {
       Icon: ReceiptIcon,
       items: [
         { name: "/user/all-task", label: "All Task", onClick },
-        { name: "/user/reports", label: "Reports", onClick }
+        { name: "/user/report", label: "Report", onClick }
       ]
     },
     "divider",

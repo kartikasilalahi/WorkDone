@@ -47,6 +47,9 @@ const actions = {
     UPDATE_TASK_REQUEST: 'UPDATE_TASK_REQUEST',
     UPDATE_TASK_ERR: 'UPDATE_TASK_ERR',
 
+    SEND_REPORT_SUCCESS: 'SEND_REPORT_SUCCESS',
+    SEND_REPORT_REQUEST: 'SEND_REPORT_REQUEST',
+    SEND_REPORT_ERR: 'SEND_REPORT_ERR',
 
     getAllTaskUserEffect: (data) => {
         return {
@@ -68,8 +71,6 @@ const actions = {
         };
     },
 
-
-    // ----------------------------------------
     getDetailTaskRequest: () => {
         return {
             type: actions.GET_DETAIL_TASK_REQUEST,
@@ -91,8 +92,6 @@ const actions = {
     },
 
 
-
-    // -------------------------------
     getAllProjectUserSuccess: (data) => {
         return {
             type: actions.GET_ALL_PROJECT_USER,
@@ -114,8 +113,6 @@ const actions = {
     },
 
 
-
-    // ---------------------------------------
     getDetailProjectRequest: () => {
         return {
             type: actions.GET_DETAIL_PROJECT_REQUEST,
@@ -137,8 +134,6 @@ const actions = {
     },
 
 
-
-    // ----------------------------------
     updateProgressTaskRequest: () => {
         return {
             type: actions.UPDATE_PROGRESS_TASK_REQUEST,
@@ -159,8 +154,6 @@ const actions = {
         };
     },
 
-
-    // -------------------------------------
     getUserDepartemenSuccess: (data) => {
         return {
             type: actions.GET_USER_DEPARTEMEN_SUCCESS,
@@ -182,8 +175,6 @@ const actions = {
     },
 
 
-
-    // -----------------------------------------
     addNewTaskSuccess: (data) => {
         return {
             type: actions.ADD_NEW_TASK_SUCCESS,
@@ -205,8 +196,6 @@ const actions = {
     },
 
 
-
-    // ----------------------------
 
     getTotalTaskSuccess: (data) => {
         return {
@@ -230,8 +219,6 @@ const actions = {
 
 
 
-    // ----------------------------
-
     getNotifTaskSuccess: (data) => {
         return {
             type: actions.GET_NOTIF_TASK_SUCCESS,
@@ -254,10 +241,6 @@ const actions = {
 
 
 
-
-
-    // ----------------------------
-
     markReadTaskSuccess: (data) => {
         return {
             type: actions.MARK_READ_TASK_SUCCESS,
@@ -279,8 +262,6 @@ const actions = {
     },
 
 
-    // ----------------------------
-
     updateTaskSuccess: (data) => {
         return {
             type: actions.UPDATE_TASK_SUCCESS,
@@ -297,6 +278,26 @@ const actions = {
     updateTaskErr: (data) => {
         return {
             type: actions.UPDATE_TASK_ERR,
+            data
+        }
+    },
+
+    sendReportSuccess: (data) => {
+        return {
+            type: actions.SEND_REPORT_SUCCESS,
+            data
+        }
+    },
+
+    sendReportRequest: () => {
+        return {
+            type: actions.SEND_REPORT_REQUEST,
+        }
+    },
+
+    sendReportErr: (data) => {
+        return {
+            type: actions.SEND_REPORT_ERR,
             data
         }
     },

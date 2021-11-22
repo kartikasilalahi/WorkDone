@@ -1,6 +1,17 @@
 const { mysql } = require('../connection')
 var moment = require('moment')
 
+const getUser = (id) => {
+    // console.log("id", id)
+    // console.log(`sql >> SELECT nama_depan, nama_belakang FROM user WHERE id=${id}`)
+    let sql = `SELECT nama_depan, nama_belakang FROM user WHERE id=${id}`
+    mysql.query(sql, (error, result) => {
+        if (error) console.log("err", error)
+        console.log("res", result[0])
+        return result[0]
+    })
+}
+
 module.exports = {
 
     register: (req, res) => {
@@ -48,13 +59,10 @@ module.exports = {
             JOIN jabatan j ON u.idjabatan=j.id 
             JOIN departemen d ON j.departemen_id=d.id 
             WHERE u.email='${email}' AND u.password = '${password}'`
-            console.log("sql", sql)
             mysql.query(sql, (error, result) => {
                 if (error) res.status(500).send({ error })
-                console.log("masuk, ", result)
 
                 if (result && result.length > 0) {
-                    console.log('result', result)
                     res.send({
                         status: 200,
                         data: result
@@ -195,6 +203,14 @@ module.exports = {
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 
+            let sql = `SELECT nama_depan, nama_belakang FROM user WHERE id=${id}`
+            mysql.query(sql, (error1, result1) => {
+                if (error) console.log("err", error)
+                return result[0]
+            })
+
+            let created_by = getUser(result[0].created_by)
+
             res.send({
                 status: 200,
                 data: result
@@ -281,6 +297,8 @@ module.exports = {
     },
 
 
+
+
     getUserDepartemen: (req, res) => {
         let { id } = req.params
         let sql = `SELECT * FROM user WHERE iddepartement=${id}`
@@ -329,13 +347,30 @@ module.exports = {
         data.last_update = last_update
 
         let sql = `UPDATE task SET ? WHERE id=${data.id}`
-        console.log(req.body)
         mysql.query(sql, data, (err, result) => {
             if (err) res.status(500).send({ error })
 
             res.send({
                 status: 200,
                 message: `Task berhasil diperbaharui`
+            })
+        })
+    },
+
+
+    sendReport: (req, res) => {
+
+        let data = req.body
+        let datetime = moment().format("YYYY-MM-DD HH:mm:ss")
+        data.datetime = datetime
+
+        let sql = `INSERT INTO report SET ?`;
+        mysql.query(sql, data, (err, result) => {
+            if (err) res.status(500).send(err)
+
+            res.send({
+                status: 200,
+                message: 'Report berhasil dikirim!'
             })
         })
     }

@@ -184,6 +184,11 @@ export default function Task() {
             let datatask = []
             allTaskUser.map((task, i) => {
                 const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
+                let taskname = ""
+                if (moment(end_datetime).format('DD MMM YYYY hh:mm:ss') < moment().format('DD MMM YYYY hh:mm:ss') && progress !== 'DONE') {
+                    taskname = `expired`
+                }
+
                 return (
                     datatask.push({
                         key: id,
@@ -206,7 +211,7 @@ export default function Task() {
                         // start_datetime: start_datetime,
                         start_datetime: moment(start_datetime).format('DD MMM YYYY, hh:mm:ss'),
                         end_datetime: moment(end_datetime).format('DD MMM YYYY, h:mm:ss'),
-                        task_name,
+                        task_name: <div>{task_name} {' '}<span style={{ color: 'red', fontSize: '8px', position: 'absolute' }}>{taskname}</span> </div>,
                         project_name,
                         action: <div>
                             <img style={{ cursor: 'pointer' }}
@@ -245,9 +250,9 @@ export default function Task() {
         dispatch(getUserDepartemen(iddepartemen))
     }, [iddepartemen])
 
-    const onChange = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
-    }
+    // const onChange = (pagination, filters, sorter, extra) => {
+    //     console.log('params', pagination, filters, sorter, extra);
+    // }
 
     const Toast = Swal.mixin({
         toast: true,
@@ -347,7 +352,7 @@ export default function Task() {
                     <Box fontSize={11}>
                         <Form noValidate >
                             <Form.Group controlId="formBasicSelect">
-                                <Form.Label>Reviewer</Form.Label>
+                                <Form.Label>Project</Form.Label>
                                 <Form.Control
                                     style={{ fontSize: '11px' }}
                                     as="select"
