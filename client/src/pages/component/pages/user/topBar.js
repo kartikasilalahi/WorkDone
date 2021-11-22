@@ -31,9 +31,18 @@ const TopBar = ({ label }) => {
     const [currentProgress, setCurrentProgress] = useState('');
     const [isUpdate, setIsUpdate] = useState(false);
     const [idUpdateTask, setIdUpdateTask] = useState(0);
+    const [listNotif, setlistNotif] = useState([]);
+
+    let today = new Date()
+    let day = today.getDay()
 
     useEffect(() => {
         dispatch(getNotifTaskUser(id))
+        // setlistNotif(allNotif)
+        // if(allNotif){
+        //     let data = allNotif
+        //     data.unshift()
+        // }
     }, [dispatch])
 
     useEffect(() => {
@@ -90,7 +99,8 @@ const TopBar = ({ label }) => {
             <Box>
                 <img src={IconNotif} width="27px" height="27px"
                     style={{ cursor: 'pointer' }} />
-                {allNotif && allNotif.length > 0 && <span className="count-notif" >{allNotif.length}</span>}
+                {allNotif && allNotif.length > 0 && day !== 5 && <span className="count-notif" >{allNotif.length}</span>}
+                {allNotif && allNotif.length > 0 && day === 5 && <span className="count-notif" >{allNotif.length + 1}</span>}
             </Box>
         </a>
     ));
@@ -148,6 +158,7 @@ const TopBar = ({ label }) => {
         "link",
         "image"
     ];
+
 
     return (
         <>
@@ -351,7 +362,22 @@ const TopBar = ({ label }) => {
                                         <Dropdown.Menu>
                                             <Box fontSize={12} pl={3} py={1} color="#51AC56" fontWeight={600}>Notifications</Box>
                                             <Divider />
+
                                             <ul>
+                                                {
+                                                    day === 5 &&
+
+                                                    <li style={{ color: '#67B9CC' }}>
+                                                        <Dropdown.Item
+                                                            style={{ width: "350px", wordWrap: 'break-word', padding: '0px 8px ' }}
+                                                            eventKey={0}
+                                                            onClick={() => history.push('/user/report')}
+
+                                                        >
+                                                            <Box color="#3CA2B8" py={1} fontWeight={600}>Don't forget to submit your weekly report today</Box>
+                                                        </Dropdown.Item>
+                                                    </li>
+                                                }
                                                 {allNotif && allNotif.length > 0 ? allNotif.map((task) => (
                                                     <li style={{ color: '#67B9CC' }}>
 
@@ -360,11 +386,14 @@ const TopBar = ({ label }) => {
                                                             eventKey={task.id}
                                                             onClick={() => setIdTask(task.id)}>
                                                             <Box py={1}>{
-                                                                task.progress === "TO DO" ? <>You have new task <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span> to do</> :
+                                                                task.progress === "TO DO" ?
+                                                                    <>You have new task <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span>
+                                                                to do</> :
                                                                     <>Task  <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span> has been updated to {task.progress}</>
                                                             }</Box>
                                                         </Dropdown.Item>
                                                     </li>
+
 
                                                 ))
                                                     :
@@ -373,6 +402,7 @@ const TopBar = ({ label }) => {
                                                     </Box>
                                                 }
                                             </ul>
+
                                         </Dropdown.Menu>
                                     </Dropdown>
                                     {' '}
