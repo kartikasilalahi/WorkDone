@@ -20,7 +20,9 @@ import {
     updateProgressTask,
     getUserDepartemen,
     addNewTask,
-    updateTask
+    updateTask,
+    getAllTaskReviewer,
+
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
@@ -49,9 +51,12 @@ export default function Task() {
     const messageSuccess = useSelector(state => state.task.message_add_new_task)
     const messageUpdateTask = useSelector(state => state.task.message_update_task)
     // const ListTotalTask = useSelector(state => state.task.total_task)
+    const allTaskReviewer = useSelector(state => state.task.all_task_reviewer)
+    const isLoadingTaskReviewer = useSelector(state => state.task.is_loading_all_task_reviewer)
 
     const id = Number(localStorage.getItem('id'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
+    const idlevel = Number(localStorage.getItem('idlevel'));
 
     const [listTask, setListTask] = useState([]);
     const [listProject, setListProject] = useState([]);
@@ -97,8 +102,12 @@ export default function Task() {
     }
 
     useEffect(() => {
-        dispatch(getAllTaskUser(id, ''))
-        dispatch(getAllProjectUser(id))
+        if (idlevel === 1) {
+            dispatch(getAllTaskReviewer(id, ''))
+        } else {
+            dispatch(getAllTaskUser(id, ''))
+            dispatch(getAllProjectUser(id))
+        }
 
     }, [dispatch])
 
@@ -180,60 +189,116 @@ export default function Task() {
     }, [isUpdateProgress])
 
     useEffect(() => {
-        if (allTaskUser && !isLoadingTaskUser) {
-            let datatask = []
-            allTaskUser.map((task, i) => {
-                const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
-                let taskname = ""
-                if (moment(end_datetime).format('DD MMM YYYY hh:mm:ss') < moment().format('DD MMM YYYY hh:mm:ss') && progress !== 'DONE') {
-                    taskname = `expired`
-                }
+        if (idlevel === 2) {
+            if (allTaskUser && !isLoadingTaskUser) {
+                let datatask = []
+                allTaskUser.map((task, i) => {
+                    const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
+                    let taskname = ""
+                    if (moment(end_datetime).format('DD MMM YYYY hh:mm:ss') < moment().format('DD MMM YYYY hh:mm:ss') && progress !== 'DONE') {
+                        taskname = `expired`
+                    }
 
-                return (
-                    datatask.push({
-                        key: id,
-                        progress: <div
-                            style={{
-                                backgroundColor: `${progress === 'DONE' ? '#6BE497'
-                                    : progress === 'IN PROGRESS' ? '#F8B032'
-                                        : progress === 'REVIEW' ? '#57D8E5'
-                                            : progress == 'TO DO' ? '#6C757D' : '#EF4D5F'}`,
-                                borderRadius: '25px',
-                                textAlign: 'center',
-                                paddingTop: '5px',
-                                paddingBottom: '5px',
-                                width: '120px',
-                                color: 'white',
-                                fontWeight: 'bold',
-                                borderColor: 'whitesmoke'
-                            }}
-                        >{progress}</div>,
-                        // start_datetime: start_datetime,
-                        start_datetime: moment(start_datetime).format('DD MMM YYYY, hh:mm:ss'),
-                        end_datetime: moment(end_datetime).format('DD MMM YYYY, h:mm:ss'),
-                        task_name: <div>{task_name} {' '}<span style={{ color: 'red', fontSize: '8px', position: 'absolute' }}>{taskname}</span> </div>,
-                        project_name,
-                        action: <div>
-                            <img style={{ cursor: 'pointer' }}
-                                onClick={() => {
-                                    setIdTask(id)
-                                    setSelectedTask(allTaskUser[i])
-                                }} src={IconEdit} width="30px" /> {' '}
-                            <img
-                                onClick={() => {
-                                    setIdDetail(id)
-                                    setOpenPopupDetail(true)
+                    return (
+                        datatask.push({
+                            key: id,
+                            progress: <div
+                                style={{
+                                    backgroundColor: `${progress === 'DONE' ? '#6BE497'
+                                        : progress === 'IN PROGRESS' ? '#F8B032'
+                                            : progress === 'REVIEW' ? '#57D8E5'
+                                                : progress == 'TO DO' ? '#6C757D' : '#EF4D5F'}`,
+                                    borderRadius: '25px',
+                                    textAlign: 'center',
+                                    paddingTop: '5px',
+                                    paddingBottom: '5px',
+                                    width: '120px',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    borderColor: 'whitesmoke'
                                 }}
-                                style={{ cursor: 'pointer' }}
-                                src={IconDetail}
-                                width="30px" />
-                        </div>
-                    })
-                )
-            })
-            setListTask(datatask)
+                            >{progress}</div>,
+                            // start_datetime: start_datetime,
+                            start_datetime: moment(start_datetime).format('DD MMM YYYY, hh:mm:ss'),
+                            end_datetime: moment(end_datetime).format('DD MMM YYYY, h:mm:ss'),
+                            task_name: <div>{task_name} {' '}<span style={{ color: 'red', fontSize: '8px', position: 'absolute' }}>{taskname}</span> </div>,
+                            project_name,
+                            action: <div>
+                                <img style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                        setIdTask(id)
+                                        setSelectedTask(allTaskUser[i])
+                                    }} src={IconEdit} width="30px" /> {' '}
+                                <img
+                                    onClick={() => {
+                                        setIdDetail(id)
+                                        setOpenPopupDetail(true)
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                    src={IconDetail}
+                                    width="30px" />
+                            </div>
+                        })
+                    )
+                })
+                setListTask(datatask)
+            }
+        } else {
+            if (allTaskReviewer && !isLoadingTaskReviewer) {
+                let datatask = []
+                allTaskReviewer.map((task, i) => {
+                    const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
+                    let taskname = ""
+                    if (moment(end_datetime).format('DD MMM YYYY hh:mm:ss') < moment().format('DD MMM YYYY hh:mm:ss') && progress !== 'DONE') {
+                        taskname = `expired`
+                    }
+
+                    return (
+                        datatask.push({
+                            key: id,
+                            progress: <div
+                                style={{
+                                    backgroundColor: `${progress === 'DONE' ? '#6BE497'
+                                        : progress === 'IN PROGRESS' ? '#F8B032'
+                                            : progress === 'REVIEW' ? '#57D8E5'
+                                                : progress == 'TO DO' ? '#6C757D' : '#EF4D5F'}`,
+                                    borderRadius: '25px',
+                                    textAlign: 'center',
+                                    paddingTop: '5px',
+                                    paddingBottom: '5px',
+                                    width: '120px',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    borderColor: 'whitesmoke'
+                                }}
+                            >{progress}</div>,
+                            // start_datetime: start_datetime,
+                            start_datetime: moment(start_datetime).format('DD MMM YYYY, hh:mm:ss'),
+                            end_datetime: moment(end_datetime).format('DD MMM YYYY, h:mm:ss'),
+                            task_name: <div>{task_name} {' '}<span style={{ color: 'red', fontSize: '8px', position: 'absolute' }}>{taskname}</span> </div>,
+                            project_name,
+                            action: <div>
+                                <img style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                        setIdTask(id)
+                                        setSelectedTask(allTaskReviewer[i])
+                                    }} src={IconEdit} width="30px" /> {' '}
+                                <img
+                                    onClick={() => {
+                                        setIdDetail(id)
+                                        setOpenPopupDetail(true)
+                                    }}
+                                    style={{ cursor: 'pointer' }}
+                                    src={IconDetail}
+                                    width="30px" />
+                            </div>
+                        })
+                    )
+                })
+                setListTask(datatask)
+            }
         }
-    }, [allTaskUser])
+    }, [allTaskUser, allTaskReviewer])
 
     useEffect(() => {
         if (allProjectUser && !isLoadingProjectUser) {
@@ -420,36 +485,75 @@ export default function Task() {
                                 </Grid>
                             </Grid>
 
-                            <Form.Group controlId="formBasicSelect">
-                                <Form.Label>Assignee</Form.Label>
-                                <Form.Control
-                                    style={{ fontSize: '11px' }}
-                                    type="text"
-                                    value='Assigned To Me'
-                                    size="sm"
-                                    disabled
-                                />
-                            </Form.Group>
+                            {
+                                Number(localStorage.getItem('idlevel') === 2) ?
+                                    <>
+                                        <Form.Group controlId="formBasicSelect">
+                                            <Form.Label>Assignee</Form.Label>
+                                            <Form.Control
+                                                style={{ fontSize: '11px' }}
+                                                type="text"
+                                                value='Assigned To Me'
+                                                size="sm"
+                                                disabled
+                                            />
+                                        </Form.Group>
 
-                            <Form.Group controlId="formBasicSelect1">
-                                <Form.Label>Reviewer</Form.Label>
-                                <Form.Control
-                                    style={{ fontSize: '11px' }}
-                                    as="select"
-                                    value={dataNewTask.reviewer}
-                                    size="sm"
-                                    onChange={(e) => {
-                                        setDataNewTask({ ...dataNewTask, reviewer: Number(e.target.value) })
-                                    }}
-                                >
-                                    <option value="" selected disabled>Select Reviewer..</option>
-                                    {
-                                        listUserDepartemen && listUserDepartemen.map((user) => (
-                                            <option value={user.id} key={user.id}>{user.nama_depan} {user.nama_belakang}</option>
-                                        ))
-                                    }
-                                </Form.Control>
-                            </Form.Group>
+                                        <Form.Group controlId="formBasicSelect1">
+                                            <Form.Label>Reviewer</Form.Label>
+                                            <Form.Control
+                                                style={{ fontSize: '11px' }}
+                                                as="select"
+                                                value={dataNewTask.reviewer}
+                                                size="sm"
+                                                onChange={(e) => {
+                                                    setDataNewTask({ ...dataNewTask, reviewer: Number(e.target.value) })
+                                                }}
+                                            >
+                                                <option value="" selected disabled>Select Reviewer..</option>
+                                                {
+                                                    listUserDepartemen && listUserDepartemen.map((user) => (
+                                                        <option value={user.id} key={user.id}>{user.nama_depan} {user.nama_belakang}</option>
+                                                    ))
+                                                }
+                                            </Form.Control>
+                                        </Form.Group>
+                                    </>
+                                    :
+                                    <>
+                                        <Form.Group controlId="formBasicSelect">
+                                            <Form.Label>Reviewer</Form.Label>
+                                            <Form.Control
+                                                style={{ fontSize: '11px' }}
+                                                type="text"
+                                                value='Reviewed By Me'
+                                                size="sm"
+                                                disabled
+                                            />
+                                        </Form.Group>
+
+                                        <Form.Group controlId="formBasicSelect1">
+                                            <Form.Label>Assign To</Form.Label>
+                                            <Form.Control
+                                                style={{ fontSize: '11px' }}
+                                                as="select"
+                                                value={dataNewTask.reviewer}
+                                                size="sm"
+                                                onChange={(e) => {
+                                                    setDataNewTask({ ...dataNewTask, reviewer: Number(e.target.value) })
+                                                }}
+                                            >
+                                                <option value="" selected disabled>Select Assignee..</option>
+                                                {
+                                                    listUserDepartemen && listUserDepartemen.map((user) => (
+                                                        <option value={user.id} key={user.id}>{user.nama_depan} {user.nama_belakang}</option>
+                                                    ))
+                                                }
+                                            </Form.Control>
+                                        </Form.Group>
+                                    </>
+                            }
+
 
                             <Form.Group controlId="formBasicSelect2">
                                 <Form.Label>Level of Difficult</Form.Label>
@@ -754,7 +858,10 @@ export default function Task() {
                             <Grid lg={6} item>
                                 <Box pb={3} textAlign="right" pr={4} >
                                     <Search placeholder="Search Task Name"
-                                        onChange={(e) => dispatch(getAllTaskUser(id, e.target.value))}
+                                        onChange={(e) => {
+                                            if (idlevel === 2) dispatch(getAllTaskUser(id, e.target.value))
+                                            else dispatch(getAllTaskReviewer(id, e.target.value))
+                                        }}
                                         allowClear
                                         style={{ width: 350 }} />
                                 </Box>
