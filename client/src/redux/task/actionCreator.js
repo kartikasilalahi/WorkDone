@@ -52,7 +52,19 @@ const {
 
     sendReportSuccess,
     sendReportRequest,
-    sendReportErr
+    sendReportErr,
+
+    getAllTaskReviewerSuccess,
+    getAllTaskReviewerRequest,
+    getAllTaskReviewerErr,
+
+    getNotifReviewerSuccess,
+    getNotifReviewerRequest,
+    getNotifReviewerErr,
+
+    markReadByReviewerSuccess,
+    markReadByReviewerRequest,
+    markReadByReviewerErr,
 } = action
 
 
@@ -62,12 +74,14 @@ const getAllTaskUser = (id, keyword) => {
             dispatch(getAllTaskUserRequest())
             const allTaskUser = await Axios.get(`${APIURL}taskman/alltaskuser?id=${id}&keyword=${keyword}`)
             if (allTaskUser.data.data) {
+                dispatch(getTotalTask(allTaskUser.data.data))
+
                 // var start = moment('2021-01-20T01:14:07.000Z'); //todays date
                 // var end = moment("2021-01-30T01:14:07.000Z"); // another date
                 // var duration = moment.duration(end.diff(start));
                 // var hour = duration.asHours();
                 // console.log("hour", hour)
-                let Tasks = allTaskUser.data.data
+                // let Tasks = allTaskUser.data.data
                 // Tasks.sort(function (a, b) {
                 //     return moment.duration(moment(a.end_datetime.diff(a.start_datetimee))) - moment.duration(moment(b.end_datetime.diff(b.start_datetimee)))
                 // });
@@ -93,7 +107,6 @@ const getAllTaskUser = (id, keyword) => {
                 //         }
                 //     }
                 // }
-                dispatch(getTotalTask(allTaskUser.data.data))
                 dispatch(getAllTaskUserEffect(allTaskUser.data.data))
             } else {
                 dispatch(getAllTaskUserErr(allTaskUser.data.message))
@@ -156,7 +169,6 @@ const getDetailProject = (id) => {
 const updateProgressTask = ({ id, new_progress, idUser }) => {
     return async dispatch => {
         try {
-            console.log("id", id)
             dispatch(updateProgressTaskRequest())
             const updateProgress = await Axios.post(`${APIURL}taskman/updateprogress`, { id, new_progress })
             if (updateProgress.data.message) {
@@ -244,8 +256,8 @@ const getNotifTaskUser = (id) => {
             dispatch(getNotifTaskRequest())
             const getnotif = await Axios.get(`${APIURL}taskman/getnotif/${id}`)
             if (getnotif.data.data) {
+                dispatch(getTotalTask(getnotif.data.data))
                 dispatch(getNotifTaskSuccess(getnotif.data.data))
-                // dispatch(getTotalTask(getnotif.data.data))
             } else {
                 dispatch(getNotifTaskErr(getnotif.data.message))
             }
@@ -304,6 +316,52 @@ const sendReport = ({ iduser, iddepartemen, data }) => {
     }
 }
 
+const getAllTaskReviewer = (id, keyword) => {
+    return async dispatch => {
+        try {
+            dispatch(getAllTaskReviewerRequest())
+            const allTaskUser = await Axios.get(`${APIURL}taskman/alltaskreviewer?id=${id}&keyword=${keyword}`)
+            if (allTaskUser.data.data) {
+                dispatch(getTotalTask(allTaskUser.data.data))
+                dispatch(getAllTaskReviewerSuccess(allTaskUser.data.data))
+            }
+        } catch (error) {
+            dispatch(getAllTaskReviewerErr(error))
+        }
+    }
+}
+
+const getNotifReviewer = (id) => {
+    return async dispatch => {
+        try {
+            dispatch(getNotifReviewerRequest())
+            const getnotif = await Axios.get(`${APIURL}taskman/getnotifreviewer/${id}`)
+            if (getnotif.data.data) {
+                dispatch(getTotalTask(getnotif.data.data))
+                dispatch(getNotifReviewerSuccess(getnotif.data.data))
+            }
+        } catch (error) {
+            dispatch(getNotifReviewerErr(error))
+        }
+    }
+}
+
+const markReadByReviewer = ({ id, idUser }) => {
+    return async dispatch => {
+        try {
+            dispatch(markReadTaskRequest())
+            const markTask = await Axios.post(`${APIURL}taskman/markreadtaskbyreviewer/${id}`)
+            if (markTask.data.message) {
+                dispatch(getNotifReviewer(idUser))
+                dispatch(getAllTaskReviewer(idUser, ''))
+                dispatch(markReadByReviewerSuccess(markTask.data.message))
+            }
+        } catch (error) {
+            dispatch(markReadByReviewerErr(error))
+        }
+    }
+}
+
 export {
     getAllTaskUser,
     getDetailTask,
@@ -316,5 +374,8 @@ export {
     getNotifTaskUser,
     markReadTask,
     updateTask,
-    sendReport
+    sendReport,
+    getAllTaskReviewer,
+    getNotifReviewer,
+    markReadByReviewer
 };

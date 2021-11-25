@@ -42,6 +42,14 @@ const {
     SEND_REPORT_REQUEST,
     SEND_REPORT_ERR,
 
+    GET_ALL_TASK_REVIEWER_SUCCESS,
+    GET_ALL_TASK_REVIEWER_REQUEST,
+    GET_ALL_TASK_REVIEWER_ERR,
+
+    GET_NOTIF_REVIEWER_SUCCESS,
+    GET_NOTIF_REVIEWER_REQUEST,
+    GET_NOTIF_REVIEWER_ERR,
+
 
 } = action
 
@@ -93,6 +101,17 @@ const initState = {
 
     is_loading_send_report: false,
     message_send_report: '',
+
+    all_task_reviewer: [],
+    is_loading_all_task_reviewer: false,
+    is_error_all_task_reviewer: false,
+    message_all_task_reviewer: '',
+
+    all_notif_reviewer: [],
+    is_loading_all_notif_reviewer: false,
+    is_error_all_notif_reviewer: false,
+    message_all_notif_reviewer: '',
+
 
 };
 
@@ -299,6 +318,48 @@ const AuthReducer = (state = initState, action) => {
                 message_send_report: data
             }
         }
+
+        // all task reviewe
+        case GET_ALL_TASK_REVIEWER_REQUEST:
+            return {
+                ...state,
+                is_loading_all_task_reviewer: true,
+                message_all_task_reviewer: ''
+            };
+        case GET_ALL_TASK_REVIEWER_SUCCESS:
+            return {
+                ...state,
+                all_task_reviewer: data,
+                is_loading_all_task_reviewer: false,
+                message_all_task_reviewer: ''
+            };
+        case GET_ALL_TASK_REVIEWER_ERR:
+            return {
+                ...state,
+                is_loading_all_task_reviewer: false,
+                message_all_task_reviewer: err
+            };
+
+        // GET NOTIF reviewer
+        case GET_NOTIF_REVIEWER_REQUEST:
+            return {
+                ...state,
+                is_loading_all_notif_reviewer: true,
+                message_all_notif_reviewer: ''
+            };
+        case GET_NOTIF_REVIEWER_SUCCESS:
+            return {
+                ...state,
+                all_notif_reviewer: data,
+                is_loading_all_notif_reviewer: false,
+                message_all_notif_reviewer: ''
+            };
+        case GET_NOTIF_REVIEWER_ERR:
+            return {
+                ...state,
+                is_loading_all_notif_reviewer: false,
+                message_all_notif_reviewer: err
+            };
 
         default:
             return state;

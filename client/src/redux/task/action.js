@@ -51,6 +51,18 @@ const actions = {
     SEND_REPORT_REQUEST: 'SEND_REPORT_REQUEST',
     SEND_REPORT_ERR: 'SEND_REPORT_ERR',
 
+    GET_ALL_TASK_REVIEWER_SUCCESS: 'GET_ALL_TASK_REVIEWER_SUCCESS',
+    GET_ALL_TASK_REVIEWER_REQUEST: 'GET_ALL_TASK_REVIEWER_REQUEST',
+    GET_ALL_TASK_REVIEWER_ERR: 'GET_ALL_TASK_REVIEWER_ERR',
+
+    GET_NOTIF_REVIEWER_SUCCESS: 'GET_NOTIF_REVIEWER_SUCCESS',
+    GET_NOTIF_REVIEWER_REQUEST: 'GET_NOTIF_REVIEWER_REQUEST',
+    GET_NOTIF_REVIEWER_ERR: 'GET_NOTIF_REVIEWER_ERR',
+
+    MARK_READ_BY_REVIEWER_SUCCESS: 'MARK_READ_BY_REVIEWER_SUCCESS',
+    MARK_READ_BY_REVIEWER_REQUEST: 'MARK_READ_BY_REVIEWER_REQUEST',
+    MARK_READ_BY_REVIEWER_ERR: 'MARK_READ_BY_REVIEWER_ERR',
+
     getAllTaskUserEffect: (data) => {
         return {
             type: actions.GET_ALL_TASK_USER,
@@ -298,6 +310,66 @@ const actions = {
     sendReportErr: (data) => {
         return {
             type: actions.SEND_REPORT_ERR,
+            data
+        }
+    },
+
+    getAllTaskReviewerRequest: () => {
+        return {
+            type: actions.GET_ALL_TASK_REVIEWER_REQUEST,
+        };
+    },
+
+    getAllTaskReviewerSuccess: data => {
+        return {
+            type: actions.GET_ALL_TASK_REVIEWER_SUCCESS,
+            data,
+        };
+    },
+
+    getAllTaskReviewerErr: err => {
+        return {
+            type: actions.GET_ALL_TASK_REVIEWER_ERR,
+            err,
+        };
+    },
+
+    getNotifReviewerSuccess: (data) => {
+        return {
+            type: actions.GET_NOTIF_REVIEWER_SUCCESS,
+            data
+        }
+    },
+
+    getNotifReviewerRequest: () => {
+        return {
+            type: actions.GET_NOTIF_REVIEWER_REQUEST,
+        }
+    },
+
+    getNotifReviewerErr: (data) => {
+        return {
+            type: actions.GET_NOTIF_REVIEWER_ERR,
+            data
+        }
+    },
+
+    markReadByReviewerSuccess: (data) => {
+        return {
+            type: actions.MARK_READ_BY_REVIEWER_SUCCESS,
+            data
+        }
+    },
+
+    markReadByReviewerRequest: () => {
+        return {
+            type: actions.MARK_READ_BY_REVIEWER_REQUEST,
+        }
+    },
+
+    markReadByReviewerErr: (data) => {
+        return {
+            type: actions.MARK_READ_BY_REVIEWER_ERR,
             data
         }
     },

@@ -2,7 +2,14 @@ import React, { useEffect, useState, forwardRef } from 'react'
 import { Box, Grid, Avatar, Divider } from '@material-ui/core'
 import IconNotif from '../../../../Assets/img/icon/notif.png'
 import { useHistory } from "react-router-dom";
-import { getNotifTaskUser, markReadTask, getDetailTask, updateProgressTask } from '../../../../redux/task/actionCreator'
+import {
+    getNotifTaskUser,
+    markReadTask,
+    getDetailTask,
+    updateProgressTask,
+    getNotifReviewer,
+    markReadByReviewer
+} from '../../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, Dropdown } from 'react-bootstrap';
 import {
@@ -20,35 +27,41 @@ const TopBar = ({ label }) => {
     const history = useHistory();
     const dispatch = useDispatch()
     const id = Number(localStorage.getItem('id'));
+    const idlevel = Number(localStorage.getItem('idlevel'));
     const allNotif = useSelector(state => state.task.all_notif_task_user)
     const isLoadingTaskUser = useSelector(state => state.task.is_loading_all_task_user)
     const detailTask = useSelector(state => state.task.detail_task_user)
     const isLoadingUpdateProgressTask = useSelector(state => state.task.is_loading_update_progress_task)
     const messageUpdateProgressTask = useSelector(state => state.task.message_update_progress_task)
+    const allNotifReviewer = useSelector(state => state.task.all_notif_reviewer)
+
 
     const [idTask, setIdTask] = useState();
     const [Newprogress, setNewprogress] = useState('');
     const [currentProgress, setCurrentProgress] = useState('');
     const [isUpdate, setIsUpdate] = useState(false);
     const [idUpdateTask, setIdUpdateTask] = useState(0);
-    const [listNotif, setlistNotif] = useState([]);
 
     let today = new Date()
     let day = today.getDay()
 
     useEffect(() => {
-        dispatch(getNotifTaskUser(id))
-        // setlistNotif(allNotif)
-        // if(allNotif){
-        //     let data = allNotif
-        //     data.unshift()
-        // }
+        if (idlevel === 1) {
+            dispatch(getNotifReviewer(id))
+        } else {
+            dispatch(getNotifTaskUser(id))
+        }
     }, [dispatch])
 
     useEffect(() => {
         if (idTask > 0) {
-            dispatch(markReadTask({ id: idTask, idUser: id }))
-            dispatch(getDetailTask(idTask))
+            if (idlevel === 2) {
+                dispatch(markReadTask({ id: idTask, idUser: id }))
+                dispatch(getDetailTask(idTask))
+            } else {
+                dispatch(markReadByReviewer({ id: idTask, idUser: id }))
+                dispatch(getDetailTask(idTask))
+            }
         }
     }, [idTask])
 
@@ -68,6 +81,8 @@ const TopBar = ({ label }) => {
             setCurrentProgress(detailTask[0].progress)
         }
     }, [detailTask])
+
+    console.log("curee", currentProgress)
 
     useEffect(() => {
         if (isUpdate) {
@@ -96,12 +111,21 @@ const TopBar = ({ label }) => {
             }}
         >
             {/* Render custom icon here */}
-            <Box>
-                <img src={IconNotif} width="27px" height="27px"
-                    style={{ cursor: 'pointer' }} />
-                {allNotif && allNotif.length > 0 && day !== 5 && <span className="count-notif" >{allNotif.length}</span>}
-                {allNotif && allNotif.length > 0 && day === 5 && <span className="count-notif" >{allNotif.length + 1}</span>}
-            </Box>
+            {
+                idlevel === 1 ?
+                    <Box>
+                        <img src={IconNotif} width="27px" height="27px"
+                            style={{ cursor: 'pointer' }} />
+                        {allNotifReviewer && allNotifReviewer.length > 0 && <span className="count-notif" >{allNotifReviewer.length}</span>}
+                    </Box>
+                    :
+                    <Box>
+                        <img src={IconNotif} width="27px" height="27px"
+                            style={{ cursor: 'pointer' }} />
+                        {allNotif && allNotif.length > 0 && day !== 5 && <span className="count-notif" >{allNotif.length}</span>}
+                        {allNotif && allNotif.length > 0 && day === 5 && <span className="count-notif" >{allNotif.length + 1}</span>}
+                    </Box>
+            }
         </a>
     ));
 
@@ -159,6 +183,8 @@ const TopBar = ({ label }) => {
         "image"
     ];
 
+    console.log("all", allNotifReviewer)
+    console.log("idle", idlevel)
 
     return (
         <>
@@ -170,40 +196,84 @@ const TopBar = ({ label }) => {
                         <Box fontSize={11}>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Status</Grid>
-                                <Grid item lg={9}>
-                                    {
-                                        currentProgress === "DECLINE" ?
-                                            <Dropdown onSelect={(e) => {
-                                                setCurrentProgress(e)
-                                                setIsUpdate(true)
-                                                setIdUpdateTask(detailTask[0].id)
-                                                setNewprogress((e))
-                                            }}>
-                                                {
-                                                    isLoadingUpdateProgressTask ?
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }} >
-                                                            loading..
+                                {idlevel === 2 ?
+                                    <Grid item lg={9}>
+                                        {
+                                            currentProgress === "DECLINE" ?
+                                                <Dropdown onSelect={(e) => {
+                                                    setCurrentProgress(e)
+                                                    setIsUpdate(true)
+                                                    setIdUpdateTask(detailTask[0].id)
+                                                    setNewprogress((e))
+                                                }}>
+                                                    {
+                                                        isLoadingUpdateProgressTask ?
+                                                            <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                style={{ fontSize: '10px' }} >
+                                                                loading..
                                                     </Dropdown.Toggle>
-                                                        :
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }}
-                                                            variant='danger'
-                                                        >
-                                                            {currentProgress}
-                                                        </Dropdown.Toggle>
-                                                }
+                                                            :
+                                                            <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                style={{ fontSize: '10px' }}
+                                                                variant='danger'
+                                                            >
+                                                                {currentProgress}
+                                                            </Dropdown.Toggle>
+                                                    }
 
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item
-                                                        style={{ fontSize: '11px' }}
-                                                        eventKey="IN PROGRESS" >
-                                                        RE-DO &#10137; (IN PROGRESS)</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                            :
-                                            currentProgress === "DONE" ?
-                                                <Button variant="success">
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item
+                                                            style={{ fontSize: '11px' }}
+                                                            eventKey="IN PROGRESS" >
+                                                            RE-DO &#10137; (IN PROGRESS)</Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                                :
+                                                currentProgress === "DONE" ?
+                                                    <Button variant="success">
+                                                        <Box px={1} fontSize={10} color="white">{currentProgress}</Box>
+                                                    </Button>
+                                                    :
+                                                    <Dropdown onSelect={(e) => {
+                                                        setCurrentProgress(e)
+                                                        setIsUpdate(true)
+                                                        setIdUpdateTask(detailTask[0].id)
+                                                        setNewprogress((e))
+                                                    }}>
+                                                        {
+                                                            isLoadingUpdateProgressTask ?
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }} >
+                                                                    loading..
+                                                    </Dropdown.Toggle>
+                                                                :
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }}
+                                                                    variant={currentProgress === 'TO DO' ? 'secondary'
+                                                                        : currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                            : currentProgress === 'REVIEW' ? 'info' : 'primary'
+                                                                    }>
+                                                                    {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                                </Dropdown.Toggle>
+                                                        }
+
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                        }
+                                    </Grid>
+                                    :
+                                    <Grid item lg={9}>
+                                        {
+                                            currentProgress !== "REVIEW" ?
+                                                <Button variant={
+                                                    currentProgress === 'DECLINE' ? 'danger' :
+                                                        currentProgress === 'DONE' ? 'success' :
+                                                            currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                : currentProgress === 'REVIEW' ? 'info' : 'secondary'}>
                                                     <Box px={1} fontSize={10} color="white">{currentProgress}</Box>
                                                 </Button>
                                                 :
@@ -222,22 +292,23 @@ const TopBar = ({ label }) => {
                                                             :
                                                             <Dropdown.Toggle size="sm" id="dropdown-basic"
                                                                 style={{ fontSize: '10px' }}
-                                                                variant={currentProgress === 'TO DO' ? 'secondary'
-                                                                    : currentProgress === 'IN PROGRESS' ? 'warning'
-                                                                        : currentProgress === 'REVIEW' ? 'info' : 'primary'
-                                                                }>
-                                                                {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                                variant={
+                                                                    currentProgress === 'DECLINE' ? 'danger' :
+                                                                        currentProgress === 'DONE' ? 'success' :
+                                                                            currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                                : currentProgress === 'REVIEW' ? 'info' : 'secondary'}>
+                                                                {currentProgress}
                                                             </Dropdown.Toggle>
                                                     }
-
                                                     <Dropdown.Menu>
-                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
-                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
-                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'DONE'} eventKey="DONE">APPROVE</Dropdown.Item>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'DECLINE'} eventKey="DECLINE" >DECLINE</Dropdown.Item>
                                                     </Dropdown.Menu>
                                                 </Dropdown>
-                                    }
-                                </Grid>
+                                        }
+                                    </Grid>
+
+                                }
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Id</Grid>
@@ -359,13 +430,13 @@ const TopBar = ({ label }) => {
                                     <Dropdown style={{ marginRight: '10px' }}>
                                         <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                                         </Dropdown.Toggle>
-                                        <Dropdown.Menu>
+                                        <Dropdown.Menu style={{ height: "450px", overflow: 'scroll' }}>
                                             <Box fontSize={12} pl={3} py={1} color="#51AC56" fontWeight={600}>Notifications</Box>
                                             <Divider />
 
                                             <ul>
                                                 {
-                                                    day === 5 &&
+                                                    idlevel === 2 && day === 5 &&
 
                                                     <li style={{ color: '#67B9CC' }}>
                                                         <Dropdown.Item
@@ -378,29 +449,50 @@ const TopBar = ({ label }) => {
                                                         </Dropdown.Item>
                                                     </li>
                                                 }
-                                                {allNotif && allNotif.length > 0 ? allNotif.map((task) => (
-                                                    <li style={{ color: '#67B9CC' }}>
+                                                {
+                                                    idlevel === 2 && allNotif && allNotif.length > 0 ? allNotif.map((task) => (
+                                                        <li style={{ color: '#67B9CC' }}>
 
-                                                        <Dropdown.Item
-                                                            style={{ width: "350px", wordWrap: 'break-word', padding: '0px 8px ' }}
-                                                            eventKey={task.id}
-                                                            onClick={() => setIdTask(task.id)}>
-                                                            <Box py={1}>{
-                                                                task.progress === "TO DO" ?
-                                                                    <>You have new task <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span>
+                                                            <Dropdown.Item
+                                                                style={{ width: "350px", wordWrap: 'break-word', padding: '0px 8px ' }}
+                                                                eventKey={task.id}
+                                                                onClick={() => setIdTask(task.id)}>
+                                                                <Box py={1}>{
+                                                                    task.progress === "TO DO" ?
+                                                                        <>You have new task <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span>
                                                                 to do</> :
-                                                                    <>Task  <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span> has been updated to {task.progress}</>
-                                                            }</Box>
-                                                        </Dropdown.Item>
-                                                    </li>
+                                                                        <>Task  <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span> has been updated to {task.progress}</>
+                                                                }</Box>
+                                                            </Dropdown.Item>
+                                                        </li>
+                                                    ))
+                                                        :
+                                                        idlevel === 1 && allNotifReviewer && allNotifReviewer.length > 0 ? allNotifReviewer.map((task) => (
+                                                            <li style={{ color: '#67B9CC' }}>
 
-
-                                                ))
-                                                    :
-                                                    <Box width={350} fontSize={10} color="gray" pt={4} textAlign="center" pr={6}>
-                                                        There's no new notifications
+                                                                <Dropdown.Item
+                                                                    style={{ width: "350px", wordWrap: 'break-word', padding: '0px 8px ' }}
+                                                                    eventKey={task.id}
+                                                                    onClick={() => setIdTask(task.id)}>
+                                                                    <Box py={1}>{
+                                                                        task.progress === "TO DO" ?
+                                                                            <>There's new task <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span></>
+                                                                            :
+                                                                            task.progress === "REVIEW" ?
+                                                                                <>Task<span style={{ fontWeight: 'bold', color: "#67B9CC" }}> {task.task_name} </span>need to be
+                                                                                    <span style={{ fontWeight: 'bold', color: "#51AC56" }}> REVIEWED </span>by You</>
+                                                                                :
+                                                                                <>Task  <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span> has been updated to {task.progress}</>
+                                                                    }</Box>
+                                                                </Dropdown.Item>
+                                                            </li>
+                                                        ))
+                                                            :
+                                                            <Box width={350} fontSize={10} color="gray" pt={4} textAlign="center" pr={6}>
+                                                                There's no new notifications
                                                     </Box>
                                                 }
+
                                             </ul>
 
                                         </Dropdown.Menu>

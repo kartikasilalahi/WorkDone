@@ -19,7 +19,10 @@ import {
     updateProgressTask,
     getUserDepartemen,
     addNewTask,
-    updateTask
+    updateTask,
+    getAllTaskReviewer,
+    getNotifReviewer,
+    markReadByReviewer
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
@@ -48,8 +51,12 @@ export default function DashboardUser() {
     const messageSuccess = useSelector(state => state.task.message_add_new_task)
     const ListTotalTask = useSelector(state => state.task.total_task)
     const messageUpdateTask = useSelector(state => state.task.message_update_task)
+    const allTaskReviewer = useSelector(state => state.task.all_task_reviewer)
+    const isLoadingTaskReviewer = useSelector(state => state.task.is_loading_all_task_reviewer)
+    const allNotifReviewer = useSelector(state => state.task.all_notif_reviewer)
 
     const id = Number(localStorage.getItem('id'));
+    const idlevel = Number(localStorage.getItem('idlevel'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
     const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
     const [idTask, setIdTask] = useState();
@@ -85,13 +92,16 @@ export default function DashboardUser() {
     const onSaveNewTask = () => {
         let data = dataNewTask
         dispatch(addNewTask(data))
-
-
     }
 
     useEffect(() => {
-        dispatch(getAllTaskUser(id, ''))
-        dispatch(getAllProjectUser(id))
+        if (idlevel === 1) {
+            dispatch(getAllTaskReviewer(id, ''))
+        } else {
+
+            dispatch(getAllTaskUser(id, ''))
+            dispatch(getAllProjectUser(id))
+        }
 
     }, [dispatch])
 
@@ -397,69 +407,115 @@ export default function DashboardUser() {
                         <Box fontSize={11}>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Status</Grid>
-                                <Grid item lg={9}>
-                                    {
-                                        currentProgress === "DECLINE" ?
-                                            <Dropdown onSelect={(e) => {
-                                                setCurrentProgress(e)
-                                                setIsUpdateProgress(true)
-                                                setIdUpdateTask(selectedTask.id)
-                                                setNewprogress((e))
-                                            }}>
-                                                {
-                                                    isLoadingUpdateProgressTask ?
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }} >
-                                                            loading..
+                                {
+                                    idlevel === 2 ?
+                                        <Grid item lg={9}>
+                                            {
+                                                currentProgress === "DECLINE" ?
+                                                    <Dropdown onSelect={(e) => {
+                                                        setCurrentProgress(e)
+                                                        setIsUpdateProgress(true)
+                                                        setIdUpdateTask(selectedTask.id)
+                                                        setNewprogress((e))
+                                                    }}>
+                                                        {
+                                                            isLoadingUpdateProgressTask ?
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }} >
+                                                                    loading..
                                                     </Dropdown.Toggle>
-                                                        :
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }}
-                                                            variant='danger'
-                                                        >
-                                                            {currentProgress}
-                                                        </Dropdown.Toggle>
-                                                }
+                                                                :
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }}
+                                                                    variant='danger'
+                                                                >
+                                                                    {currentProgress}
+                                                                </Dropdown.Toggle>
+                                                        }
 
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item
-                                                        style={{ fontSize: '11px' }}
-                                                        eventKey="IN PROGRESS" >
-                                                        RE-DO &#10137; (IN PROGRESS)</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                            :
-                                            <Dropdown onSelect={(e) => {
-                                                setCurrentProgress(e)
-                                                setIsUpdateProgress(true)
-                                                setIdUpdateTask(selectedTask.id)
-                                                setNewprogress((e))
-                                            }}>
-                                                {
-                                                    isLoadingUpdateProgressTask ?
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }} >
-                                                            loading..
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item
+                                                                style={{ fontSize: '11px' }}
+                                                                eventKey="IN PROGRESS" >
+                                                                RE-DO &#10137; (IN PROGRESS)</Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                    :
+                                                    <Dropdown onSelect={(e) => {
+                                                        setCurrentProgress(e)
+                                                        setIsUpdateProgress(true)
+                                                        setIdUpdateTask(selectedTask.id)
+                                                        setNewprogress((e))
+                                                    }}>
+                                                        {
+                                                            isLoadingUpdateProgressTask ?
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }} >
+                                                                    loading..
                                                     </Dropdown.Toggle>
-                                                        :
-                                                        <Dropdown.Toggle size="sm" id="dropdown-basic"
-                                                            style={{ fontSize: '10px' }}
-                                                            variant={currentProgress === 'TO DO' ? 'secondary'
-                                                                : currentProgress === 'IN PROGRESS' ? 'warning'
-                                                                    : currentProgress === 'REVIEW' ? 'info' : 'primary'
-                                                            }>
-                                                            {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
-                                                        </Dropdown.Toggle>
-                                                }
+                                                                :
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }}
+                                                                    variant={currentProgress === 'TO DO' ? 'secondary'
+                                                                        : currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                            : currentProgress === 'REVIEW' ? 'info' : 'primary'
+                                                                    }>
+                                                                    {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                                </Dropdown.Toggle>
+                                                        }
 
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
-                                                    <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                    }
-                                </Grid>
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={selectedTask.progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                            }
+                                        </Grid>
+                                        :
+                                        <Grid item lg={9}>
+                                            {
+                                                currentProgress !== "REVIEW" ?
+                                                    <Button variant={
+                                                        currentProgress === 'DECLINE' ? 'danger' :
+                                                            currentProgress === 'DONE' ? 'success' :
+                                                                currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                    : currentProgress === 'REVIEW' ? 'info' : 'secondary'}>
+                                                        <Box px={1} fontSize={10} color="white">{currentProgress}</Box>
+                                                    </Button>
+                                                    :
+                                                    <Dropdown onSelect={(e) => {
+                                                        setCurrentProgress(e)
+                                                        setIsUpdateProgress(true)
+                                                        setIdUpdateTask(selectedTask.id)
+                                                        setNewprogress((e))
+                                                    }}>
+                                                        {
+                                                            isLoadingUpdateProgressTask ?
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }} >
+                                                                    loading..
+                                                    </Dropdown.Toggle>
+                                                                :
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }}
+                                                                    variant={
+                                                                        currentProgress === 'DECLINE' ? 'danger' :
+                                                                            currentProgress === 'DONE' ? 'success' :
+                                                                                currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                                    : currentProgress === 'REVIEW' ? 'info' : 'secondary'}>
+                                                                    {currentProgress}
+                                                                </Dropdown.Toggle>
+                                                        }
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'DONE'} eventKey="DONE">APPROVE</Dropdown.Item>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'DECLINE'} eventKey="DECLINE" >DECLINE</Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                            }
+                                        </Grid>
+
+                                }
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Id</Grid>
@@ -589,180 +645,182 @@ export default function DashboardUser() {
                     <TopBar label='Dashboard' />
 
                     <Box px={2} className="container-content" pb={5}>
-                        <Grid container justifyContent="space-between">
-                            <Grid xs={6} sm={6} lg={6}>
-                                <Box>
-                                    <Box pb={1} fontSize={14}>Welcome back,</Box>
-                                    <Box color="#0F0F19" fontSize={13}>Don't forget to take attendance. And Enjoy your work!&#128522; </Box>
+                        {
+                            Number(localStorage.getItem("idlevel")) === 2 ?
+                                <Grid container justifyContent="space-between">
+                                    <Grid xs={6} sm={6} lg={6}>
+                                        <Box>
+                                            <Box pb={1} fontSize={14}>Welcome back,</Box>
+                                            <Box color="#0F0F19" fontSize={13}>Don't forget to take attendance. And Enjoy your work!&#128522; </Box>
 
-                                    <Box mt={7} py={3} pl={5} style={{ backgroundColor: 'white', }}>
-                                        <Chart
-                                            options={options}
-                                            series={ListTotalTask}
-                                            type="donut"
-                                            width="380"
-                                        />
-                                    </Box>
-                                    <Box>
-                                        <Box pt={7}>
-                                            <Grid container justifyContent="space-between">
-                                                <Grid item><Box fontSize={14} fontWeight={600}>My Project</Box></Grid>
-                                                <Grid item><Box fontSize={12} color="#88D38B">See more</Box></Grid>
-                                            </Grid>
-                                        </Box>
-                                        <Box pt={2}  >
-                                            <Grid container spacing={3}>
-                                                {isLoadingProjectUser ? 'loading...' :
-                                                    allProjectUser.map((project, i) => (
-
-                                                        <Grid item xs={6} key={project.id}>
-                                                            {
-                                                                <Box p={2}
-                                                                    style={{
-                                                                        borderRadius: "15px",
-                                                                        WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                                                        boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                                                        backgroundColor: '#fff'
-                                                                    }}>
-                                                                    <Box fontSize={12}>{project.project_name}</Box>
-                                                                    <Box fontSize={11}>{project.departemen}</Box>
-                                                                </Box>
-                                                            }
-
-                                                        </Grid>
-                                                    )
-                                                    )}
-                                                <Grid item xs={6}>
-                                                    <Box fontWeight={600} p={2}
-                                                        style={{
-                                                            borderRadius: "15px",
-                                                            WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                                            boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                                            backgroundColor: '#fff',
-                                                            cursor: 'pointer'
-                                                        }}>
-                                                        <Box textAlign="center" fontSize={13}> + </Box>
-                                                        <Box textAlign="center" fontSize={13}> Add New Project</Box>
-                                                    </Box>
-                                                </Grid>
-                                            </Grid>
-
-                                        </Box>
-                                    </Box>
-
-                                </Box>
-                            </Grid>
-                            <Grid xs={6} sm={6} lg={6}>
-                                <Box ml={3}  >
-                                    <Box textAlign="right" pb={3}>
-                                        <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
-                                            <Box px={1} color="white" fontSize={11}>Live Attendance</Box>
-                                        </Button>
-
-                                        <Box fontSize={12} pt={1} fontWeight='bold'>
-                                            {moment().format('DD MMMM YYYY,')}
-                                            <Box pl={59}> <Clock hour12={false} /></Box>
-                                        </Box>
-                                    </Box>
-                                    <Box pt={1}>
-                                        <Grid container justifyContent="space-between">
-                                            <Grid item><Box fontSize={14} fontWeight={600}>My Task</Box></Grid>
-                                            <Grid item>
-                                                <Box color="#88D38B" fontSize={12} mr={2}
-                                                    onClick={() => history.push('/user/all-task')}
-                                                    style={{ cursor: 'pointer' }}>See all</Box></Grid>
-                                        </Grid>
-                                        <Box fontSize={9} pt={1}>
-                                            <Grid container>
-                                                <Grid item >
-                                                    <Box width={165} px={1} py={1} style={{ backgroundColor: '#6C757D', color: 'white', borderRadius: '5px' }}>
-                                                        <Grid container alignItems="center">
-                                                            <Grid item>
-                                                                <Box pr={2} style={{ borderRight: '1px solid white' }}>
-                                                                    <AvTimerIcon fontSize='medium' style={{ fill: 'white' }} />
-                                                                </Box>
-                                                            </Grid>
-                                                            <Grid item>
-                                                                <Box pl={2}>
-                                                                    <Box color="white">To Do</Box>
-                                                                    <Box color="white">{ListTotalTask[0]} task</Box>
-                                                                </Box>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Box>
-                                                </Grid>
-                                                <Grid item >
-                                                    <Box width={165} mx={1} px={1} py={1} style={{ backgroundColor: '#F8B032', color: 'white', borderRadius: '5px' }}>
-                                                        <Grid container alignItems="center">
-                                                            <Grid item>
-                                                                <Box pr={2} style={{ borderRight: '1px solid white' }}>
-                                                                    <RateReviewIcon fontSize='medium' style={{ fill: 'white' }} />
-                                                                </Box>
-                                                            </Grid>
-                                                            <Grid item>
-                                                                <Box pl={2}>
-                                                                    <Box color="white">Review</Box>
-                                                                    <Box color="white">{ListTotalTask[2]} task</Box>
-                                                                </Box>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Box>
-                                                </Grid>
-                                                <Grid item >
-                                                    <Box width={165} px={1} py={1} style={{ backgroundColor: '#51AC56', color: 'white', borderRadius: '5px' }}>
-                                                        <Grid container alignItems="center">
-                                                            <Grid item>
-                                                                <Box pr={2} style={{ borderRight: '1px solid white' }}>
-                                                                    <DoneIcon fontSize='medium' style={{ fill: 'white' }} />
-                                                                </Box>
-                                                            </Grid>
-                                                            <Grid item>
-                                                                <Box pl={2}>
-                                                                    <Box color="white">Done</Box>
-                                                                    <Box color="white">{ListTotalTask[3]} task</Box>
-                                                                </Box>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Box>
-                                                </Grid>
-                                            </Grid>
-                                        </Box>
-                                    </Box>
-                                    <Box pt={2}>
-                                        {isLoadingTaskUser ? 'loading...' :
-                                            allTaskUser.filter(tasks => tasks.progress !== 'DONE').slice(0, 10).map((task, i) => (
-                                                <Box key={i} p={1} mb={2}
-                                                    onClick={() => {
-                                                        console.log("iddt", task.id)
-                                                        setIdTask(task.id)
-                                                        // setSelectedTask(allTaskUser[i])
-                                                        setSelectedTask(allTaskUser.filter(tasks => tasks.progress !== 'DONE')[i])
-                                                    }}
-                                                    style={{
-                                                        width: "515px",
-                                                        borderRadius: "5px",
-                                                        WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                                        boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                                        backgroundColor: '#fff',
-                                                        cursor: 'pointer'
-                                                    }}>
-                                                    <Box fontSize={11}>
-                                                        <Grid container justifyContent="space-between" alignItems="center">
-                                                            <Grid item lg={6}>{task.task_name}
-                                                                <Box
-                                                                    fontSize={10}
-                                                                    color="#3366CC"
-                                                                    fontWeight={500}>
-                                                                    {task.project_name}
-                                                                </Box>
-                                                            </Grid>
-                                                            <Grid item lg={6}><Box textAlign="right"><NavigateNextIcon /></Box></Grid>
-                                                        </Grid>
-                                                    </Box>
+                                            <Box mt={7} py={3} pl={5} style={{ backgroundColor: 'white', }}>
+                                                <Chart
+                                                    options={options}
+                                                    series={ListTotalTask}
+                                                    type="donut"
+                                                    width="380"
+                                                />
+                                            </Box>
+                                            <Box>
+                                                <Box pt={7}>
+                                                    <Grid container justifyContent="space-between">
+                                                        <Grid item><Box fontSize={14} fontWeight={600}>My Project</Box></Grid>
+                                                        <Grid item><Box fontSize={12} color="#88D38B">See more</Box></Grid>
+                                                    </Grid>
                                                 </Box>
-                                            ))
-                                        }
-                                        {/* <Box p={2} mb={2}
+                                                <Box pt={2}  >
+                                                    <Grid container spacing={3}>
+                                                        {isLoadingProjectUser ? 'loading...' :
+                                                            allProjectUser.map((project, i) => (
+
+                                                                <Grid item xs={6} key={project.id}>
+                                                                    {
+                                                                        <Box p={2}
+                                                                            style={{
+                                                                                borderRadius: "15px",
+                                                                                WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                                boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                                backgroundColor: '#fff'
+                                                                            }}>
+                                                                            <Box fontSize={12}>{project.project_name}</Box>
+                                                                            <Box fontSize={11}>{project.departemen}</Box>
+                                                                        </Box>
+                                                                    }
+
+                                                                </Grid>
+                                                            )
+                                                            )}
+                                                        <Grid item xs={6}>
+                                                            <Box fontWeight={600} p={2}
+                                                                style={{
+                                                                    borderRadius: "15px",
+                                                                    WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                    boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                    backgroundColor: '#fff',
+                                                                    cursor: 'pointer'
+                                                                }}>
+                                                                <Box textAlign="center" fontSize={13}> + </Box>
+                                                                <Box textAlign="center" fontSize={13}> Add New Project</Box>
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                </Box>
+                                            </Box>
+
+                                        </Box>
+                                    </Grid>
+                                    <Grid xs={6} sm={6} lg={6}>
+                                        <Box ml={3}  >
+                                            <Box textAlign="right" pb={3}>
+                                                <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
+                                                    <Box px={1} color="white" fontSize={11}>Live Attendance</Box>
+                                                </Button>
+
+                                                <Box fontSize={12} pt={1} fontWeight='bold'>
+                                                    {moment().format('DD MMMM YYYY,')}
+                                                    <Box pl={59}> <Clock hour12={false} /></Box>
+                                                </Box>
+                                            </Box>
+                                            <Box pt={1}>
+                                                <Grid container justifyContent="space-between">
+                                                    <Grid item><Box fontSize={14} fontWeight={600}>My Task</Box></Grid>
+                                                    <Grid item>
+                                                        <Box color="#88D38B" fontSize={12} mr={2}
+                                                            onClick={() => history.push('/user/all-task')}
+                                                            style={{ cursor: 'pointer' }}>See all</Box></Grid>
+                                                </Grid>
+                                                <Box fontSize={9} pt={1}>
+                                                    <Grid container>
+                                                        <Grid item >
+                                                            <Box width={165} px={1} py={1} style={{ backgroundColor: '#6C757D', color: 'white', borderRadius: '5px' }}>
+                                                                <Grid container alignItems="center">
+                                                                    <Grid item>
+                                                                        <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                            <AvTimerIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                        </Box>
+                                                                    </Grid>
+                                                                    <Grid item>
+                                                                        <Box pl={2}>
+                                                                            <Box color="white">To Do</Box>
+                                                                            <Box color="white">{ListTotalTask[0]} task</Box>
+                                                                        </Box>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item >
+                                                            <Box width={165} mx={1} px={1} py={1} style={{ backgroundColor: '#F8B032', color: 'white', borderRadius: '5px' }}>
+                                                                <Grid container alignItems="center">
+                                                                    <Grid item>
+                                                                        <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                            <RateReviewIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                        </Box>
+                                                                    </Grid>
+                                                                    <Grid item>
+                                                                        <Box pl={2}>
+                                                                            <Box color="white">Review</Box>
+                                                                            <Box color="white">{ListTotalTask[2]} task</Box>
+                                                                        </Box>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item >
+                                                            <Box width={165} px={1} py={1} style={{ backgroundColor: '#51AC56', color: 'white', borderRadius: '5px' }}>
+                                                                <Grid container alignItems="center">
+                                                                    <Grid item>
+                                                                        <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                            <DoneIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                        </Box>
+                                                                    </Grid>
+                                                                    <Grid item>
+                                                                        <Box pl={2}>
+                                                                            <Box color="white">Done</Box>
+                                                                            <Box color="white">{ListTotalTask[3]} task</Box>
+                                                                        </Box>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Box>
+                                            </Box>
+                                            <Box pt={2}>
+                                                {isLoadingTaskUser ? 'loading...' :
+                                                    allTaskUser.filter(tasks => tasks.progress !== 'DONE').slice(0, 10).map((task, i) => (
+                                                        <Box key={i} p={1} mb={2}
+                                                            onClick={() => {
+                                                                console.log("iddt", task.id)
+                                                                setIdTask(task.id)
+                                                                // setSelectedTask(allTaskUser[i])
+                                                                setSelectedTask(allTaskUser.filter(tasks => tasks.progress !== 'DONE')[i])
+                                                            }}
+                                                            style={{
+                                                                width: "515px",
+                                                                borderRadius: "5px",
+                                                                WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                backgroundColor: '#fff',
+                                                                cursor: 'pointer'
+                                                            }}>
+                                                            <Box fontSize={11}>
+                                                                <Grid container justifyContent="space-between" alignItems="center">
+                                                                    <Grid item lg={6}>{task.task_name}
+                                                                        <Box
+                                                                            fontSize={10}
+                                                                            color="#3366CC"
+                                                                            fontWeight={500}>
+                                                                            {task.project_name}
+                                                                        </Box>
+                                                                    </Grid>
+                                                                    <Grid item lg={6}><Box textAlign="right"><NavigateNextIcon /></Box></Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                        </Box>
+                                                    ))
+                                                }
+                                                {/* <Box p={2} mb={2}
                                             style={{
                                                 width: "515px",
                                                 borderRadius: "5px",
@@ -773,11 +831,201 @@ export default function DashboardUser() {
                                             <Box fontSize={12} textAlign="center" onClick={handleClickOpen}
                                                 style={{ cursor: 'pointer' }} fontWeight={600}>+ Create New Task</Box>
                                         </Box> */}
-                                    </Box>
-                                </Box>
-                            </Grid>
-                        </Grid>
+                                            </Box>
+                                        </Box>
+                                    </Grid>
+                                </Grid>
 
+                                :
+                                <Grid container justifyContent="space-between">
+                                    <Grid xs={6} sm={6} lg={6}>
+                                        <Box>
+                                            <Box pb={1} fontSize={14}>Welcome back,</Box>
+                                            <Box color="#0F0F19" fontSize={13}>Don't forget to take attendance. And Enjoy your work!&#128522; </Box>
+
+                                            <Box mt={7} py={3} pl={5} style={{ backgroundColor: 'white', }}>
+                                                <Chart
+                                                    options={options}
+                                                    series={ListTotalTask}
+                                                    type="donut"
+                                                    width="380"
+                                                />
+                                            </Box>
+                                            <Box>
+                                                <Box pt={7}>
+                                                    <Grid container justifyContent="space-between">
+                                                        <Grid item><Box fontSize={14} fontWeight={600}>My Project</Box></Grid>
+                                                        <Grid item><Box fontSize={12} color="#88D38B">See more</Box></Grid>
+                                                    </Grid>
+                                                </Box>
+                                                <Box pt={2}  >
+                                                    <Grid container spacing={3}>
+                                                        {isLoadingProjectUser ? 'loading...' :
+                                                            allProjectUser.map((project, i) => (
+
+                                                                <Grid item xs={6} key={project.id}>
+                                                                    {
+                                                                        <Box p={2}
+                                                                            style={{
+                                                                                borderRadius: "15px",
+                                                                                WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                                boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                                backgroundColor: '#fff'
+                                                                            }}>
+                                                                            <Box fontSize={12}>{project.project_name}</Box>
+                                                                            <Box fontSize={11}>{project.departemen}</Box>
+                                                                        </Box>
+                                                                    }
+
+                                                                </Grid>
+                                                            )
+                                                            )}
+                                                        <Grid item xs={6}>
+                                                            <Box fontWeight={600} p={2}
+                                                                style={{
+                                                                    borderRadius: "15px",
+                                                                    WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                    boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                    backgroundColor: '#fff',
+                                                                    cursor: 'pointer'
+                                                                }}>
+                                                                <Box textAlign="center" fontSize={13}> + </Box>
+                                                                <Box textAlign="center" fontSize={13}> Add New Project</Box>
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                </Box>
+                                            </Box>
+
+                                        </Box>
+                                    </Grid>
+                                    <Grid xs={6} sm={6} lg={6}>
+                                        <Box ml={3}  >
+                                            <Box textAlign="right" pb={3}>
+                                                <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
+                                                    <Box px={1} color="white" fontSize={11}>Live Attendance</Box>
+                                                </Button>
+
+                                                <Box fontSize={12} pt={1} fontWeight='bold'>
+                                                    {moment().format('DD MMMM YYYY,')}
+                                                    <Box pl={59}> <Clock hour12={false} /></Box>
+                                                </Box>
+                                            </Box>
+                                            <Box pt={1}>
+                                                <Grid container justifyContent="space-between">
+                                                    <Grid item><Box fontSize={14} fontWeight={600}>My Task</Box></Grid>
+                                                    <Grid item>
+                                                        <Box color="#88D38B" fontSize={12} mr={2}
+                                                            onClick={() => history.push('/user/all-task')}
+                                                            style={{ cursor: 'pointer' }}>See all</Box></Grid>
+                                                </Grid>
+                                                <Box fontSize={9} pt={1}>
+                                                    <Grid container>
+                                                        <Grid item >
+                                                            <Box width={165} px={1} py={1} style={{ backgroundColor: '#6C757D', color: 'white', borderRadius: '5px' }}>
+                                                                <Grid container alignItems="center">
+                                                                    <Grid item>
+                                                                        <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                            <AvTimerIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                        </Box>
+                                                                    </Grid>
+                                                                    <Grid item>
+                                                                        <Box pl={2}>
+                                                                            <Box color="white">To Do</Box>
+                                                                            <Box color="white">{ListTotalTask[0]} task</Box>
+                                                                        </Box>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item >
+                                                            <Box width={165} mx={1} px={1} py={1} style={{ backgroundColor: '#F8B032', color: 'white', borderRadius: '5px' }}>
+                                                                <Grid container alignItems="center">
+                                                                    <Grid item>
+                                                                        <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                            <RateReviewIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                        </Box>
+                                                                    </Grid>
+                                                                    <Grid item>
+                                                                        <Box pl={2}>
+                                                                            <Box color="white">Review</Box>
+                                                                            <Box color="white">{ListTotalTask[2]} task</Box>
+                                                                        </Box>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid item >
+                                                            <Box width={165} px={1} py={1} style={{ backgroundColor: '#51AC56', color: 'white', borderRadius: '5px' }}>
+                                                                <Grid container alignItems="center">
+                                                                    <Grid item>
+                                                                        <Box pr={2} style={{ borderRight: '1px solid white' }}>
+                                                                            <DoneIcon fontSize='medium' style={{ fill: 'white' }} />
+                                                                        </Box>
+                                                                    </Grid>
+                                                                    <Grid item>
+                                                                        <Box pl={2}>
+                                                                            <Box color="white">Done</Box>
+                                                                            <Box color="white">{ListTotalTask[3]} task</Box>
+                                                                        </Box>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Box>
+                                            </Box>
+                                            <Box pt={2}>
+                                                {isLoadingTaskReviewer ? 'loading...' :
+                                                    allTaskReviewer.filter(tasks => tasks.progress !== 'DONE').slice(0, 10).map((task, i) => (
+                                                        <Box key={i} p={1} mb={2}
+                                                            onClick={() => {
+                                                                setIdTask(task.id)
+                                                                // setSelectedTask(allTaskUser[i])
+                                                                setSelectedTask(allTaskReviewer.filter(tasks => tasks.progress !== 'DONE')[i])
+                                                            }}
+                                                            style={{
+                                                                width: "515px",
+                                                                borderRadius: "5px",
+                                                                WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                                                backgroundColor: '#fff',
+                                                                cursor: 'pointer'
+                                                            }}>
+                                                            <Box fontSize={11}>
+                                                                <Grid container justifyContent="space-between" alignItems="center">
+                                                                    <Grid item lg={6}>{task.task_name}
+                                                                        <Box
+                                                                            fontSize={10}
+                                                                            color="#3366CC"
+                                                                            fontWeight={500}>
+                                                                            {task.project_name}
+                                                                        </Box>
+                                                                    </Grid>
+                                                                    <Grid item lg={6}><Box textAlign="right"><NavigateNextIcon /></Box></Grid>
+                                                                </Grid>
+                                                            </Box>
+                                                        </Box>
+                                                    ))
+                                                }
+                                                {/* <Box p={2} mb={2}
+                                        style={{
+                                            width: "515px",
+                                            borderRadius: "5px",
+                                            WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                            boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
+                                            backgroundColor: '#fff'
+                                        }}>
+                                        <Box fontSize={12} textAlign="center" onClick={handleClickOpen}
+                                            style={{ cursor: 'pointer' }} fontWeight={600}>+ Create New Task</Box>
+                                    </Box> */}
+                                            </Box>
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+
+                        }
                     </Box>
                 </Grid>
             </Grid>

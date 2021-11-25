@@ -15,6 +15,8 @@ router.get('/allprojectuser/:id', taskmanController.getAllProjectUser)
 router.get('/detailproject/:id', taskmanController.getDetailProject)
 router.get('/getuserdepartemen/:id', taskmanController.getUserDepartemen)
 router.get('/getnotif/:id', taskmanController.getNotif)
+router.get('/alltaskreviewer', taskmanController.getAlltaskByReviewer)
+router.get('/getnotifreviewer/:id', taskmanController.getNotifReviewer)
 
 router.put('/ubahpassword/:id', taskmanController.ubahPasword)
 
@@ -24,6 +26,7 @@ router.post('/addnewtask', taskmanController.addNewTask)
 router.post('/markreadtask/:id', taskmanController.markReadTask)
 router.post('/updatetask', taskmanController.updateTask)
 router.post('/sendreport', taskmanController.sendReport)
+router.post('/markreadtaskbyreviewer/:id', taskmanController.markReadTaskByReviewer)
 
 
 

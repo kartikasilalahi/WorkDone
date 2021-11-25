@@ -52,6 +52,7 @@ module.exports = {
             u.nama_belakang, 
             u.email, 
             u.iddepartement,
+            u.idlevel,
             r.role_name as role, 
             j.name as jabatan, 
             d.name as departemen 
@@ -153,6 +154,7 @@ module.exports = {
             })
         })
     },
+    // TOKEN
     // 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
     getListDepartemen: (req, res) => {
         let sql = `SELECT * from departemen`
@@ -250,8 +252,9 @@ module.exports = {
     updateProgressTask: (req, res) => {
         const { id, new_progress } = req.body
         let isread = 1
+        let isreadbyreviewer = 0;
         let last_update = moment().format("YYYY-MM-DD HH:mm:ss") // =>> UTK NGAMBIL TGL HARI INI
-        let sql = `UPDATE task SET progress='${new_progress}', isread=${isread}, last_update='${last_update}' WHERE id=${id}`
+        let sql = `UPDATE task SET progress='${new_progress}', isread=${isread}, isreadbyreviewer=${isreadbyreviewer}, last_update='${last_update}' WHERE id=${id}`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
             res.send({
@@ -276,6 +279,7 @@ module.exports = {
         dataTask.last_update = last_update
         dataTask.progress = progress
         dataTask.isread = 0;
+        dataTask.isreadbyreviewer = 0;
 
 
         mysql.query(sql, dataTask, (err, result) => {
@@ -373,6 +377,54 @@ module.exports = {
                 message: 'Report berhasil dikirim!'
             })
         })
-    }
+    },
+
+
+    getAlltaskByReviewer: (req, res) => {
+        let { id, keyword } = req.query
+        let sql = `SELECT p.project_name, t.* 
+        from task t JOIN project p ON p.id = t.project_id
+        where t.reviewer = ${id} AND t.task_name LIKE '%${keyword}%'`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
+
+    getNotifReviewer: (req, res) => {
+        let { id } = req.params
+        let isreadbyreviewer = 0
+        let sql = `SELECT p.project_name, t.* 
+        from task t JOIN project p ON p.id = t.project_id
+        where t.reviewer = ${id} AND t.isreadbyreviewer=${isreadbyreviewer}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
+    markReadTaskByReviewer: (req, res) => {
+        const { id } = req.params
+        let isreadbyreviewer = 1;
+        let isread = 0;
+        let sql = `UPDATE task SET isreadbyreviewer=${isreadbyreviewer}, isread=${isread} WHERE id=${id}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+            res.send({
+                status: 200,
+                message: `Task sudah dibaca`
+            })
+        })
+    },
+
 
 }
