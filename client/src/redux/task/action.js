@@ -63,6 +63,10 @@ const actions = {
     MARK_READ_BY_REVIEWER_REQUEST: 'MARK_READ_BY_REVIEWER_REQUEST',
     MARK_READ_BY_REVIEWER_ERR: 'MARK_READ_BY_REVIEWER_ERR',
 
+    GET_ALL_PROJECT_IN_DEPARTEMEN_SUCCESS: 'GET_ALL_PROJECT_IN_DEPARTEMEN_SUCCESS',
+    GET_ALL_PROJECT_IN_DEPARTEMEN_REQUEST: 'GET_ALL_PROJECT_IN_DEPARTEMEN_REQUEST',
+    GET_ALL_PROJECT_IN_DEPARTEMEN_ERR: 'GET_ALL_PROJECT_IN_DEPARTEMEN_ERR',
+
     getAllTaskUserEffect: (data) => {
         return {
             type: actions.GET_ALL_TASK_USER,
@@ -224,7 +228,7 @@ const actions = {
 
     getTotalTaskErr: (data) => {
         return {
-            type: actions.GET_TOTAL_TASK_SUCCESS,
+            type: actions.GET_TOTAL_TASK_ERR,
             data
         }
     },
@@ -370,6 +374,26 @@ const actions = {
     markReadByReviewerErr: (data) => {
         return {
             type: actions.MARK_READ_BY_REVIEWER_ERR,
+            data
+        }
+    },
+
+    getAllProjectInDepartemenSuccess: (data) => {
+        return {
+            type: actions.GET_ALL_PROJECT_IN_DEPARTEMEN_SUCCESS,
+            data
+        }
+    },
+
+    getAllProjectInDepartemenRequest: () => {
+        return {
+            type: actions.GET_ALL_PROJECT_IN_DEPARTEMEN_REQUEST,
+        }
+    },
+
+    getAllProjectInDepartemenErr: (data) => {
+        return {
+            type: actions.GET_ALL_PROJECT_IN_DEPARTEMEN_ERR,
             data
         }
     },

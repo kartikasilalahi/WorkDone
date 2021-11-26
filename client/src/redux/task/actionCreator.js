@@ -65,6 +65,10 @@ const {
     markReadByReviewerSuccess,
     markReadByReviewerRequest,
     markReadByReviewerErr,
+
+    getAllProjectInDepartemenSuccess,
+    getAllProjectInDepartemenRequest,
+    getAllProjectInDepartemenErr,
 } = action
 
 
@@ -349,7 +353,7 @@ const getNotifReviewer = (id) => {
 const markReadByReviewer = ({ id, idUser }) => {
     return async dispatch => {
         try {
-            dispatch(markReadTaskRequest())
+            dispatch(markReadByReviewerRequest())
             const markTask = await Axios.post(`${APIURL}taskman/markreadtaskbyreviewer/${id}`)
             if (markTask.data.message) {
                 dispatch(getNotifReviewer(idUser))
@@ -358,6 +362,22 @@ const markReadByReviewer = ({ id, idUser }) => {
             }
         } catch (error) {
             dispatch(markReadByReviewerErr(error))
+        }
+    }
+}
+
+const getAllProjectInDepartemen = (iddepartemen) => {
+    return async dispatch => {
+        try {
+            dispatch(getAllProjectInDepartemenRequest())
+            const allProject = await Axios.get(`${APIURL}taskman/allprojectuser/${iddepartemen}`)
+            if (allProject.data.data) {
+                dispatch(getAllProjectInDepartemenSuccess(allProject.data.data))
+            } else {
+                dispatch(getAllProjectInDepartemenErr(allProject.data.message))
+            }
+        } catch (error) {
+            dispatch(getAllProjectInDepartemenErr(error))
         }
     }
 }
@@ -377,5 +397,6 @@ export {
     sendReport,
     getAllTaskReviewer,
     getNotifReviewer,
-    markReadByReviewer
+    markReadByReviewer,
+    getAllProjectInDepartemen
 };

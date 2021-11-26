@@ -50,6 +50,9 @@ const {
     GET_NOTIF_REVIEWER_REQUEST,
     GET_NOTIF_REVIEWER_ERR,
 
+    GET_ALL_PROJECT_IN_DEPARTEMEN_SUCCESS,
+    GET_ALL_PROJECT_IN_DEPARTEMEN_REQUEST,
+    GET_ALL_PROJECT_IN_DEPARTEMEN_ERR,
 
 } = action
 
@@ -111,6 +114,11 @@ const initState = {
     is_loading_all_notif_reviewer: false,
     is_error_all_notif_reviewer: false,
     message_all_notif_reviewer: '',
+
+    all_project_in_departemen: [],
+    is_loading_all_project_in_departemen: false,
+    is_error_all_project_in_departemen: false,
+    message_all_project_in_departemen: '',
 
 
 };
@@ -359,6 +367,27 @@ const AuthReducer = (state = initState, action) => {
                 ...state,
                 is_loading_all_notif_reviewer: false,
                 message_all_notif_reviewer: err
+            };
+
+        // all PROJECT in DEPARTEMEN
+        case GET_ALL_PROJECT_IN_DEPARTEMEN_REQUEST:
+            return {
+                ...state,
+                is_loading_all_project_in_departemen: true,
+                message_all_project_in_departemen: ''
+            };
+        case GET_ALL_PROJECT_IN_DEPARTEMEN_SUCCESS:
+            return {
+                ...state,
+                all_project_in_departemen: data,
+                is_loading_all_project_in_departemen: false,
+                message_all_project_in_departemen: ''
+            };
+        case GET_ALL_PROJECT_IN_DEPARTEMEN_ERR:
+            return {
+                ...state,
+                is_loading_all_project_in_departemen: false,
+                message_all_project_in_departemen: err
             };
 
         default:

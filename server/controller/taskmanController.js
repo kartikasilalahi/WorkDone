@@ -426,5 +426,33 @@ module.exports = {
         })
     },
 
+    getAllProjectByDepartemen: (req, res) => {
+        const { iddepartemen } = req.params;
+        let sql = `SELECT * from project WHERE id_deoartemen=${iddepartemen}`;
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    }
+
+    // integrate algo in all task user (PENDING)
+    // create task by reviewer
+    // add project
+    // edit project
+    // registrasi user
+    // fitur admin
+    // profil
+    // change report on reviewer (view report per user not send)
+    // change password
+    // LIVE ATTENDANCE
+    // validate if form empty when submit
+    // SUSUN LAPORAN 
+    // GASSSSSSSSSSSSSSSSSSSSSSSS
+
+
 
 }

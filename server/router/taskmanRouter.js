@@ -17,6 +17,7 @@ router.get('/getuserdepartemen/:id', taskmanController.getUserDepartemen)
 router.get('/getnotif/:id', taskmanController.getNotif)
 router.get('/alltaskreviewer', taskmanController.getAlltaskByReviewer)
 router.get('/getnotifreviewer/:id', taskmanController.getNotifReviewer)
+router.get('/getallprojectdepartemen/:iddepartemen', taskmanController.getAllProjectByDepartemen)
 
 router.put('/ubahpassword/:id', taskmanController.ubahPasword)
 

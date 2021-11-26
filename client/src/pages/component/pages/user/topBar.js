@@ -82,7 +82,7 @@ const TopBar = ({ label }) => {
         }
     }, [detailTask])
 
-    console.log("curee", currentProgress)
+    // console.log("curee", currentProgress)
 
     useEffect(() => {
         if (isUpdate) {
@@ -183,8 +183,8 @@ const TopBar = ({ label }) => {
         "image"
     ];
 
-    console.log("all", allNotifReviewer)
-    console.log("idle", idlevel)
+    // console.log("all", allNotifReviewer)
+    // console.log("idle", idlevel)
 
     return (
         <>

@@ -22,6 +22,7 @@ import {
     addNewTask,
     updateTask,
     getAllTaskReviewer,
+    getAllProjectInDepartemen,
 
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
@@ -50,9 +51,11 @@ export default function Task() {
     const listUserDepartemen = useSelector(state => state.task.departemen_user)
     const messageSuccess = useSelector(state => state.task.message_add_new_task)
     const messageUpdateTask = useSelector(state => state.task.message_update_task)
-    // const ListTotalTask = useSelector(state => state.task.total_task)
+    // const ListTotalTask = useSelector(state => state.task.total_task)  
     const allTaskReviewer = useSelector(state => state.task.all_task_reviewer)
     const isLoadingTaskReviewer = useSelector(state => state.task.is_loading_all_task_reviewer)
+    const allProjectInDepartemen = useSelector(state => state.task.all_project_in_departemen)
+    const isLoadingProjectInDepartemen = useSelector(state => state.task.is_loading_all_project_in_departemen)
 
     const id = Number(localStorage.getItem('id'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
@@ -61,6 +64,7 @@ export default function Task() {
     const [listTask, setListTask] = useState([]);
     const [listProject, setListProject] = useState([]);
 
+    // console.log("allProjectInDepartemen", allProjectInDepartemen)
 
     const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
     const [idTask, setIdTask] = useState();
@@ -72,9 +76,9 @@ export default function Task() {
     const [Newprogress, setNewprogress] = useState('');
     const [currentProgress, setCurrentProgress] = useState('');
     const [dataNewTask, setDataNewTask] = useState({
-        assignee: id,
+        assignee: idlevel === 2 ? id : '',
         created_by: id,
-        reviewer: '',
+        reviewer: idlevel === 1 ? id : '',
         level: '',
         description: '',
         task_name: '',
@@ -98,12 +102,14 @@ export default function Task() {
 
     const onSaveNewTask = () => {
         let data = dataNewTask
+        console.log("data", data)
         dispatch(addNewTask(data))
     }
 
     useEffect(() => {
         if (idlevel === 1) {
             dispatch(getAllTaskReviewer(id, ''))
+            dispatch(getAllProjectInDepartemen(iddepartemen))
         } else {
             dispatch(getAllTaskUser(id, ''))
             dispatch(getAllProjectUser(id))
@@ -168,9 +174,9 @@ export default function Task() {
             })
             setOpenPopupCreateTask(false);
             setDataNewTask({
-                assignee: id,
+                assignee: idlevel === 2 ? id : '',
                 created_by: id,
-                reviewer: '',
+                reviewer: idlevel === 1 ? id : '',
                 level: '',
                 description: '',
                 task_name: '',
@@ -195,10 +201,11 @@ export default function Task() {
                 allTaskUser.map((task, i) => {
                     const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
                     let taskname = ""
-                    if (moment(end_datetime).format('DD MMM YYYY hh:mm:ss') < moment().format('DD MMM YYYY hh:mm:ss') && progress !== 'DONE') {
+                    let end = moment(end_datetime);
+                    let now = moment();
+                    if (end.diff(now, 'hour') <= 0) {
                         taskname = `expired`
                     }
-
                     return (
                         datatask.push({
                             key: id,
@@ -249,10 +256,14 @@ export default function Task() {
                 allTaskReviewer.map((task, i) => {
                     const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
                     let taskname = ""
-                    if (moment(end_datetime).format('DD MMM YYYY hh:mm:ss') < moment().format('DD MMM YYYY hh:mm:ss') && progress !== 'DONE') {
+                    let end = moment(end_datetime);
+                    let now = moment();
+                    // if (moment(end_datetime).format('DD MMMM YYYY hh:mm:ss') < moment().format('DD MMMM YYYY hh:mm:ss') && progress !== 'DONE') {
+                    //     taskname = `expired`
+                    // }
+                    if (end.diff(now, 'hour') <= 0) {
                         taskname = `expired`
                     }
-
                     return (
                         datatask.push({
                             key: id,
@@ -299,17 +310,29 @@ export default function Task() {
             }
         }
     }, [allTaskUser, allTaskReviewer])
+    // allProjectInDepartemen
 
     useEffect(() => {
-        if (allProjectUser && !isLoadingProjectUser) {
-            let listproject = []
-            allProjectUser.map((project) => {
-                const { id, project_name } = project
-                return (listproject.push({ value: project_name, text: project_name }))
-            })
-            setListProject(listproject)
+        if (idlevel === 2) {
+            if (allProjectUser && !isLoadingProjectUser) {
+                let listproject = []
+                allProjectUser.map((project) => {
+                    const { id, project_name } = project
+                    return (listproject.push({ value: project_name, text: project_name }))
+                })
+                setListProject(listproject)
+            }
+        } else {
+            if (allProjectInDepartemen && !isLoadingProjectInDepartemen) {
+                let listproject = []
+                allProjectInDepartemen.map((project) => {
+                    const { id, project_name } = project
+                    return (listproject.push({ value: project_name, text: project_name }))
+                })
+                setListProject(listproject)
+            }
         }
-    }, [allProjectUser])
+    }, [allProjectUser, allProjectInDepartemen])
 
     useEffect(() => {
         dispatch(getUserDepartemen(iddepartemen))
@@ -425,9 +448,15 @@ export default function Task() {
                                     size="sm"
                                     onChange={(e) => setDataNewTask({ ...dataNewTask, project_id: Number(e.target.value) })}
                                 >
+                                    {/* allProjectInDepartemen */}
                                     <option value="" selected disabled>Select Project..</option>
                                     {
-                                        allProjectUser && allProjectUser.map((project) => (
+                                        idlevel === 2 && allProjectUser && allProjectUser.map((project) => (
+                                            <option value={project.id} key={project.id}>{project.project_name}</option>
+                                        ))
+                                    }
+                                    {
+                                        idlevel === 1 && allProjectInDepartemen && allProjectInDepartemen.map((project) => (
                                             <option value={project.id} key={project.id}>{project.project_name}</option>
                                         ))
                                     }
@@ -486,7 +515,7 @@ export default function Task() {
                             </Grid>
 
                             {
-                                Number(localStorage.getItem('idlevel') === 2) ?
+                                idlevel === 2 ?
                                     <>
                                         <Form.Group controlId="formBasicSelect">
                                             <Form.Label>Assignee</Form.Label>
@@ -540,7 +569,7 @@ export default function Task() {
                                                 value={dataNewTask.reviewer}
                                                 size="sm"
                                                 onChange={(e) => {
-                                                    setDataNewTask({ ...dataNewTask, reviewer: Number(e.target.value) })
+                                                    setDataNewTask({ ...dataNewTask, assignee: Number(e.target.value) })
                                                 }}
                                             >
                                                 <option value="" selected disabled>Select Assignee..</option>
