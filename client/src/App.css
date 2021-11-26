@@ -260,4 +260,18 @@ a {
   min-height: 27em;
 }
 
+.quil-project .ql-editor {
+  min-height: 15em;
+}
+
+.multiSelectContainer{
+  font-size: 10px;
+  
+}
+
+.chip, .singleChip {
+  white-space: nowrap;
+  font-size: 10px !important;
+}
+
 /* .navbar .nav li .dropdown-menu li a {white-space: normal !important;} */

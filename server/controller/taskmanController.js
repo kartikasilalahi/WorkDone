@@ -222,7 +222,11 @@ module.exports = {
     getAllProjectUser: (req, res) => {
         let { id } = req.params
         let sql = `
-        SELECT pu.id, p.project_name, u.nama_depan, u.nama_belakang, d.name as departemen 
+        SELECT pu.id, 
+        p.project_name, 
+        u.nama_depan, 
+        u.nama_belakang, 
+        d.name as departemen 
         from project_user pu JOIN project p ON pu.project_id=p.id
         JOIN user u ON pu.user_id = u.id
         JOIN departemen d ON d.id=p.departemen_id WHERE user_id=${id}`
@@ -440,8 +444,8 @@ module.exports = {
     }
 
     // integrate algo in all task user (PENDING)
-    // create task by reviewer
-    // add project
+    // create task by reviewer DONE
+    // add project (IN PROGRESS)
     // edit project
     // registrasi user
     // fitur admin
@@ -452,6 +456,7 @@ module.exports = {
     // validate if form empty when submit
     // SUSUN LAPORAN 
     // GASSSSSSSSSSSSSSSSSSSSSSSS
+    // DETAIL TASK for user (assignee, reviewer, created by with name npot id_)
 
 
 

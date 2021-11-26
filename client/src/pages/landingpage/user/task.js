@@ -102,7 +102,6 @@ export default function Task() {
 
     const onSaveNewTask = () => {
         let data = dataNewTask
-        console.log("data", data)
         dispatch(addNewTask(data))
     }
 

@@ -11,6 +11,7 @@ import Swal from 'sweetalert2'
 const Report = () => {
     const dispatch = useDispatch()
     let id = Number(localStorage.getItem('id'))
+    let idlevel = Number(localStorage.getItem('idlevel'))
     let iddepartemen = Number(localStorage.getItem('iddepartemen'))
     const messageSendReport = useSelector(state => state.task.message_send_report)
     const loadingSendReport = useSelector(state => state.task.is_loading_send_report)
@@ -71,36 +72,43 @@ const Report = () => {
                 </Grid>
                 <Grid item md={10}>
                     <TopBar label="Report" />
-                    <Box px={2} className="container-content" pb={5}>
-                        <Box className="box-quil" px={2}>
-                            <ReactQuill
-                                theme="snow"
-                                modules={modules}
-                                formats={formats}
-                                value={reportField}
-                                onChange={(e) => setReportField(e)}
-                                style={{ minHeight: "200px" }}
-                            />
-                        </Box>
-                        <Box pt={1} px={2} textAlign="right">
-                            <Button variant="success"
-                                style={{
-                                    paddingRight: "40px",
-                                    paddingLeft: '40px',
-                                    fontSize: "13px",
-                                    borderRadius: '20px'
-                                }}
-                                onClick={() => {
-                                    setIsSend(true)
-                                    dispatch(sendReport({
-                                        iduser: id,
-                                        iddepartemen: iddepartemen,
-                                        data: reportField
-                                    }))
-                                }}
-                            >{loadingSendReport ? 'loading ..' : 'send'}</Button>
-                        </Box>
-                    </Box>
+                    {
+                        idlevel === 2 ?
+                            <Box px={2} className="container-content" pb={5}>
+                                <Box className="box-quil" px={2}>
+                                    <ReactQuill
+                                        theme="snow"
+                                        modules={modules}
+                                        formats={formats}
+                                        value={reportField}
+                                        onChange={(e) => setReportField(e)}
+                                        style={{ minHeight: "200px" }}
+                                    />
+                                </Box>
+                                <Box pt={1} px={2} textAlign="right">
+                                    <Button variant="success"
+                                        style={{
+                                            paddingRight: "40px",
+                                            paddingLeft: '40px',
+                                            fontSize: "13px",
+                                            borderRadius: '20px'
+                                        }}
+                                        onClick={() => {
+                                            setIsSend(true)
+                                            dispatch(sendReport({
+                                                iduser: id,
+                                                iddepartemen: iddepartemen,
+                                                data: reportField
+                                            }))
+                                        }}
+                                    >{loadingSendReport ? 'loading ..' : 'send'}</Button>
+                                </Box>
+                            </Box>
+                            :
+                            <Box px={2} className="container-content" pb={5}>
+                                disini isi report tiap user
+                            </Box>
+                    }
                 </Grid>
             </Grid>
         </div>

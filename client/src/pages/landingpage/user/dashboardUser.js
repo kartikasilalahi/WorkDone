@@ -21,6 +21,7 @@ import {
     addNewTask,
     updateTask,
     getAllTaskReviewer,
+    getAllProjectInDepartemen,
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
@@ -34,6 +35,8 @@ import RateReviewIcon from '@mui/icons-material/RateReview';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 import TopBar from '../../component/pages/user/topBar'
 import Clock from 'react-digital-clock';
+import Multiselect from 'multiselect-react-dropdown';
+
 
 export default function DashboardUser() {
     const dispatch = useDispatch()
@@ -52,15 +55,19 @@ export default function DashboardUser() {
     const allTaskReviewer = useSelector(state => state.task.all_task_reviewer)
     const isLoadingTaskReviewer = useSelector(state => state.task.is_loading_all_task_reviewer)
     const allNotifReviewer = useSelector(state => state.task.all_notif_reviewer)
+    const allProjectInDepartemen = useSelector(state => state.task.all_project_in_departemen)
+    const isLoadingProjectInDepartemen = useSelector(state => state.task.is_loading_all_project_in_departemen)
 
     const id = Number(localStorage.getItem('id'));
     const idlevel = Number(localStorage.getItem('idlevel'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
     const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
+    const [openPopupCreateProject, setOpenPopupCreateProject] = useState(false);
     const [idTask, setIdTask] = useState();
     const [idProject, setIdProject] = useState();
     const [isUpdateProgress, setIsUpdateProgress] = useState(false);
     const [isUpdateTask, setIsUpdateTask] = useState(false);
+    const [fieldAnggota, setFieldAnggota] = useState([]);
 
     const [idUpdateTask, setIdUpdateTask] = useState(0);
     const [Newprogress, setNewprogress] = useState('');
@@ -95,17 +102,30 @@ export default function DashboardUser() {
     useEffect(() => {
         if (idlevel === 1) {
             dispatch(getAllTaskReviewer(id, ''))
+            dispatch(getAllProjectInDepartemen(iddepartemen))
         } else {
-
             dispatch(getAllTaskUser(id, ''))
             dispatch(getAllProjectUser(id))
         }
-
     }, [dispatch])
+
+    useEffect(() => {
+        if (listUserDepartemen.length > 0 && openPopupCreateProject) {
+            let listuser = [];
+            listUserDepartemen.map((user) => {
+                const { nama_depan, nama_belakang } = user;
+                if (nama_belakang === null) return listuser.push({ key: nama_depan })
+                return listuser.push({ key: `${nama_depan} ${nama_belakang}` })
+            })
+            setFieldAnggota(listuser)
+        }
+
+    }, [listUserDepartemen, openPopupCreateProject])
 
 
     useEffect(() => {
         dispatch(getUserDepartemen(iddepartemen))
+
     }, [iddepartemen])
 
     useEffect(() => {
@@ -634,6 +654,54 @@ export default function DashboardUser() {
 
             </Dialog >
 
+            <Dialog open={openPopupCreateProject} onClose={() => setOpenPopupCreateProject(false)} maxWidth="sm" fullWidth>
+                <DialogTitle><Box fontSize={13} fontWeight={600}>Create New Project</Box></DialogTitle>
+                <DialogContent>
+                    <Box style={{ minHeight: "400px" }}>
+                        <Box pb={2} fontSize={10}>Project Name: </Box>
+                        <Form.Control
+                            style={{ fontSize: '11px' }}
+                            size="sm"
+                            type="text"
+                            placeholder="Input Project Name"
+                            // value={selectedTask.task_name}
+                            // onChange={(e) => setSelectedTask({ ...selectedTask, task_name: e.target.value })}
+                            required />
+
+                        <Box py={2} fontSize={10}>Members: </Box>
+                        <Multiselect
+                            options={fieldAnggota}
+                            closeIcon="close"
+                            displayValue="key"
+                        />
+                        <Box py={2} fontSize={10}>Description: </Box>
+                        <Box className="quil-project">
+                            <ReactQuill
+                                theme="snow"
+                                modules={modules}
+                                formats={formats}
+                            // value={selectedTask.description}
+                            // onChange={(e) => setSelectedTask({ ...selectedTask, description: e })}
+                            />
+                        </Box>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="danger" size="sm"
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Cancel</Button>
+                    <Button variant="success" size="sm"
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Save</Button>
+                </DialogActions>
+
+            </Dialog>
             <Grid container>
                 <Grid item md={2}>
                     <SideBar />
@@ -688,19 +756,6 @@ export default function DashboardUser() {
                                                                 </Grid>
                                                             )
                                                             )}
-                                                        <Grid item xs={6}>
-                                                            <Box fontWeight={600} p={2}
-                                                                style={{
-                                                                    borderRadius: "15px",
-                                                                    WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                                                    boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                                                    backgroundColor: '#fff',
-                                                                    cursor: 'pointer'
-                                                                }}>
-                                                                <Box textAlign="center" fontSize={13}> + </Box>
-                                                                <Box textAlign="center" fontSize={13}> Add New Project</Box>
-                                                            </Box>
-                                                        </Grid>
                                                     </Grid>
 
                                                 </Box>
@@ -858,8 +913,8 @@ export default function DashboardUser() {
                                                 </Box>
                                                 <Box pt={2}  >
                                                     <Grid container spacing={3}>
-                                                        {isLoadingProjectUser ? 'loading...' :
-                                                            allProjectUser.map((project, i) => (
+                                                        {isLoadingProjectInDepartemen ? 'loading...' :
+                                                            allProjectInDepartemen.map((project, i) => (
 
                                                                 <Grid item xs={6} key={project.id}>
                                                                     {
@@ -888,7 +943,7 @@ export default function DashboardUser() {
                                                                     cursor: 'pointer'
                                                                 }}>
                                                                 <Box textAlign="center" fontSize={13}> + </Box>
-                                                                <Box textAlign="center" fontSize={13}> Add New Project</Box>
+                                                                <Box textAlign="center" fontSize={13} onClick={() => setOpenPopupCreateProject(true)}> Add New Project</Box>
                                                             </Box>
                                                         </Grid>
                                                     </Grid>
