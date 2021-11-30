@@ -22,6 +22,7 @@ import {
     updateTask,
     getAllTaskReviewer,
     getAllProjectInDepartemen,
+    addNewProject
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
@@ -57,6 +58,8 @@ export default function DashboardUser() {
     const allNotifReviewer = useSelector(state => state.task.all_notif_reviewer)
     const allProjectInDepartemen = useSelector(state => state.task.all_project_in_departemen)
     const isLoadingProjectInDepartemen = useSelector(state => state.task.is_loading_all_project_in_departemen)
+    const isLoadingAddNewProject = useSelector(state => state.task.is_loading_add_new_project)
+    const messageAddNewProject = useSelector(state => state.task.message_add_new_project)
 
     const id = Number(localStorage.getItem('id'));
     const idlevel = Number(localStorage.getItem('idlevel'));
@@ -84,6 +87,12 @@ export default function DashboardUser() {
         start_datetime: new Date(),
     });
     const [selectedTask, setSelectedTask] = useState({});
+    const [dataNewProject, setDataNewProject] = useState({
+        project_name: '',
+        project_description: '',
+        departemen_id: iddepartemen,
+        list_user: []
+    });
 
 
     const handleClickOpen = () => {
@@ -112,10 +121,11 @@ export default function DashboardUser() {
     useEffect(() => {
         if (listUserDepartemen.length > 0 && openPopupCreateProject) {
             let listuser = [];
-            listUserDepartemen.map((user) => {
+            listUserDepartemen.filter((users) => users.id !== id).map((user) => {
                 const { nama_depan, nama_belakang } = user;
-                if (nama_belakang === null) return listuser.push({ key: nama_depan })
-                return listuser.push({ key: `${nama_depan} ${nama_belakang}` })
+                let iduser = user.id
+                if (nama_belakang === null) return listuser.push({ key: nama_depan, id: iduser })
+                return listuser.push({ key: `${nama_depan} ${nama_belakang}`, id: iduser })
             })
             setFieldAnggota(listuser)
         }
@@ -183,6 +193,16 @@ export default function DashboardUser() {
             dispatch(updateProgressTask({ id: idUpdateTask, new_progress: Newprogress, idUser: id }))
         }
     }, [isUpdateProgress])
+
+    useEffect(() => {
+        if (messageAddNewProject.length > 0 && isLoadingAddNewProject === false) {
+            Toast.fire({
+                icon: 'success',
+                title: messageAddNewProject
+            })
+            setOpenPopupCreateProject(false)
+        }
+    }, [isLoadingAddNewProject, messageAddNewProject])
 
     let options = {
         chart: {
@@ -277,6 +297,7 @@ export default function DashboardUser() {
 
     return (
         <div>
+            {/* popup create task */}
             <Dialog open={openPopupCreateTask} onClose={handleClosePopupCreateTask} maxWidth="sm" fullWidth>
                 <DialogTitle><Box fontSize={14} fontWeight={700}>Add New Task</Box></DialogTitle>
                 <DialogContent>
@@ -654,6 +675,7 @@ export default function DashboardUser() {
 
             </Dialog >
 
+            {/* popup create project */}
             <Dialog open={openPopupCreateProject} onClose={() => setOpenPopupCreateProject(false)} maxWidth="sm" fullWidth>
                 <DialogTitle><Box fontSize={13} fontWeight={600}>Create New Project</Box></DialogTitle>
                 <DialogContent>
@@ -664,8 +686,8 @@ export default function DashboardUser() {
                             size="sm"
                             type="text"
                             placeholder="Input Project Name"
-                            // value={selectedTask.task_name}
-                            // onChange={(e) => setSelectedTask({ ...selectedTask, task_name: e.target.value })}
+                            value={dataNewProject.project_name}
+                            onChange={(e) => setDataNewProject({ ...dataNewProject, project_name: e.target.value })}
                             required />
 
                         <Box py={2} fontSize={10}>Members: </Box>
@@ -673,6 +695,8 @@ export default function DashboardUser() {
                             options={fieldAnggota}
                             closeIcon="close"
                             displayValue="key"
+                            onSelect={(e) => setDataNewProject({ ...dataNewProject, list_user: e })}
+                            placeholder="Select user"
                         />
                         <Box py={2} fontSize={10}>Description: </Box>
                         <Box className="quil-project">
@@ -680,28 +704,34 @@ export default function DashboardUser() {
                                 theme="snow"
                                 modules={modules}
                                 formats={formats}
-                            // value={selectedTask.description}
-                            // onChange={(e) => setSelectedTask({ ...selectedTask, description: e })}
+                                value={dataNewProject.project_description}
+                                onChange={(e) => setDataNewProject({ ...dataNewProject, project_description: e })}
+
                             />
                         </Box>
                     </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button variant="danger" size="sm"
+                        onClick={() => setOpenPopupCreateProject(false)}
                         style={{
                             fontSize: '11px',
                             paddingLeft: '25px',
                             paddingRight: '25px'
                         }}>Cancel</Button>
                     <Button variant="success" size="sm"
+                        onClick={() => dispatch(addNewProject(dataNewProject))}
                         style={{
                             fontSize: '11px',
                             paddingLeft: '25px',
                             paddingRight: '25px'
-                        }}>Save</Button>
+                        }}>{isLoadingAddNewProject ? 'loading..' : 'Save'}</Button>
                 </DialogActions>
 
             </Dialog>
+
+
+            {/* start content */}
             <Grid container>
                 <Grid item md={2}>
                     <SideBar />

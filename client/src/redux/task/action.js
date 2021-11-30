@@ -67,6 +67,10 @@ const actions = {
     GET_ALL_PROJECT_IN_DEPARTEMEN_REQUEST: 'GET_ALL_PROJECT_IN_DEPARTEMEN_REQUEST',
     GET_ALL_PROJECT_IN_DEPARTEMEN_ERR: 'GET_ALL_PROJECT_IN_DEPARTEMEN_ERR',
 
+    ADD_PROJECT_SUCCESS: 'ADD_PROJECT_SUCCESS',
+    ADD_PROJECT_REQUEST: 'ADD_PROJECT_REQUEST',
+    ADD_PROJECT_ERR: 'ADD_PROJECT_ERR',
+
     getAllTaskUserEffect: (data) => {
         return {
             type: actions.GET_ALL_TASK_USER,
@@ -394,6 +398,26 @@ const actions = {
     getAllProjectInDepartemenErr: (data) => {
         return {
             type: actions.GET_ALL_PROJECT_IN_DEPARTEMEN_ERR,
+            data
+        }
+    },
+
+    addProjectSuccess: (data) => {
+        return {
+            type: actions.ADD_PROJECT_SUCCESS,
+            data
+        }
+    },
+
+    addProjectRequest: () => {
+        return {
+            type: actions.ADD_PROJECT_REQUEST,
+        }
+    },
+
+    addProjectErr: (data) => {
+        return {
+            type: actions.ADD_PROJECT_ERR,
             data
         }
     },

@@ -441,11 +441,43 @@ module.exports = {
                 data: result
             })
         })
+    },
+
+    addNewProject: (req, res) => {
+        // flow : tmabahkan ke tabel project dulu baru e project user (project_id dan user_id)
+        let { project_name, list_user, project_description, departemen_id } = req.body
+        let sql = `INSERT INTO project SET ?`
+        let dataProject = {
+            project_name,
+            project_description,
+            departemen_id
+        }
+        mysql.query(sql, dataProject, (err, result) => {
+            if (err) return res.status(500).send(err)
+
+            let listUser = []
+            list_user.forEach((user, i) => {
+                listUser.push([result.insertId, user.id])
+            })
+            sql = `INSERT INTO project_user (project_id, user_id) VALUES ?`
+            mysql.query(sql, [listUser], (err2, result2) => {
+                if (err2) res.status(500).send(err2)
+
+                res.send({
+                    status: 200,
+                    message: 'Task Baru berhasil ditambahkan!'
+                })
+            })
+        })
+
     }
+
+    // `project_name`, `departemen_id`, `project_description`
 
     // integrate algo in all task user (PENDING)
     // create task by reviewer DONE
-    // add project (IN PROGRESS)
+    // add project (DONE)
+    // VIEW detail project (NOT YET)
     // edit project
     // registrasi user
     // fitur admin
@@ -457,6 +489,24 @@ module.exports = {
     // SUSUN LAPORAN 
     // GASSSSSSSSSSSSSSSSSSSSSSSS
     // DETAIL TASK for user (assignee, reviewer, created by with name npot id_)
+
+    // Tes New Project
+
+    // ini tes new project, dubat hari ininih, semoga berhasil ya!!!!
+
+
+
+    // anggota:
+
+    // kartika as front end developer
+
+    // dian as ui/ux designer
+
+    // alfan as QA tester
+
+    // cris as back end developer
+
+
 
 
 

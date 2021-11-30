@@ -69,6 +69,10 @@ const {
     getAllProjectInDepartemenSuccess,
     getAllProjectInDepartemenRequest,
     getAllProjectInDepartemenErr,
+
+    addProjectSuccess,
+    addProjectRequest,
+    addProjectErr,
 } = action
 
 
@@ -382,6 +386,22 @@ const getAllProjectInDepartemen = (iddepartemen) => {
     }
 }
 
+const addNewProject = (data) => {
+    console.log("data", data)
+    return async dispatch => {
+        try {
+            dispatch(addProjectRequest())
+            const newProject = await Axios.post(`${APIURL}taskman/addnewproject`, data)
+            if (newProject.data.message) {
+                dispatch(getAllProjectInDepartemen(data.departemen_id))
+                dispatch(addProjectSuccess(newProject.data.message))
+            }
+        } catch (error) {
+            dispatch(addProjectErr(error))
+        }
+    }
+}
+
 export {
     getAllTaskUser,
     getDetailTask,
@@ -398,5 +418,6 @@ export {
     getAllTaskReviewer,
     getNotifReviewer,
     markReadByReviewer,
-    getAllProjectInDepartemen
+    getAllProjectInDepartemen,
+    addNewProject
 };

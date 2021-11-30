@@ -54,6 +54,10 @@ const {
     GET_ALL_PROJECT_IN_DEPARTEMEN_REQUEST,
     GET_ALL_PROJECT_IN_DEPARTEMEN_ERR,
 
+    ADD_PROJECT_SUCCESS,
+    ADD_PROJECT_REQUEST,
+    ADD_PROJECT_ERR,
+
 } = action
 
 const initState = {
@@ -120,6 +124,8 @@ const initState = {
     is_error_all_project_in_departemen: false,
     message_all_project_in_departemen: '',
 
+    message_add_new_project: '',
+    is_loading_add_new_project: false,
 
 };
 
@@ -264,6 +270,7 @@ const AuthReducer = (state = initState, action) => {
                 message_add_new_task: data
             }
 
+        // total task
         case GET_TOTAL_TASK_SUCCESS:
             return {
                 ...state,
@@ -389,6 +396,21 @@ const AuthReducer = (state = initState, action) => {
                 is_loading_all_project_in_departemen: false,
                 message_all_project_in_departemen: err
             };
+
+        case ADD_PROJECT_SUCCESS:
+            return {
+                ...state,
+                message_add_new_project: data,
+                is_loading_add_new_project: false
+            }
+
+        case ADD_PROJECT_REQUEST:
+            return {
+                ...state,
+                message_add_new_project: '',
+                is_loading_add_new_project: true
+            }
+
 
         default:
             return state;

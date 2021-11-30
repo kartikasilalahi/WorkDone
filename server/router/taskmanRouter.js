@@ -28,6 +28,7 @@ router.post('/markreadtask/:id', taskmanController.markReadTask)
 router.post('/updatetask', taskmanController.updateTask)
 router.post('/sendreport', taskmanController.sendReport)
 router.post('/markreadtaskbyreviewer/:id', taskmanController.markReadTaskByReviewer)
+router.post('/addnewproject', taskmanController.addNewProject)
 
 
 
