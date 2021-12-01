@@ -8,7 +8,6 @@ import {
 import SideBar from '../../component/pages/user/sideBar'
 import TopBar from '../../component/pages/user/topBar'
 import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
-import { Table } from 'antd';
 import moment from 'moment'
 import IconEdit from '../../../Assets/img/icon/edit.png'
 import IconDetail from '../../../Assets/img/icon/info.png'
@@ -32,6 +31,7 @@ import Swal from 'sweetalert2'
 import DateTimePicker from 'react-datetime-picker';
 import ReactQuill from 'react-quill'
 import { Input } from 'antd';
+import { Table } from 'antd';
 
 const { Search } = Input
 

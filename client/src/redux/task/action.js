@@ -12,6 +12,10 @@ const actions = {
     GET_ALL_PROJECT_USER_REQUEST: 'GET_ALL_PROJECT_USER_REQUEST',
     GET_ALL_PROJECT_USER_ERR: 'GET_ALL_PROJECT_USER_ERR',
 
+    GET_ALL_PROJECT_DEPARTEMEN_SUCCESS: 'GET_ALL_PROJECT_DEPARTEMEN_SUCCESS',
+    GET_ALL_PROJECT_DEPARTEMEN_REQUEST: 'GET_ALL_PROJECT_DEPARTEMEN_REQUEST',
+    GET_ALL_PROJECT_DEPARTEMEN_ERR: 'GET_ALL_PROJECT_DEPARTEMEN_ERR',
+
     GET_DETAIL_PROJECT_REQUEST: 'GET_DETAIL_PROJECT_REQUEST',
     GET_DETAIL_PROJECT_SUCCESS: 'GET_DETAIL_PROJECT_SUCCESS',
     GET_DETAIL_PROJECT_ERR: 'GET_DETAIL_PROJECT_ERR',
@@ -71,6 +75,14 @@ const actions = {
     ADD_PROJECT_REQUEST: 'ADD_PROJECT_REQUEST',
     ADD_PROJECT_ERR: 'ADD_PROJECT_ERR',
 
+    GET_ALL_DEPARTEMEN_SUCCESS: 'GET_ALL_DEPARTEMEN_SUCCESS',
+    GET_ALL_DEPARTEMEN_REQUEST: 'GET_ALL_DEPARTEMEN_REQUEST',
+    GET_ALL_DEPARTEMEN_ERR: 'GET_ALL_DEPARTEMEN_ERR',
+
+    GET_ALL_PROJECT_SUCCESS: 'GET_ALL_PROJECT_SUCCESS',
+    GET_ALL_PROJECT_REQUEST: 'GET_ALL_PROJECT_REQUEST',
+    GET_ALL_PROJECT_ERR: 'GET_ALL_PROJECT_ERR',
+
     getAllTaskUserEffect: (data) => {
         return {
             type: actions.GET_ALL_TASK_USER,
@@ -128,6 +140,27 @@ const actions = {
     getAllProjectUserErr: (err) => {
         return {
             type: actions.GET_ALL_PROJECT_USER_ERR,
+            err,
+        };
+    },
+
+
+    getAllProjectDepartemenSuccess: (data) => {
+        return {
+            type: actions.GET_ALL_PROJECT_DEPARTEMEN_SUCCESS,
+            data,
+        };
+    },
+
+    getAllProjectDepartemenRequest: () => {
+        return {
+            type: actions.GET_ALL_PROJECT_DEPARTEMEN_REQUEST,
+        };
+    },
+
+    getAllProjectDepartemenErr: (err) => {
+        return {
+            type: actions.GET_ALL_PROJECT_DEPARTEMEN_ERR,
             err,
         };
     },
@@ -418,6 +451,26 @@ const actions = {
     addProjectErr: (data) => {
         return {
             type: actions.ADD_PROJECT_ERR,
+            data
+        }
+    },
+
+    getAllDepartemenSuccess: (data) => {
+        return {
+            type: actions.GET_ALL_DEPARTEMEN_SUCCESS,
+            data
+        }
+    },
+
+    getAllDepartemenRequest: () => {
+        return {
+            type: actions.GET_ALL_DEPARTEMEN_REQUEST,
+        }
+    },
+
+    getAllDepartemenErr: (data) => {
+        return {
+            type: actions.GET_ALL_DEPARTEMEN_ERR,
             data
         }
     },

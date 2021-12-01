@@ -10,21 +10,21 @@ import { useHistory } from "react-router-dom";
 import swal from 'sweetalert'
 
 function SidebarItem({ depthStep = 10, depth = 0, expanded, active, item, ...rest }) {
-  const [collapsed, setCollapsed] = React.useState(true);
+  const [collapsed, setCollapsed] = React.useState(false);
   const { label, items, Icon, onClick: onClickProp } = item;
   const history = useHistory();
   function toggleCollapse() {
     setCollapsed(prevValue => !prevValue);
   }
-  useEffect(() => {
-    if (active === '/user/all-task') {
-      setCollapsed(false)
-    }
-    if (active === '/user/change-password') {
-      setCollapsed(false)
-    }
+  // useEffect(() => {
+  //   if (active === '/user/all-task') {
+  //     setCollapsed(false)
+  //   }
+  //   if (active === '/user/change-password') {
+  //     setCollapsed(false)
+  //   }
 
-  }, [])
+  // }, [])
 
   function onClick(e) {
     if (Array.isArray(items)) {

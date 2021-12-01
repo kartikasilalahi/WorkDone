@@ -73,6 +73,14 @@ const {
     addProjectSuccess,
     addProjectRequest,
     addProjectErr,
+
+    getAllProjectDepartemenSuccess,
+    getAllProjectDepartemenRequest,
+    getAllProjectDepartemenErr,
+
+    getAllDepartemenSuccess,
+    getAllDepartemenRequest,
+    getAllDepartemenErr,
 } = action
 
 
@@ -158,15 +166,32 @@ const getAllProjectUser = (id) => {
     }
 }
 
+const getAllProjectDepartemen = (id) => {
+    return async dispatch => {
+        try {
+            // dispatch(getAllProjectUserRequest())
+            // const allTaskUser = await Axios.get(`${APIURL}taskman/allprojectuser/${id}`)
+            // if (allTaskUser.data.data) {
+            //     dispatch(getAllProjectUserSuccess(allTaskUser.data.data))
+            // } else {
+            //     dispatch(getAllProjectUserErr(allTaskUser.data.message))
+            // }
+        } catch (error) {
+            // dispatch(getAllProjectUserErr(error))
+        }
+    }
+}
+
 const getDetailProject = (id) => {
     return async dispatch => {
         try {
             dispatch(getDetailProjectRequest())
-            const allTaskUser = await Axios.get(`${APIURL}taskman/detailproject/${id}`)
-            if (allTaskUser.data.data) {
-                dispatch(getDetailProjectSuccess(allTaskUser.data.data))
+            const detailProject = await Axios.get(`${APIURL}taskman/detailproject/${id}`)
+            if (detailProject.data.data) {
+                console.log("detaill", detailProject)
+                dispatch(getDetailProjectSuccess(detailProject.data.data))
             } else {
-                dispatch(getDetailProjectErr(allTaskUser.data.message))
+                dispatch(getDetailProjectErr(detailProject.data.message))
             }
         } catch (error) {
             dispatch(getDetailProjectErr(error))
@@ -387,7 +412,6 @@ const getAllProjectInDepartemen = (iddepartemen) => {
 }
 
 const addNewProject = (data) => {
-    console.log("data", data)
     return async dispatch => {
         try {
             dispatch(addProjectRequest())
@@ -401,6 +425,22 @@ const addNewProject = (data) => {
         }
     }
 }
+
+const getAllDepartemen = (keyword) => {
+    return async dispatch => {
+        try {
+            dispatch(getAllDepartemenRequest())
+            const allDepartemen = await Axios.get(`${APIURL}taskman/alldepartemen?keyword=${keyword}`)
+            if (allDepartemen.data.data) {
+                dispatch(getAllDepartemenSuccess(allDepartemen.data.data))
+            }
+        } catch (error) {
+            dispatch(getAllDepartemenErr(error))
+        }
+    }
+}
+
+
 
 export {
     getAllTaskUser,
@@ -419,5 +459,6 @@ export {
     getNotifReviewer,
     markReadByReviewer,
     getAllProjectInDepartemen,
-    addNewProject
+    addNewProject,
+    getAllDepartemen
 };

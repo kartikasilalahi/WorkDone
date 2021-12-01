@@ -60,12 +60,17 @@ export default function DashboardUser() {
     const isLoadingProjectInDepartemen = useSelector(state => state.task.is_loading_all_project_in_departemen)
     const isLoadingAddNewProject = useSelector(state => state.task.is_loading_add_new_project)
     const messageAddNewProject = useSelector(state => state.task.message_add_new_project)
+    const detailProject = useSelector(state => state.task.detail_project_user)
+    const isLoadingDetailProject = useSelector(state => state.task.is_loading_detail_project_user)
+
+    console.log("detailProject", detailProject)
 
     const id = Number(localStorage.getItem('id'));
     const idlevel = Number(localStorage.getItem('idlevel'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
     const [openPopupCreateTask, setOpenPopupCreateTask] = useState(false);
     const [openPopupCreateProject, setOpenPopupCreateProject] = useState(false);
+    const [openPopupDetailProject, setOpenPopupDetailProject] = useState(false);
     const [idTask, setIdTask] = useState();
     const [idProject, setIdProject] = useState();
     const [isUpdateProgress, setIsUpdateProgress] = useState(false);
@@ -727,9 +732,13 @@ export default function DashboardUser() {
                             paddingRight: '25px'
                         }}>{isLoadingAddNewProject ? 'loading..' : 'Save'}</Button>
                 </DialogActions>
-
             </Dialog>
 
+            {/* popup detail project */}
+            <Dialog open={openPopupDetailProject} onClose={() => setOpenPopupDetailProject(false)} maxWidth="sm" fullWidth>
+                <DialogTitle><Box fontSize={13} fontWeight={600}>Detail Project</Box></DialogTitle>
+
+            </Dialog>
 
             {/* start content */}
             <Grid container>
@@ -954,6 +963,11 @@ export default function DashboardUser() {
                                                                                 WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
                                                                                 boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
                                                                                 backgroundColor: '#fff'
+                                                                            }}
+
+                                                                            onClick={() => {
+                                                                                dispatch(getDetailProject(project.id))
+                                                                                setOpenPopupDetailProject(true)
                                                                             }}>
                                                                             <Box fontSize={12}>{project.project_name}</Box>
                                                                             <Box fontSize={11}>{project.departemen}</Box>
@@ -971,7 +985,8 @@ export default function DashboardUser() {
                                                                     boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
                                                                     backgroundColor: '#fff',
                                                                     cursor: 'pointer'
-                                                                }}>
+                                                                }}
+                                                            >
                                                                 <Box textAlign="center" fontSize={13}> + </Box>
                                                                 <Box textAlign="center" fontSize={13} onClick={() => setOpenPopupCreateProject(true)}> Add New Project</Box>
                                                             </Box>

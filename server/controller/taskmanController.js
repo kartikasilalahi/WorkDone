@@ -78,7 +78,7 @@ module.exports = {
             u.nama_depan,
             u.nama_belakang, 
             u.email, 
-            r.name as role, 
+            r.role_name as role, 
             j.name as jabatan, 
             d.name as departemen 
             from user u JOIN role r ON u.idrole = r.id 
@@ -103,7 +103,7 @@ module.exports = {
         u.nama_depan,
         u.nama_belakang, 
         u.email, 
-        r.name as role, 
+        r.role_name as role, 
         j.name as jabatan, 
         d.name as departemen 
         l.name as level
@@ -239,10 +239,24 @@ module.exports = {
         })
     },
 
+    getAllProjectibyDepartemen: (req, res) => {
+        let { iddepartemen } = req.params
+        let sql = `
+        SELECT *
+        from project WHERE departemen_id=${iddepartemen}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
     getDetailProject: (req, res) => {
         let { id } = req.params
         let sql = `
-        SELECT * FROM workdone.task where project_id=${id};`
+        SELECT * FROM workdone.project where id=${id};`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
             res.send({
@@ -432,7 +446,7 @@ module.exports = {
 
     getAllProjectByDepartemen: (req, res) => {
         const { iddepartemen } = req.params;
-        let sql = `SELECT * from project WHERE id_deoartemen=${iddepartemen}`;
+        let sql = `SELECT * from project WHERE id_departemen=${iddepartemen}`;
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 
@@ -470,6 +484,54 @@ module.exports = {
             })
         })
 
+    },
+
+    getAllUser: (req, res) => {
+        let { keyword } = req.query
+
+        let sql = `u.id, 
+        u.nama_depan,
+        u.nama_belakang, 
+        u.email, 
+        u.jk,
+        u.tempat_lahir,
+        u.tanggal_lahir,
+        u.no_hp,
+        u.alamat,
+        u.tanggal_masuk,
+        r.role_name as role, 
+        j.name as jabatan, 
+        d.name as departemen,
+        l.name as level
+        from user u JOIN role r ON u.idrole = r.id 
+        JOIN jabatan j ON u.idjabatan=j.id 
+        JOIN departemen d ON j.departemen_id=d.id 
+        JOIN level l ON l.id=u.idlevel
+        WHERE u.nama_depan LIKE '%${keyword}%' OR u.nama_belakang LIKE '%${keyword}%'`;
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
+    getAllDepartemen: (req, res) => {
+        let { keyword } = req.query
+        let sql = `SELECT d.*, u.email, u.nama_depan, u.nama_belakang 
+        from departemen d JOIN user u ON d.idatasan=u.id
+        WHERE d.name LIKE '%${keyword}%'`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+
     }
 
     // `project_name`, `departemen_id`, `project_description`
@@ -480,7 +542,7 @@ module.exports = {
     // VIEW detail project (NOT YET)
     // edit project
     // registrasi user
-    // fitur admin
+    // fitur admin (table departemen and search departemen DONE,)
     // profil
     // change report on reviewer (view report per user not send)
     // change password

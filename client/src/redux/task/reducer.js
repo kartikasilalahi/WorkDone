@@ -58,6 +58,10 @@ const {
     ADD_PROJECT_REQUEST,
     ADD_PROJECT_ERR,
 
+    GET_ALL_DEPARTEMEN_SUCCESS,
+    GET_ALL_DEPARTEMEN_REQUEST,
+    GET_ALL_DEPARTEMEN_ERR,
+
 } = action
 
 const initState = {
@@ -126,6 +130,11 @@ const initState = {
 
     message_add_new_project: '',
     is_loading_add_new_project: false,
+
+    all_departemen: [],
+    is_loading_all_departemen: false,
+    is_error_all_departemen: false,
+    message_all_departemen: '',
 
 };
 
@@ -410,6 +419,27 @@ const AuthReducer = (state = initState, action) => {
                 message_add_new_project: '',
                 is_loading_add_new_project: true
             }
+
+        // GET ALL DEPARTEMEN
+        case GET_ALL_DEPARTEMEN_REQUEST:
+            return {
+                ...state,
+                is_loading_all_departemen: true,
+                message_all_departemen: ''
+            };
+        case GET_ALL_DEPARTEMEN_SUCCESS:
+            return {
+                ...state,
+                all_departemen: data,
+                is_loading_all_departemen: false,
+                message_all_departemen: ''
+            };
+        case GET_ALL_DEPARTEMEN_ERR:
+            return {
+                ...state,
+                is_loading_all_departemen: false,
+                message_all_departemen: err
+            };
 
 
         default:

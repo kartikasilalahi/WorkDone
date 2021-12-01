@@ -13,7 +13,7 @@ export default function dashboardAdmin() {
 
                 </Grid>
                 <Grid item lg={10} style={{ backgroundColor: "whitesmoke", minHeight: "100vh" }}>
-                    <TopBar label='Dashboard Admin' />
+                    <TopBar label='Change Password' />
                 </Grid>
             </Grid>
         </div>
