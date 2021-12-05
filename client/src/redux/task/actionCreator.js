@@ -81,6 +81,19 @@ const {
     getAllDepartemenSuccess,
     getAllDepartemenRequest,
     getAllDepartemenErr,
+
+    getAllUserSuccess,
+    getAllUserRequest,
+    getAllUserErr,
+
+    addDepartemenSuccess,
+    addDepartemenRequest,
+    addDepartemenErr,
+
+    editDepartemenSuccess,
+    editDepartemenRequest,
+    editDepartemenErr,
+
 } = action
 
 
@@ -440,6 +453,49 @@ const getAllDepartemen = (keyword) => {
     }
 }
 
+const getAllUser = (keyword) => {
+    return async dispatch => {
+        try {
+            dispatch(getAllUserRequest())
+            const allDepartemen = await Axios.get(`${APIURL}taskman/alluser?keyword=${keyword}`)
+            if (allDepartemen.data.data) {
+                dispatch(getAllUserSuccess(allDepartemen.data.data))
+            }
+        } catch (error) {
+            dispatch(getAllUserErr(error))
+        }
+    }
+}
+
+const addNewDepartemen = (data) => {
+    return async dispatch => {
+        try {
+            dispatch(addDepartemenRequest())
+            const newdepartemen = await Axios.post(`${APIURL}taskman/addnewdepartemen`, data)
+            if (newdepartemen.data.message) {
+                dispatch(getAllDepartemen(''))
+                dispatch(addDepartemenSuccess(newdepartemen.data.message))
+            }
+        } catch (error) {
+            dispatch(addDepartemenErr(error))
+        }
+    }
+}
+
+const editDepartemen = (data) => {
+    return async dispatch => {
+        try {
+            dispatch(editDepartemenRequest())
+            const editdepartemen = await Axios.post(`${APIURL}taskman/editdepartemen`, data)
+            if (editdepartemen.data.message) {
+                dispatch(getAllDepartemen(''))
+                dispatch(editDepartemenSuccess(editdepartemen.data.message))
+            }
+        } catch (error) {
+            dispatch(editDepartemenErr(error))
+        }
+    }
+}
 
 
 export {
@@ -460,5 +516,8 @@ export {
     markReadByReviewer,
     getAllProjectInDepartemen,
     addNewProject,
-    getAllDepartemen
+    getAllDepartemen,
+    getAllUser,
+    addNewDepartemen,
+    editDepartemen
 };

@@ -202,7 +202,7 @@ export default function Task() {
                     let taskname = ""
                     let end = moment(end_datetime);
                     let now = moment();
-                    if (end.diff(now, 'hour') <= 0) {
+                    if (end.diff(now, 'hour') <= 0 && progress !== 'DONE') {
                         taskname = `expired`
                     }
                     return (
@@ -260,7 +260,7 @@ export default function Task() {
                     // if (moment(end_datetime).format('DD MMMM YYYY hh:mm:ss') < moment().format('DD MMMM YYYY hh:mm:ss') && progress !== 'DONE') {
                     //     taskname = `expired`
                     // }
-                    if (end.diff(now, 'hour') <= 0) {
+                    if (end.diff(now, 'hour') <= 0 && progress !== 'DONE') {
                         taskname = `expired`
                     }
                     return (

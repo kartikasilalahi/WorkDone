@@ -62,6 +62,16 @@ const {
     GET_ALL_DEPARTEMEN_REQUEST,
     GET_ALL_DEPARTEMEN_ERR,
 
+    GET_ALL_USER_SUCCESS,
+    GET_ALL_USER_REQUEST,
+    GET_ALL_USER_ERR,
+
+    ADD_DEPARTEMEN_SUCCESS,
+    ADD_DEPARTEMEN_REQUEST,
+
+    EDIT_DEPARTEMEN_SUCCESS,
+    EDIT_DEPARTEMEN_REQUEST,
+
 } = action
 
 const initState = {
@@ -135,6 +145,17 @@ const initState = {
     is_loading_all_departemen: false,
     is_error_all_departemen: false,
     message_all_departemen: '',
+
+    all_user: [],
+    is_loading_all_user: false,
+    is_error_all_user: false,
+    message_all_user: '',
+
+    message_add_new_departemen: '',
+    is_loading_add_new_departemen: false,
+
+    message_edit_departemen: '',
+    is_loading_edit_departemen: false,
 
 };
 
@@ -406,6 +427,7 @@ const AuthReducer = (state = initState, action) => {
                 message_all_project_in_departemen: err
             };
 
+        // ADD NEW PROJECT
         case ADD_PROJECT_SUCCESS:
             return {
                 ...state,
@@ -441,6 +463,56 @@ const AuthReducer = (state = initState, action) => {
                 message_all_departemen: err
             };
 
+        // GET ALL USER
+        case GET_ALL_USER_REQUEST:
+            return {
+                ...state,
+                is_loading_all_user: true,
+                message_all_user: ''
+            };
+        case GET_ALL_USER_SUCCESS:
+            return {
+                ...state,
+                all_user: data,
+                is_loading_all_user: false,
+                message_all_user: ''
+            };
+        case GET_ALL_USER_ERR:
+            return {
+                ...state,
+                is_loading_all_user: false,
+                message_all_user: err
+            };
+
+        // ADD NEW DEPARTEME
+        case ADD_DEPARTEMEN_SUCCESS:
+            return {
+                ...state,
+                message_add_new_departemen: data,
+                is_loading_add_new_departemen: false
+            }
+
+        case ADD_DEPARTEMEN_REQUEST:
+            return {
+                ...state,
+                message_add_new_departemen: '',
+                is_loading_add_new_departemen: true
+            }
+
+        // EDIT DEPARTEME
+        case EDIT_DEPARTEMEN_SUCCESS:
+            return {
+                ...state,
+                message_edit_departemen: data,
+                is_loading_edit_departemen: false
+            }
+
+        case EDIT_DEPARTEMEN_REQUEST:
+            return {
+                ...state,
+                message_edit_departemen: '',
+                is_loading_edit_departemen: true
+            }
 
         default:
             return state;

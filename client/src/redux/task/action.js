@@ -83,6 +83,21 @@ const actions = {
     GET_ALL_PROJECT_REQUEST: 'GET_ALL_PROJECT_REQUEST',
     GET_ALL_PROJECT_ERR: 'GET_ALL_PROJECT_ERR',
 
+
+    GET_ALL_USER_SUCCESS: 'GET_ALL_USER_SUCCESS',
+    GET_ALL_USER_REQUEST: 'GET_ALL_USER_REQUEST',
+    GET_ALL_USER_ERR: 'GET_ALL_USER_ERR',
+
+    ADD_DEPARTEMEN_SUCCESS: 'ADD_DEPARTEMEN_SUCCESS',
+    ADD_DEPARTEMEN_REQUEST: 'ADD_DEPARTEMEN_REQUEST',
+    ADD_DEPARTEMEN_ERR: 'ADD_DEPARTEMEN_ERR',
+
+    EDIT_DEPARTEMEN_SUCCESS: 'EDIT_DEPARTEMEN_SUCCESS',
+    EDIT_DEPARTEMEN_REQUEST: 'EDIT_DEPARTEMEN_REQUEST',
+    EDIT_DEPARTEMEN_ERR: 'EDIT_DEPARTEMEN_ERR',
+
+
+
     getAllTaskUserEffect: (data) => {
         return {
             type: actions.GET_ALL_TASK_USER,
@@ -474,6 +489,68 @@ const actions = {
             data
         }
     },
+
+
+    getAllUserSuccess: (data) => {
+        return {
+            type: actions.GET_ALL_USER_SUCCESS,
+            data
+        }
+    },
+
+    getAllUserRequest: () => {
+        return {
+            type: actions.GET_ALL_USER_REQUEST,
+        }
+    },
+
+    getAllUserErr: (data) => {
+        return {
+            type: actions.GET_ALL_USER_ERR,
+            data
+        }
+    },
+
+    addDepartemenSuccess: (data) => {
+        return {
+            type: actions.ADD_DEPARTEMEN_SUCCESS,
+            data
+        }
+    },
+
+    addDepartemenRequest: () => {
+        return {
+            type: actions.ADD_DEPARTEMEN_REQUEST,
+        }
+    },
+
+    addDepartemenErr: (data) => {
+        return {
+            type: actions.ADD_DEPARTEMEN_ERR,
+            data
+        }
+    },
+
+    editDepartemenSuccess: (data) => {
+        return {
+            type: actions.EDIT_DEPARTEMEN_SUCCESS,
+            data
+        }
+    },
+
+    editDepartemenRequest: () => {
+        return {
+            type: actions.EDIT_DEPARTEMEN_REQUEST,
+        }
+    },
+
+    editDepartemenErr: (data) => {
+        return {
+            type: actions.EDIT_DEPARTEMEN_ERR,
+            data
+        }
+    },
+
 
 };
 

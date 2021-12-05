@@ -489,7 +489,7 @@ module.exports = {
     getAllUser: (req, res) => {
         let { keyword } = req.query
 
-        let sql = `u.id, 
+        let sql = `SELECT u.id, 
         u.nama_depan,
         u.nama_belakang, 
         u.email, 
@@ -499,6 +499,7 @@ module.exports = {
         u.no_hp,
         u.alamat,
         u.tanggal_masuk,
+        u.idlevel,
         r.role_name as role, 
         j.name as jabatan, 
         d.name as departemen,
@@ -532,7 +533,35 @@ module.exports = {
             })
         })
 
+    },
+
+    addNewDepartment: (req, res) => {
+        let data = req.body
+        let sql = `INSERT INTO departemen SET ?`
+        mysql.query(sql, data, (err, result) => {
+            if (err) return res.status(500).send(err)
+
+            res.send({
+                status: 200,
+                message: 'Department Baru berhasil ditambahkan!'
+            })
+        })
+    },
+
+    editDepartemen: (req, res) => {
+        let data = req.body
+        let sql = `UPDATE departemen SET ? WHERE id=${data.id}`
+        mysql.query(sql, data, (err, result) => {
+            if (err) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                message: `Departemen berhasil diperbaharui`
+            })
+        })
     }
+
+
 
     // `project_name`, `departemen_id`, `project_description`
 
@@ -542,7 +571,7 @@ module.exports = {
     // VIEW detail project (NOT YET)
     // edit project
     // registrasi user
-    // fitur admin (table departemen and search departemen DONE,)
+    // fitur admin (table departemen and search departemen DONE, add new department DONE, edit department done)
     // profil
     // change report on reviewer (view report per user not send)
     // change password
