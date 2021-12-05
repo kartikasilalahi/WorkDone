@@ -94,6 +94,10 @@ const {
     editDepartemenRequest,
     editDepartemenErr,
 
+    getAllTaskSuccess,
+    getAllTaskRequest,
+    getAllTaskErr,
+
 } = action
 
 
@@ -497,6 +501,20 @@ const editDepartemen = (data) => {
     }
 }
 
+const getAllTask = (keyword) => {
+    return async dispatch => {
+        try {
+            dispatch(getAllTaskRequest())
+            const alltask = await Axios.get(`${APIURL}taskman/alltask?keyword=${keyword}`)
+            if (alltask.data.data) {
+                dispatch(getAllTaskSuccess(alltask.data.data))
+            }
+        } catch (error) {
+            dispatch(getAllTaskErr(error))
+        }
+    }
+}
+
 
 export {
     getAllTaskUser,
@@ -519,5 +537,6 @@ export {
     getAllDepartemen,
     getAllUser,
     addNewDepartemen,
-    editDepartemen
+    editDepartemen,
+    getAllTask
 };

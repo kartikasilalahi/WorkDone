@@ -360,7 +360,7 @@ export default function Departemen() {
                                 </Box>
                             </Grid>
                         </Grid>
-                        <Box textAlign="right" fontSize={12} pb={1} color="gray" >Total {listUser.length} User</Box>
+                        <Box textAlign="right" fontSize={12} pb={1} color="gray" >Total {allUser.length} User</Box>
                         <Box pb={2}>
                             {isLoadingListUser ? 'loading..' :
                                 <Table columns={columns} dataSource={allUser} pagination />}

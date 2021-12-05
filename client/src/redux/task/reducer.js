@@ -72,6 +72,10 @@ const {
     EDIT_DEPARTEMEN_SUCCESS,
     EDIT_DEPARTEMEN_REQUEST,
 
+    GET_ALL_TASK_SUCCESS,
+    GET_ALL_TASK_REQUEST,
+    GET_ALL_TASK_ERR,
+
 } = action
 
 const initState = {
@@ -156,6 +160,11 @@ const initState = {
 
     message_edit_departemen: '',
     is_loading_edit_departemen: false,
+
+    all_task: [],
+    is_loading_all_task: false,
+    is_error_all_task: false,
+    message_all_task: '',
 
 };
 
@@ -514,6 +523,26 @@ const AuthReducer = (state = initState, action) => {
                 is_loading_edit_departemen: true
             }
 
+        // GET ALL TASK
+        case GET_ALL_TASK_REQUEST:
+            return {
+                ...state,
+                is_loading_all_task: true,
+                message_all_task: ''
+            };
+        case GET_ALL_TASK_SUCCESS:
+            return {
+                ...state,
+                all_task: data,
+                is_loading_all_task: false,
+                message_all_task: ''
+            };
+        case GET_ALL_TASK_ERR:
+            return {
+                ...state,
+                is_loading_all_task: false,
+                message_all_task: err
+            };
         default:
             return state;
     }

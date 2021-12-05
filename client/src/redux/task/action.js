@@ -96,6 +96,9 @@ const actions = {
     EDIT_DEPARTEMEN_REQUEST: 'EDIT_DEPARTEMEN_REQUEST',
     EDIT_DEPARTEMEN_ERR: 'EDIT_DEPARTEMEN_ERR',
 
+    GET_ALL_TASK_SUCCESS: 'GET_ALL_TASK_SUCCESS',
+    GET_ALL_TASK_REQUEST: 'GET_ALL_TASK_REQUEST',
+    GET_ALL_TASK_ERR: 'GET_ALL_TASK_ERR',
 
 
     getAllTaskUserEffect: (data) => {
@@ -551,6 +554,25 @@ const actions = {
         }
     },
 
+    getAllTaskSuccess: (data) => {
+        return {
+            type: actions.GET_ALL_TASK_SUCCESS,
+            data
+        }
+    },
+
+    getAllTaskRequest: () => {
+        return {
+            type: actions.GET_ALL_TASK_REQUEST,
+        }
+    },
+
+    getAllTaskErr: (data) => {
+        return {
+            type: actions.GET_ALL_TASK_ERR,
+            data
+        }
+    },
 
 };
 

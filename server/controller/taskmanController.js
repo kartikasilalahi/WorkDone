@@ -506,7 +506,7 @@ module.exports = {
         l.name as level
         from user u JOIN role r ON u.idrole = r.id 
         JOIN jabatan j ON u.idjabatan=j.id 
-        JOIN departemen d ON j.departemen_id=d.id 
+        JOIN departemen d on u.iddepartement = d.id 
         JOIN level l ON l.id=u.idlevel
         WHERE u.nama_depan LIKE '%${keyword}%' OR u.nama_belakang LIKE '%${keyword}%'`;
         mysql.query(sql, (error, result) => {
@@ -559,24 +559,45 @@ module.exports = {
                 message: `Departemen berhasil diperbaharui`
             })
         })
-    }
+    },
+
+
+    getAllTask: (req, res) => {
+        let { keyword } = req.query
+        let sql = `SELECT p.project_name, t.* 
+        from task_user tu  JOIN task t ON tu.id =  t.id 
+        JOIN project p ON p.id = t.project_id
+        where t.task_name LIKE '%${keyword}%'`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
 
 
 
     // `project_name`, `departemen_id`, `project_description`
 
     // integrate algo in all task user (PENDING)
-    // create task by reviewer DONE
+    // create task by reviewer (DONE)
     // add project (DONE)
     // VIEW detail project (NOT YET)
+    // edit progress on page task by REVIEWER nedd to fixing
     // edit project
     // registrasi user
-    // fitur admin (table departemen and search departemen DONE, add new department DONE, edit department done)
-    // profil
-    // change report on reviewer (view report per user not send)
-    // change password
-    // LIVE ATTENDANCE
-    // validate if form empty when submit
+    // fitur admin :
+    // (table departemen and search departemen (DONE), add new department (DONE), edit department (DONE))
+    // (table user and search user (DONE), add new user (not yet), edit user (not yet), detail user (not yet))
+    // (table user and search user (DONE), add new user (not yet), edit user (not yet), detail user (not yet))
+    // profil (not yet)
+    // change report on reviewer (view report per user => NOT YET)
+    // change password (not yet)
+    // LIVE ATTENDANCE (not yet)
+    // validate if form empty when submit (not yet)
     // SUSUN LAPORAN 
     // GASSSSSSSSSSSSSSSSSSSSSSSS
     // DETAIL TASK for user (assignee, reviewer, created by with name npot id_)
