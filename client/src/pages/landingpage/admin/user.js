@@ -352,9 +352,9 @@ export default function Departemen() {
                             <Grid item lg={6}>
                                 <Box pb={3} textAlign="right" >
                                     <Search placeholder="Search User"
-                                        // onChange={(e) => {
-                                        //     dispatch(getAllDepartemen(e.target.value))
-                                        // }}
+                                        onChange={(e) => {
+                                            dispatch(getAllUser(e.target.value))
+                                        }}
                                         allowClear
                                         style={{ width: 350 }} />
                                 </Box>
