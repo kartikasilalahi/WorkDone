@@ -8,6 +8,7 @@ import Task from '../pages/landingpage/user/task';
 import NotFound from './notFound';
 import ChangePassword from '../pages/landingpage/user/changePassword';
 import Report from '../pages/landingpage/user/report';
+import Profile from '../pages/landingpage/user/profile';
 
 
 const UseRoute = () => {
@@ -20,6 +21,7 @@ const UseRoute = () => {
       <Route path={`${path}/all-task`} component={Task} />
       <Route path={`${path}/change-password`} component={ChangePassword} />
       <Route path={`${path}/report`} component={Report} />
+      <Route path={`${path}/profile`} component={Profile} />
       <Route exact path="*" component={NotFound} />
 
     </Switch>

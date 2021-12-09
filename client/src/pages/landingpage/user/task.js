@@ -22,7 +22,7 @@ import {
     updateTask,
     getAllTaskReviewer,
     getAllProjectInDepartemen,
-
+    getAllUser,
 } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
@@ -56,6 +56,7 @@ export default function Task() {
     const isLoadingTaskReviewer = useSelector(state => state.task.is_loading_all_task_reviewer)
     const allProjectInDepartemen = useSelector(state => state.task.all_project_in_departemen)
     const isLoadingProjectInDepartemen = useSelector(state => state.task.is_loading_all_project_in_departemen)
+    const listUser = useSelector(state => state.task.all_user)
 
     const id = Number(localStorage.getItem('id'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
@@ -106,6 +107,7 @@ export default function Task() {
     }
 
     useEffect(() => {
+        dispatch(getAllUser(''))
         if (idlevel === 1) {
             dispatch(getAllTaskReviewer(id, ''))
             dispatch(getAllProjectInDepartemen(iddepartemen))
@@ -769,11 +771,15 @@ export default function Task() {
 
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Created by</Grid>
-                                <Grid item lg={9}>: {selectedTask.created_by}</Grid>
+                                <Grid item lg={9}>:
+                                {selectedTask.created_by}
+                                    {/* {listUser.filter((val) => val.id === selectedTask.created_by)[0].nama_depan} */}
+                                </Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Assignee</Grid>
-                                <Grid item lg={9}>: {selectedTask.assignee}</Grid>
+                                <Grid item lg={9}>: {selectedTask.assignee}
+                                </Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Level of difficult</Grid>

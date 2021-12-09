@@ -100,6 +100,13 @@ const actions = {
     GET_ALL_TASK_REQUEST: 'GET_ALL_TASK_REQUEST',
     GET_ALL_TASK_ERR: 'GET_ALL_TASK_ERR',
 
+    GET_ALL_PROJECT_SUCCESS: 'GET_ALL_PROJECT_SUCCESS',
+    GET_ALL_PROJECT_REQUEST: 'GET_ALL_PROJECT_REQUEST',
+    GET_ALL_PROJECT_ERR: 'GET_ALL_PROJECT_ERR',
+
+    GET_PROFILE_USER_SUCCESS: 'GET_PROFILE_USER_SUCCESS',
+    GET_PROFILE_USER_REQUEST: 'GET_PROFILE_USER_REQUEST',
+    GET_PROFILE_USER_ERR: 'GET_PROFILE_USER_ERR',
 
     getAllTaskUserEffect: (data) => {
         return {
@@ -570,6 +577,46 @@ const actions = {
     getAllTaskErr: (data) => {
         return {
             type: actions.GET_ALL_TASK_ERR,
+            data
+        }
+    },
+
+    getAllProjectSuccess: (data) => {
+        return {
+            type: actions.GET_ALL_PROJECT_SUCCESS,
+            data
+        }
+    },
+
+    getAllProjectRequest: () => {
+        return {
+            type: actions.GET_ALL_PROJECT_REQUEST,
+        }
+    },
+
+    getAllProjectErr: (data) => {
+        return {
+            type: actions.GET_ALL_PROJECT_ERR,
+            data
+        }
+    },
+
+    getProfileUserSuccess: (data) => {
+        return {
+            type: actions.GET_PROFILE_USER_SUCCESS,
+            data
+        }
+    },
+
+    getProfileUserRequest: () => {
+        return {
+            type: actions.GET_PROFILE_USER_REQUEST,
+        }
+    },
+
+    getProfileUserErr: (data) => {
+        return {
+            type: actions.GET_PROFILE_USER_ERR,
             data
         }
     },

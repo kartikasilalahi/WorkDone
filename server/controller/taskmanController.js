@@ -97,19 +97,25 @@ module.exports = {
     },
 
     getProfil: (req, res) => {
-        let { id } = req.params
+        let { id } = req.query
         let sql = `SELECT 
         u.id, 
         u.nama_depan,
         u.nama_belakang, 
         u.email, 
+        u.jk,
+        u.tempat_lahir,
+        u.tanggal_lahir,
+        u.no_hp,
+        u.alamat,
+        u.tanggal_masuk,
         r.role_name as role, 
         j.name as jabatan, 
-        d.name as departemen 
+        d.name as departemen,
         l.name as level
         from user u JOIN role r ON u.idrole = r.id 
         JOIN jabatan j ON u.idjabatan=j.id 
-        JOIN departemen d ON j.iddepartemen=d.id 
+        JOIN departemen d ON j.departemen_id=d.id 
         JOIN level l ON l.id=u.idlevel
         WHERE u.id=${id}`
         mysql.query(sql, (error, result) => {
@@ -568,6 +574,22 @@ module.exports = {
         from task_user tu  JOIN task t ON tu.id =  t.id 
         JOIN project p ON p.id = t.project_id
         where t.task_name LIKE '%${keyword}%'`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
+
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
+
+    getAllProject: (req, res) => {
+        let { keyword } = req.query
+        let sql = `SELECT p.*, d.name as departemen from project p
+        JOIN departemen d on p.departemen_id = d.id
+        where p.project_name LIKE '%${keyword}%'`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 

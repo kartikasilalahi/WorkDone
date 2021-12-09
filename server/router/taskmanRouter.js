@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/login', taskmanController.login)
 router.get('/login/:id', taskmanController.login)
-router.get('/profile/:id', taskmanController.getProfil)
+router.get('/profile', taskmanController.getProfil)
 router.get('/role', taskmanController.getListRole)
 router.get('/departemen', taskmanController.getListDepartemen)
 router.get('/jabatan', taskmanController.getListJabatan)
@@ -22,6 +22,7 @@ router.get('/getallprojectdepartemen/:iddepartemen', taskmanController.getAllPro
 router.get('/alluser', taskmanController.getAllUser)
 router.get('/alldepartemen', taskmanController.getAllDepartemen)
 router.get('/alltask', taskmanController.getAllTask)
+router.get('/allproject', taskmanController.getAllProject)
 
 router.put('/ubahpassword/:id', taskmanController.ubahPasword)
 

@@ -76,6 +76,14 @@ const {
     GET_ALL_TASK_REQUEST,
     GET_ALL_TASK_ERR,
 
+    GET_ALL_PROJECT_SUCCESS,
+    GET_ALL_PROJECT_REQUEST,
+    GET_ALL_PROJECT_ERR,
+
+    GET_PROFILE_USER_SUCCESS,
+    GET_PROFILE_USER_REQUEST,
+    GET_PROFILE_USER_ERR,
+
 } = action
 
 const initState = {
@@ -165,6 +173,16 @@ const initState = {
     is_loading_all_task: false,
     is_error_all_task: false,
     message_all_task: '',
+
+    all_project: [],
+    is_loading_all_project: false,
+    is_error_all_project: false,
+    message_all_project: '',
+
+    profile_user: undefined,
+    is_loading_profile_user: false,
+    is_error_profile_user: false,
+    message_profile_user: '',
 
 };
 
@@ -542,6 +560,48 @@ const AuthReducer = (state = initState, action) => {
                 ...state,
                 is_loading_all_task: false,
                 message_all_task: err
+            };
+
+        // GET ALL PROJECT
+        case GET_ALL_PROJECT_REQUEST:
+            return {
+                ...state,
+                is_loading_all_project: true,
+                message_all_project: ''
+            };
+        case GET_ALL_PROJECT_SUCCESS:
+            return {
+                ...state,
+                all_project: data,
+                is_loading_all_project: false,
+                message_all_project: ''
+            };
+        case GET_ALL_PROJECT_ERR:
+            return {
+                ...state,
+                is_loading_all_project: false,
+                message_all_project: err
+            };
+
+        // GET PROFILE USER
+        case GET_PROFILE_USER_REQUEST:
+            return {
+                ...state,
+                is_loading_profile_user: true,
+                message_profile_user: ''
+            };
+        case GET_PROFILE_USER_SUCCESS:
+            return {
+                ...state,
+                profile_user: data,
+                is_loading_profile_user: false,
+                message_profile_user: ''
+            };
+        case GET_PROFILE_USER_ERR:
+            return {
+                ...state,
+                is_loading_profile_user: false,
+                message_profile_user: err
             };
         default:
             return state;

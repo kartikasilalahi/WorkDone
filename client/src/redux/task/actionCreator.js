@@ -98,6 +98,14 @@ const {
     getAllTaskRequest,
     getAllTaskErr,
 
+    getAllProjectSuccess,
+    getAllProjectRequest,
+    getAllProjectErr,
+
+    getProfileUserSuccess,
+    getProfileUserRequest,
+    getProfileUserErr,
+
 } = action
 
 
@@ -515,6 +523,35 @@ const getAllTask = (keyword) => {
     }
 }
 
+const getAllProject = (keyword) => {
+    return async dispatch => {
+        try {
+            dispatch(getAllProjectRequest())
+            const allproject = await Axios.get(`${APIURL}taskman/allproject?keyword=${keyword}`)
+            if (allproject.data.data) {
+                dispatch(getAllProjectSuccess(allproject.data.data))
+            }
+        } catch (error) {
+            dispatch(getAllProjectErr(error))
+        }
+    }
+}
+
+const getProfileUser = (id) => {
+    return async dispatch => {
+        try {
+            dispatch(getProfileUserRequest())
+            const profile = await Axios.get(`${APIURL}taskman/profile?id=${id}`)
+            if (profile.data.data) {
+                console.log("profile.data.data", profile.data.data)
+                dispatch(getProfileUserSuccess(profile.data.data))
+            }
+        } catch (error) {
+            dispatch(getProfileUserErr(error))
+        }
+    }
+}
+
 
 export {
     getAllTaskUser,
@@ -538,5 +575,7 @@ export {
     getAllUser,
     addNewDepartemen,
     editDepartemen,
-    getAllTask
+    getAllTask,
+    getAllProject,
+    getProfileUser
 };

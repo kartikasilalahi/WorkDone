@@ -351,7 +351,7 @@ export default function Task() {
 
                 </Grid>
                 <Grid item lg={10} style={{ backgroundColor: "whitesmoke", minHeight: "100vh" }}>
-                    <TopBar label='All Department' />
+                    <TopBar label='All Task' />
                     <Box px={2} className="container-content" pb={5}>
                         <Grid container justifyContent="space-between">
                             {/* <Grid lg={6} item>
