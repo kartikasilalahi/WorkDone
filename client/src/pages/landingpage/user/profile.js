@@ -67,7 +67,7 @@ const Profile = () => {
                                 <Box pb={6} px={4} pt={4} style={{ border: "1px solid #dedede", borderRadius: "8px", backgroundColor: "whitesmoke" }}>
                                     <Grid container justifyContent="space-between">
                                         <Grid item lg={2}>
-                                            <Box>
+                                            <Box pt={4}>
                                                 <AccountCircleIcon sx={{ fontSize: 120 }} style={{ color: "#001E3C" }} />
                                             </Box>
                                         </Grid>
