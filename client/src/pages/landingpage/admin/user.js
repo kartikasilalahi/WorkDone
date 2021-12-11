@@ -559,11 +559,21 @@ export default function Departemen() {
             {/* popup edit */}
             <Dialog open={popupEdit} onClose={() => {
                 setPopupEdit(false)
-                // setDataEditDepartment({
-                //     name: '',
-                //     idatasan: '',
-                //     id: ''
-                // })
+                setDataEditUser({
+                    nama_depan: '',
+                    nama_belakang: '',
+                    email: '',
+                    jk: '',
+                    no_hp: '',
+                    alamat: '',
+                    tempat_lahir: '',
+                    tanggal_masuk: '',
+                    tanggal_lahir: '',
+                    idjabatan: '',
+                    iddepartement: '',
+                    idlevel: '',
+                    status: '',
+                })
             }} fullWidth maxWidth="sm">
                 <DialogTitle><Box fontSize={14} fontWeight={700}>Edit User</Box></DialogTitle>
                 <DialogContent>
@@ -777,10 +787,20 @@ export default function Departemen() {
                 <DialogActions>
                     <Button variant="danger" size="sm" onClick={() => {
                         setPopupEdit(false)
-                        setDataEditDepartment({
-                            name: '',
-                            idatasan: '',
-                            id: ''
+                        setDataEditUser({
+                            nama_depan: '',
+                            nama_belakang: '',
+                            email: '',
+                            jk: '',
+                            no_hp: '',
+                            alamat: '',
+                            tempat_lahir: '',
+                            tanggal_masuk: '',
+                            tanggal_lahir: '',
+                            idjabatan: '',
+                            iddepartement: '',
+                            idlevel: '',
+                            status: '',
                         })
                     }}
                         style={{
