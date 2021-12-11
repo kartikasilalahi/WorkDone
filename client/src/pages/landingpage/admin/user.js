@@ -42,6 +42,7 @@ export default function Departemen() {
 
     const [allDepartemen, setAllDepartemen] = useState([]);
     const [jabatan, setJabatan] = useState([]);
+    const [jabatanEdit, setJabatanEdit] = useState([]);
     const [allUser, setAllUser] = useState([]);
     const [popupCreate, setPopupCreate] = useState(false);
     const [popupEdit, setPopupEdit] = useState(false);
@@ -49,6 +50,23 @@ export default function Departemen() {
     const [listDepart, setListDepart] = useState([false]);
 
     const [dataNewUser, setDataNewUser] = useState({
+        nama_depan: '',
+        nama_belakang: '',
+        email: '',
+        password: '',
+        jk: '',
+        no_hp: '',
+        alamat: '',
+        tempat_lahir: '',
+        tanggal_masuk: '',
+        tanggal_lahir: '',
+        idjabatan: '',
+        iddepartement: '',
+        idlevel: '',
+        status: '',
+    });
+
+    const [dataEditUser, setDataEditUser] = useState({
         nama_depan: '',
         nama_belakang: '',
         email: '',
@@ -135,6 +153,28 @@ export default function Departemen() {
     }, [isLoadingAddNewUser, messageNewUser])
 
     useEffect(() => {
+        if (profileUser && loadingGetProfile === false) {
+            setDataEditUser({
+                nama_depan: profileUser[0].nama_depan,
+                nama_belakang: profileUser[0].nama_belakang,
+                email: profileUser[0].email,
+                jk: profileUser[0].jk,
+                no_hp: profileUser[0].no_hp,
+                alamat: profileUser[0].alamat,
+                // tempat_lahir: profileUser[0].,
+                tanggal_masuk: profileUser[0].tanggal_masuk,
+                tanggal_lahir: profileUser[0].tanggal_lahir,
+                idjabatan: profileUser[0].idjabatan,
+                iddepartement: profileUser[0].iddepartement,
+                idlevel: profileUser[0].idlevel,
+                status: profileUser[0].status,
+            })
+            dispatch(getJabatanInDepartemen(profileUser[0].iddepartement))
+        }
+
+    }, [loadingGetProfile, profileUser])
+
+    useEffect(() => {
         if (!isLoadingListUser && listUser) {
             let datauser = []
             listUser.map((user, i) => {
@@ -148,20 +188,14 @@ export default function Departemen() {
                         departemen: departemen,
                         action: <div>
                             <img
-                                // onClick={() => {
-                                //     setPopupEdit(true)
-                                //     setDataEditDepartment({
-                                //         name: name,
-                                //         id: id,
-                                //         idatasan: idatasan,
-                                //     })
-                                // }}
+                                onClick={() => {
+                                    setPopupEdit(true)
+                                    dispatch(getProfileUser(id))
+                                }}
                                 style={{ cursor: 'pointer' }}
                                 src={IconEdit} width="30px" /> {' '}
                             <img
                                 onClick={() => {
-                                    // setIdDetail(id)
-                                    // setOpenPopupDetail(true)
                                     dispatch(getProfileUser(id))
                                     setPopupDetail(true)
                                 }}
@@ -188,6 +222,13 @@ export default function Departemen() {
     useEffect(() => {
         if (!loadingListJabatan && listJabatan) {
             setJabatan(listJabatan)
+        }
+
+    }, [listJabatan, loadingListJabatan])
+
+    useEffect(() => {
+        if (!loadingListJabatan && listJabatan) {
+            setJabatanEdit(listJabatan)
         }
 
     }, [listJabatan, loadingListJabatan])
@@ -518,60 +559,221 @@ export default function Departemen() {
             {/* popup edit */}
             <Dialog open={popupEdit} onClose={() => {
                 setPopupEdit(false)
-                setDataEditDepartment({
-                    name: '',
-                    idatasan: '',
-                    id: ''
-                })
+                // setDataEditDepartment({
+                //     name: '',
+                //     idatasan: '',
+                //     id: ''
+                // })
             }} fullWidth maxWidth="sm">
-                <DialogTitle><Box fontSize={14} fontWeight={700}>Edit Department</Box></DialogTitle>
+                <DialogTitle><Box fontSize={14} fontWeight={700}>Edit User</Box></DialogTitle>
                 <DialogContent>
                     <Box fontSize={11}>
                         <Form noValidate >
-                            <Form.Group controlId="formBasicEmail">
-                                <Form.Label>ID</Form.Label>
-                                <Form.Control
-                                    style={{ fontSize: '11px' }}
-                                    size="sm"
-                                    type="text"
-                                    placeholder="Department Name"
-                                    value={dataEditDepartment.id}
-                                    disabled />
-                            </Form.Group>
-                            <Form.Group controlId="formBasicEmail">
-                                <Form.Label>Department</Form.Label>
-                                <Form.Control
-                                    style={{ fontSize: '11px' }}
-                                    size="sm"
-                                    type="text"
-                                    placeholder="Department Name"
-                                    value={dataEditDepartment.name}
-                                    onChange={(e) => setDataEditDepartment({ ...dataEditDepartment, name: e.target.value })}
-                                    required />
-                            </Form.Group>
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>First Name</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="First Name"
+                                            value={dataEditUser.nama_depan}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, nama_depan: e.target.value })}
+                                            required />
+                                    </Form.Group>
 
-                            <Form.Group controlId="formBasicSelect2">
-                                <Form.Label>Leader</Form.Label>
-                                <Form.Control
-                                    style={{ fontSize: '11px' }}
-                                    as="select"
-                                    size="sm"
-                                    value={dataEditDepartment.idatasan}
-                                    // defaultValue={dataEditDepartment.idatasan}
-                                    onChange={(e) => setDataEditDepartment({ ...dataEditDepartment, idatasan: Number(e.target.value) })}
-                                >
-                                    <option value="" selected disabled>Select Leader</option>
-                                    {
-                                        listUser && listUser.map((user) => (
-                                            <option value={user.id} key={user.id}>{user.nama_depan} {user.nama_belakang}</option>
-                                        ))
-                                    }
-                                </Form.Control>
-                            </Form.Group>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Last Name</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="Last Name"
+                                            value={dataEditUser.nama_belakang}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, nama_belakang: e.target.value })}
+                                            required />
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
 
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicSelect2">
+                                        <Form.Label>Gender</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            as="select"
+                                            size="sm"
+                                            value={dataEditUser.jk}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, jk: e.target.value })}
+                                        >
+                                            <option value="" selected disabled>Select Gender</option>
+                                            <option value="Laki-laki">Male</option>
+                                            <option value="Perempuan">Female</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicDate">
+                                        <Form.Label>Birth Date:</Form.Label>
+                                        <Box>
+                                            <DateTimePicker
+                                                // style={{ width: "400px" }}
+                                                onChange={(e) => setDataEditUser({ ...dataEditUser, tanggal_lahir: e })}
+                                                value={dataEditUser.tanggal_lahir}
+                                            // minDate={new Date()}
+                                            />
+                                        </Box>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Phone Number</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="Phone Number"
+                                            value={dataEditUser.no_hp}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, no_hp: e.target.value })}
+                                            required />
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="Enter email"
+                                            value={dataEditUser.email}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, email: e.target.value })}
+                                            required />
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Address</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="Enter Address"
+                                            value={dataEditUser.alamat}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, alamat: e.target.value })}
+                                            required />
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicDate">
+                                        <Form.Label>Join Date:</Form.Label>
+                                        <Box>
+                                            <DateTimePicker
+                                                onChange={(e) => setDataEditUser({ ...dataEditUser, tanggal_masuk: e })}
+                                                value={dataEditUser.tanggal_masuk}
+                                            // minDate={new Date()}
+                                            />
+                                        </Box>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Department</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            as="select"
+                                            placeholder="Select Departmen"
+                                            value={dataEditUser.iddepartement}
+                                            onChange={(e) => {
+                                                dispatch(getJabatanInDepartemen(Number(e.target.value)))
+                                                setDataEditUser({ ...dataEditUser, iddepartement: Number(e.target.value) })
+                                            }}
+                                            required >
+                                            <option value="" selected disabled>Select Department</option>
+                                            {
+                                                allDepartemen && allDepartemen.map((department) => (
+                                                    <option value={department.id} key={department.id}>{department.name}</option>
+                                                ))
+                                            }
+                                        </Form.Control>
+                                    </Form.Group>
+
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Position</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            as="select"
+                                            placeholder="Select Position"
+                                            value={dataEditUser.idjabatan}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, idjabatan: Number(e.target.value) })}
+                                            required >
+                                            <option value="" selected disabled>Select Position</option>
+                                            {
+                                                jabatanEdit && jabatanEdit.map((position) => (
+                                                    <option value={position.id} key={position.id}>{position.name}</option>
+                                                ))
+                                            }
+
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item xs={6}>
+                                    <Form.Group controlId="formBasicSelect2">
+                                        <Form.Label>Level</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            as="select"
+                                            size="sm"
+                                            value={dataEditUser.idlevel}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, idlevel: Number(e.target.value) })}
+                                        >
+                                            <option value="" selected disabled>Select level</option>
+                                            <option value="1">Subordinate</option>
+                                            <option value="2">Lead</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Form.Group controlId="formBasicSelect2">
+                                        <Form.Label>Status</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            as="select"
+                                            size="sm"
+                                            value={dataEditUser.status}
+                                            onChange={(e) => setDataEditUser({ ...dataEditUser, status: Number(e.target.value) })}
+                                        >
+                                            <option value="" selected disabled>Select status</option>
+                                            <option value="1">Permanent</option>
+                                            <option value="2">Contract</option>
+                                            <option value="3">Probation</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
                         </Form>
                     </Box>
                 </DialogContent>
+
                 <DialogActions>
                     <Button variant="danger" size="sm" onClick={() => {
                         setPopupEdit(false)
