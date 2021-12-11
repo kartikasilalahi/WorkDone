@@ -84,6 +84,14 @@ const {
     GET_PROFILE_USER_REQUEST,
     GET_PROFILE_USER_ERR,
 
+    GET_JABATAN_IN_DEPARTEMEN_SUCCESS,
+    GET_JABATAN_IN_DEPARTEMEN_REQUEST,
+    GET_JABATAN_IN_DEPARTEMEN_ERR,
+
+    ADD_NEW_USER_SUCCESS,
+    ADD_NEW_USER_REQUEST,
+    ADD_NEW_USER_ERR,
+
 } = action
 
 const initState = {
@@ -183,6 +191,14 @@ const initState = {
     is_loading_profile_user: false,
     is_error_profile_user: false,
     message_profile_user: '',
+
+    list_jabatan: undefined,
+    is_loading_list_jabatan: false,
+    is_error_list_jabatan: false,
+    message_list_jabatan: '',
+
+    message_add_new_user: '',
+    is_loading_add_new_user: false,
 
 };
 
@@ -603,6 +619,42 @@ const AuthReducer = (state = initState, action) => {
                 is_loading_profile_user: false,
                 message_profile_user: err
             };
+
+        // GET list jabatan in departemen
+        case GET_JABATAN_IN_DEPARTEMEN_REQUEST:
+            return {
+                ...state,
+                is_loading_list_jabatan: true,
+                message_list_jabatan: ''
+            };
+        case GET_JABATAN_IN_DEPARTEMEN_SUCCESS:
+            return {
+                ...state,
+                list_jabatan: data,
+                is_loading_list_jabatan: false,
+                message_list_jabatan: ''
+            };
+        case GET_JABATAN_IN_DEPARTEMEN_ERR:
+            return {
+                ...state,
+                is_loading_list_jabatan: false,
+                message_list_jabatan: err
+            };
+
+        // ADD NEW USER
+        case ADD_NEW_USER_SUCCESS:
+            return {
+                ...state,
+                message_add_new_user: data,
+                is_loading_add_new_user: false
+            }
+
+        case ADD_NEW_USER_REQUEST:
+            return {
+                ...state,
+                message_add_new_user: '',
+                is_loading_add_new_user: true
+            }
         default:
             return state;
     }

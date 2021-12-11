@@ -108,6 +108,14 @@ const actions = {
     GET_PROFILE_USER_REQUEST: 'GET_PROFILE_USER_REQUEST',
     GET_PROFILE_USER_ERR: 'GET_PROFILE_USER_ERR',
 
+    GET_JABATAN_IN_DEPARTEMEN_SUCCESS: 'GET_JABATAN_IN_DEPARTEMEN_SUCCESS',
+    GET_JABATAN_IN_DEPARTEMEN_REQUEST: 'GET_JABATAN_IN_DEPARTEMEN_REQUEST',
+    GET_JABATAN_IN_DEPARTEMEN_ERR: 'GET_JABATAN_IN_DEPARTEMEN_ERR',
+
+    ADD_NEW_USER_REQUEST: 'ADD_NEW_USER_REQUEST',
+    ADD_NEW_USER_SUCCESS: 'ADD_NEW_USER_SUCCESS',
+    ADD_NEW_USER_ERR: 'ADD_NEW_USER_ERR',
+
     getAllTaskUserEffect: (data) => {
         return {
             type: actions.GET_ALL_TASK_USER,
@@ -619,6 +627,47 @@ const actions = {
             type: actions.GET_PROFILE_USER_ERR,
             data
         }
+    },
+
+    getJabatanInDepartemenSuccess: (data) => {
+        return {
+            type: actions.GET_JABATAN_IN_DEPARTEMEN_SUCCESS,
+            data
+        }
+    },
+
+    getJabatanInDepartemenRequest: () => {
+        return {
+            type: actions.GET_JABATAN_IN_DEPARTEMEN_REQUEST,
+        }
+    },
+
+    getJabatanInDepartemenErr: (data) => {
+        return {
+            type: actions.GET_JABATAN_IN_DEPARTEMEN_ERR,
+            data
+        }
+    },
+
+
+    addNewUserRequest: () => {
+        return {
+            type: actions.ADD_NEW_USER_REQUEST,
+        };
+    },
+
+    addNewUserSuccess: data => {
+        return {
+            type: actions.ADD_NEW_USER_SUCCESS,
+            data,
+        };
+    },
+
+    addNewUserErr: err => {
+        return {
+            type: actions.ADD_NEW_USER_ERR,
+            err,
+        };
     },
 
 };

@@ -11,7 +11,7 @@ import ImgWorking from '../../Assets/img/undraw_working_anywhere_.svg'
 import { Link } from 'react-router-dom';
 
 
-export default function Loginpage() {
+export default function RegisterPage() {
 
     const [validated, setValidated] = useState(false);
     const [dataRegister, setdataRegister] = useState({

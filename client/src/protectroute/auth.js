@@ -5,7 +5,7 @@ import { Switch, Route, Redirect, useRouteMatch } from 'react-router-dom';
 // const Register = lazy(() => import('../Pages/Landingpage/Register'));
 // const Home = lazy(() => import('../Pages/Landingpage/Home'));
 import Login from '../pages/landingpage/Login'
-// import Register from '../pages/landingpage/Register'
+import Register from '../pages/landingpage/Register'
 // import Register from '../pages/landingpage/Register'
 import NotFound from './notFound'
 
@@ -30,7 +30,7 @@ const FrontendRoutes = () => {
         // </Switch>
         <Switch>
             <Route exact path={`${path}/login`} component={Login} />
-            {/* <Route exact path={`${path}/register`} component={Register} /> */}
+            <Route exact path={`${path}/register`} component={Register} />
             <Route exact path="*" component={NotFound} />
 
         </Switch>

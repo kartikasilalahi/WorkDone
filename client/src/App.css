@@ -224,6 +224,9 @@ a {
 .react-datetime-picker{
   width: 260px !important;
 }
+.form .react-datetime-picker{
+  width: 350px !important;
+}
 
 .ant-table table { font-size: 10px; }
 

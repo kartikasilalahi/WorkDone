@@ -106,6 +106,14 @@ const {
     getProfileUserRequest,
     getProfileUserErr,
 
+    getJabatanInDepartemenSuccess,
+    getJabatanInDepartemenRequest,
+    getJabatanInDepartemenErr,
+
+    addNewUserSuccess,
+    addNewUserRequest,
+    addNewUserErr,
+
 } = action
 
 
@@ -543,7 +551,6 @@ const getProfileUser = (id) => {
             dispatch(getProfileUserRequest())
             const profile = await Axios.get(`${APIURL}taskman/profile?id=${id}`)
             if (profile.data.data) {
-                console.log("profile.data.data", profile.data.data)
                 dispatch(getProfileUserSuccess(profile.data.data))
             }
         } catch (error) {
@@ -552,6 +559,34 @@ const getProfileUser = (id) => {
     }
 }
 
+const getJabatanInDepartemen = (id) => {
+    return async dispatch => {
+        try {
+            dispatch(getJabatanInDepartemenRequest())
+            const jabatan = await Axios.get(`${APIURL}taskman/listjabatan?id=${id}`)
+            if (jabatan.data.data) {
+                dispatch(getJabatanInDepartemenSuccess(jabatan.data.data))
+            }
+        } catch (error) {
+            dispatch(getJabatanInDepartemenErr(error))
+        }
+    }
+}
+
+const addNewUser = (data) => {
+    return async dispatch => {
+        try {
+            dispatch(addNewUserRequest())
+            const newuser = await Axios.post(`${APIURL}taskman/addnewduser`, data)
+            if (newuser.data.message) {
+                dispatch(getAllUser(''))
+                dispatch(addNewUserSuccess(newuser.data.message))
+            }
+        } catch (error) {
+            dispatch(addNewTaskErr(error))
+        }
+    }
+}
 
 export {
     getAllTaskUser,
@@ -577,5 +612,7 @@ export {
     editDepartemen,
     getAllTask,
     getAllProject,
-    getProfileUser
+    getProfileUser,
+    getJabatanInDepartemen,
+    addNewUser
 };

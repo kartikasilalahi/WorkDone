@@ -108,6 +108,7 @@ module.exports = {
         u.tanggal_lahir,
         u.no_hp,
         u.alamat,
+        u.status,
         u.tanggal_masuk,
         r.role_name as role, 
         j.name as jabatan, 
@@ -506,6 +507,7 @@ module.exports = {
         u.alamat,
         u.tanggal_masuk,
         u.idlevel,
+        u.status,
         r.role_name as role, 
         j.name as jabatan, 
         d.name as departemen,
@@ -600,7 +602,35 @@ module.exports = {
         })
     },
 
+    getListJabatanbyDepartemen: (req, res) => {
+        let { id } = req.query
+        let sql = `SELECT * from jabatan where departemen_id=${id}`
+        mysql.query(sql, (error, result) => {
+            if (error) res.status(500).send({ error })
 
+            res.send({
+                status: 200,
+                data: result
+            })
+        })
+    },
+
+    addNewUser: (req, res) => {
+        let data = req.body
+        data.tanggal_masuk = moment(req.body.tanggal_masuk).format('YYYY-MM-DD HH:mm:ss')
+        data.tanggal_lahir = moment(req.body.tanggal_lahir).format('YYYY-MM-DD HH:mm:ss')
+        data.idrole = 2
+
+        let sql = `INSERT INTO user SET ?`
+        mysql.query(sql, data, (err, result) => {
+            if (err) return res.status(500).send(err)
+
+            res.send({
+                status: 200,
+                message: 'User Baru berhasil ditambahkan!'
+            })
+        })
+    },
 
     // `project_name`, `departemen_id`, `project_description`
 
@@ -613,8 +643,9 @@ module.exports = {
     // registrasi user
     // fitur admin :
     // (table departemen and search departemen (DONE), add new department (DONE), edit department (DONE))
-    // (table user and search user (DONE), add new user (not yet), edit user (not yet), detail user (not yet))
-    // (table user and search user (DONE), add new user (not yet), edit user (not yet), detail user (not yet))
+    // (table task and search task (DONE), detail task (not yet))
+    // (table project and search project (DONE), detail project (not yet))
+    // (table user and search user (DONE), add new user (DONE), edit user (not yet), detail user (DONE))
     // profil (not yet)
     // change report on reviewer (view report per user => NOT YET)
     // change password (not yet)

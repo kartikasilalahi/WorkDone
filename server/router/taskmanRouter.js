@@ -23,6 +23,7 @@ router.get('/alluser', taskmanController.getAllUser)
 router.get('/alldepartemen', taskmanController.getAllDepartemen)
 router.get('/alltask', taskmanController.getAllTask)
 router.get('/allproject', taskmanController.getAllProject)
+router.get('/listjabatan', taskmanController.getListJabatanbyDepartemen)
 
 router.put('/ubahpassword/:id', taskmanController.ubahPasword)
 
@@ -36,7 +37,7 @@ router.post('/markreadtaskbyreviewer/:id', taskmanController.markReadTaskByRevie
 router.post('/addnewproject', taskmanController.addNewProject)
 router.post('/addnewdepartemen', taskmanController.addNewDepartment)
 router.post('/editdepartemen', taskmanController.editDepartemen)
-
+router.post('/addnewduser', taskmanController.addNewUser)
 
 
 

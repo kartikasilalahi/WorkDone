@@ -11,6 +11,7 @@ const actions = {
     FORGOT_SUCCESS: 'FORGOT_SUCCESS',
     FORGOT_ERR: 'FORGOT_ERR',
 
+
     loginRequest: () => {
         return {
             type: actions.LOGIN_REQUEST,
@@ -70,6 +71,7 @@ const actions = {
             err,
         };
     },
+
 };
 
 export default actions;

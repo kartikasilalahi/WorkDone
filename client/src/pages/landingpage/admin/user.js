@@ -3,17 +3,22 @@ import {
     getAllDepartemen,
     getAllUser,
     addNewDepartemen,
-    editDepartemen
+    editDepartemen,
+    getProfileUser,
+    getJabatanInDepartemen,
+    addNewUser
 } from '../../../redux/task/actionCreator'
-import { Grid, Box, DialogTitle, DialogContent, DialogActions } from '@material-ui/core'
+import { Grid, Box, DialogTitle, DialogContent, DialogActions, Divider } from '@material-ui/core'
 import TopBar from '../../component/pages/admin/topBar'
 import SideBar from '../../component/pages/admin/sideBar'
 import { useSelector, useDispatch } from 'react-redux';
 import IconEdit from '../../../Assets/img/icon/edit.png'
 import IconDetail from '../../../Assets/img/icon/info.png'
 import { Button, Form, Dropdown } from 'react-bootstrap';
+import DateTimePicker from 'react-datetime-picker';
 import Swal from 'sweetalert2'
-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import moment from 'moment'
 import { Input } from 'antd';
 import { Table } from 'antd';
 import { Dialog } from '@mui/material'
@@ -28,20 +33,36 @@ export default function Departemen() {
     const isLoadingListDepartemen = useSelector(state => state.task.is_loading_all_departemen)
     const listUser = useSelector(state => state.task.all_user)
     const isLoadingListUser = useSelector(state => state.task.is_loading_all_user)
-    const messageNewDepartemen = useSelector(state => state.task.message_add_new_departemen)
-    const isLoadingAddNewDepartemen = useSelector(state => state.task.is_loading_add_new_departemen)
-    const messageEditDepartemen = useSelector(state => state.task.message_edit_departemen)
-    const isLoadingEditDepartemen = useSelector(state => state.task.is_loading_edit_departemen)
+    const profileUser = useSelector(state => state.task.profile_user)
+    const loadingGetProfile = useSelector(state => state.task.is_loading_profile_user)
+    const listJabatan = useSelector(state => state.task.list_jabatan)
+    const loadingListJabatan = useSelector(state => state.task.is_loading_list_jabatan)
+    const messageNewUser = useSelector(state => state.task.message_add_new_user)
+    const isLoadingAddNewUser = useSelector(state => state.task.is_loading_add_new_user)
 
     const [allDepartemen, setAllDepartemen] = useState([]);
+    const [jabatan, setJabatan] = useState([]);
     const [allUser, setAllUser] = useState([]);
     const [popupCreate, setPopupCreate] = useState(false);
     const [popupEdit, setPopupEdit] = useState(false);
+    const [popupDetail, setPopupDetail] = useState(false);
     const [listDepart, setListDepart] = useState([false]);
 
-    const [dataNewDepartment, setDataNewDepartment] = useState({
-        name: '',
-        idatasan: ''
+    const [dataNewUser, setDataNewUser] = useState({
+        nama_depan: '',
+        nama_belakang: '',
+        email: '',
+        password: '',
+        jk: '',
+        no_hp: '',
+        alamat: '',
+        tempat_lahir: '',
+        tanggal_masuk: '',
+        tanggal_lahir: '',
+        idjabatan: '',
+        iddepartement: '',
+        idlevel: '',
+        status: '',
     });
     const [dataEditDepartment, setDataEditDepartment] = useState({
         id: '',
@@ -49,8 +70,9 @@ export default function Departemen() {
         idatasan: ''
     });
 
-    const onAddDepartemen = () => {
-        dispatch(addNewDepartemen(dataNewDepartment))
+    const onAddNewUser = () => {
+        dispatch(addNewUser(dataNewUser))
+        // console.log("dataNewUser", dataNewUser)
     }
 
     const onEditDepartemen = () => {
@@ -86,19 +108,31 @@ export default function Departemen() {
     }, [listDepartemen, isLoadingListDepartemen])
 
     useEffect(() => {
-        if (messageNewDepartemen.length > 0 && isLoadingAddNewDepartemen === false && popupCreate) {
+        if (messageNewUser.length > 0 && isLoadingAddNewUser === false && popupCreate) {
             Toast.fire({
                 icon: 'success',
-                title: messageNewDepartemen
+                title: messageNewUser
             })
             setPopupCreate(false)
-            setDataNewDepartment({
-                name: '',
-                idatasan: ''
+            setDataNewUser({
+                nama_depan: '',
+                nama_belakang: '',
+                email: '',
+                password: '',
+                jk: '',
+                no_hp: '',
+                alamat: '',
+                tempat_lahir: '',
+                tanggal_masuk: '',
+                tanggal_lahir: '',
+                idjabatan: '',
+                iddepartement: '',
+                idlevel: '',
+                status: '',
             })
 
         }
-    }, [isLoadingAddNewDepartemen, messageNewDepartemen])
+    }, [isLoadingAddNewUser, messageNewUser])
 
     useEffect(() => {
         if (!isLoadingListUser && listUser) {
@@ -125,10 +159,12 @@ export default function Departemen() {
                                 style={{ cursor: 'pointer' }}
                                 src={IconEdit} width="30px" /> {' '}
                             <img
-                                // onClick={() => {
-                                //     setIdDetail(id)
-                                //     setOpenPopupDetail(true)
-                                // }}
+                                onClick={() => {
+                                    // setIdDetail(id)
+                                    // setOpenPopupDetail(true)
+                                    dispatch(getProfileUser(id))
+                                    setPopupDetail(true)
+                                }}
                                 style={{ cursor: 'pointer' }}
                                 src={IconDetail}
                                 width="30px" />
@@ -141,6 +177,20 @@ export default function Departemen() {
         }
 
     }, [listUser, isLoadingListUser])
+
+    useEffect(() => {
+        if (!isLoadingListDepartemen && listDepartemen) {
+            setAllDepartemen(listDepartemen)
+        }
+
+    }, [listDepartemen, isLoadingListDepartemen])
+
+    useEffect(() => {
+        if (!loadingListJabatan && listJabatan) {
+            setJabatan(listJabatan)
+        }
+
+    }, [listJabatan, loadingListJabatan])
 
 
     const columns = [
@@ -175,7 +225,9 @@ export default function Departemen() {
         }
     ];
 
-    console.log("listDepartemen", listDepartemen)
+    if (profileUser) {
+        console.log("{profileUser[0].status", profileUser[0].status)
+    }
 
 
     return (
@@ -183,54 +235,269 @@ export default function Departemen() {
             {/* popup create */}
             <Dialog open={popupCreate} onClose={() => {
                 setPopupCreate(false)
-                setDataNewDepartment({
-                    name: '',
-                    idatasan: ''
+                setDataNewUser({
+                    nama_depan: '',
+                    nama_belakang: '',
+                    email: '',
+                    password: '',
+                    jk: '',
+                    no_hp: '',
+                    alamat: '',
+                    tempat_lahir: '',
+                    tanggal_masuk: '',
+                    tanggal_lahir: '',
+                    idjabatan: '',
+                    iddepartement: '',
+                    idlevel: '',
+                    status: '',
                 })
             }} fullWidth maxWidth="sm">
-                <DialogTitle><Box fontSize={14} fontWeight={700}>New Department</Box></DialogTitle>
+                <DialogTitle><Box fontSize={14} fontWeight={700}>New User</Box></DialogTitle>
                 <DialogContent>
                     <Box fontSize={11}>
                         <Form noValidate >
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>First Name</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="First Name"
+                                            value={dataNewUser.nama_depan}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, nama_depan: e.target.value })}
+                                            required />
+                                    </Form.Group>
+
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Last Name</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="Last Name"
+                                            value={dataNewUser.nama_belakang}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, nama_belakang: e.target.value })}
+                                            required />
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicSelect2">
+                                        <Form.Label>Gender</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            as="select"
+                                            size="sm"
+                                            value={dataNewUser.jk}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, jk: e.target.value })}
+                                        >
+                                            <option value="" selected disabled>Select Gender</option>
+                                            <option value="Laki-laki">Male</option>
+                                            <option value="Perempuan">Female</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicDate">
+                                        <Form.Label>Birth Date:</Form.Label>
+                                        <Box>
+                                            <DateTimePicker
+                                                // style={{ width: "400px" }}
+                                                onChange={(e) => setDataNewUser({ ...dataNewUser, tanggal_lahir: e })}
+                                                value={dataNewUser.tanggal_lahir}
+                                            // minDate={new Date()}
+                                            />
+                                        </Box>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Phone Number</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="Phone Number"
+                                            value={dataNewUser.no_hp}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, no_hp: e.target.value })}
+                                            required />
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="Enter email"
+                                            value={dataNewUser.email}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, email: e.target.value })}
+                                            required />
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
                             <Form.Group controlId="formBasicEmail">
-                                <Form.Label>Department</Form.Label>
+                                <Form.Label>Address</Form.Label>
                                 <Form.Control
                                     style={{ fontSize: '11px' }}
                                     size="sm"
                                     type="text"
-                                    placeholder="Department Name"
-                                    value={dataNewDepartment.name}
-                                    onChange={(e) => setDataNewDepartment({ ...dataNewDepartment, name: e.target.value })}
+                                    placeholder="Enter Address"
+                                    value={dataNewUser.alamat}
+                                    onChange={(e) => setDataNewUser({ ...dataNewUser, alamat: e.target.value })}
                                     required />
                             </Form.Group>
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            type="text"
+                                            placeholder="Enter Password"
+                                            value={dataNewUser.password}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, password: e.target.value })}
+                                            required />
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicDate">
+                                        <Form.Label>Join Date:</Form.Label>
+                                        <Box>
+                                            <DateTimePicker
+                                                onChange={(e) => setDataNewUser({ ...dataNewUser, tanggal_masuk: e })}
+                                                value={dataNewUser.tanggal_masuk}
+                                            // minDate={new Date()}
+                                            />
+                                        </Box>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Department</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            as="select"
+                                            placeholder="Select Departmen"
+                                            value={dataNewUser.iddepartement}
+                                            onChange={(e) => {
+                                                dispatch(getJabatanInDepartemen(Number(e.target.value)))
+                                                setDataNewUser({ ...dataNewUser, iddepartement: Number(e.target.value) })
+                                            }}
+                                            required >
+                                            <option value="" selected disabled>Select Department</option>
+                                            {
+                                                allDepartemen && allDepartemen.map((department) => (
+                                                    <option value={department.id} key={department.id}>{department.name}</option>
+                                                ))
+                                            }
+                                        </Form.Control>
+                                    </Form.Group>
 
-                            <Form.Group controlId="formBasicSelect2">
-                                <Form.Label>Leader</Form.Label>
-                                <Form.Control
-                                    style={{ fontSize: '11px' }}
-                                    as="select"
-                                    size="sm"
-                                    value={dataNewDepartment.idatasan}
-                                    onChange={(e) => setDataNewDepartment({ ...dataNewDepartment, idatasan: Number(e.target.value) })}
-                                >
-                                    <option value="" selected disabled>Select Leader</option>
-                                    {
-                                        listUser && listUser.filter((user) => user.idlevel === 2).map((user) => (
-                                            <option value={user.id} key={user.id}>{user.nama_depan} {user.nama_belakang}</option>
-                                        ))
-                                    }
-                                </Form.Control>
-                            </Form.Group>
+                                </Grid>
+                                <Grid item sm={6}>
+                                    <Form.Group controlId="formBasicEmail">
+                                        <Form.Label>Position</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            size="sm"
+                                            as="select"
+                                            placeholder="Select Position"
+                                            value={dataNewUser.idjabatan}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, idjabatan: Number(e.target.value) })}
+                                            required >
+                                            {
+                                                dataNewUser.iddepartement > 0 ?
+                                                    <>
+                                                        <option value="" selected disabled>Select Position</option>
+                                                        {
+                                                            dataNewUser.iddepartement > 0 && jabatan && jabatan.map((position) => (
+                                                                <option value={position.id} key={position.id}>{position.name}</option>
+                                                            ))
+                                                        }
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <option value="" selected hidden>Select Position</option>
+                                                        <option value="" disabled>Select Department first</option>
+                                                    </>
+                                            }
 
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent='space-between' spacing={2}>
+                                <Grid item xs={6}>
+                                    <Form.Group controlId="formBasicSelect2">
+                                        <Form.Label>Level</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            as="select"
+                                            size="sm"
+                                            value={dataNewUser.idlevel}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, idlevel: Number(e.target.value) })}
+                                        >
+                                            <option value="" selected disabled>Select level</option>
+                                            <option value="1">Subordinate</option>
+                                            <option value="2">Lead</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Form.Group controlId="formBasicSelect2">
+                                        <Form.Label>Status</Form.Label>
+                                        <Form.Control
+                                            style={{ fontSize: '11px' }}
+                                            as="select"
+                                            size="sm"
+                                            value={dataNewUser.status}
+                                            onChange={(e) => setDataNewUser({ ...dataNewUser, status: Number(e.target.value) })}
+                                        >
+                                            <option value="" selected disabled>Select status</option>
+                                            <option value="1">Permanent</option>
+                                            <option value="2">Contract</option>
+                                            <option value="3">Probation</option>
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Grid>
+                            </Grid>
                         </Form>
                     </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button variant="danger" size="sm" onClick={() => {
                         setPopupCreate(false)
-                        setDataNewDepartment({
-                            name: '',
-                            idatasan: ''
+                        setDataNewUser({
+                            nama_depan: '',
+                            nama_belakang: '',
+                            email: '',
+                            password: '',
+                            jk: '',
+                            no_hp: '',
+                            alamat: '',
+                            tempat_lahir: '',
+                            tanggal_masuk: '',
+                            tanggal_lahir: '',
+                            idjabatan: '',
+                            iddepartement: '',
+                            idlevel: '',
+                            status: '',
                         })
                     }}
                         style={{
@@ -239,12 +506,12 @@ export default function Departemen() {
                             paddingRight: '25px'
                         }}>Cancel</Button>
                     <Button variant="success" size="sm"
-                        onClick={onAddDepartemen}
+                        onClick={onAddNewUser}
                         style={{
                             fontSize: '11px',
                             paddingLeft: '25px',
                             paddingRight: '25px'
-                        }}>{isLoadingAddNewDepartemen ? 'loading..' : 'Save'}</Button>
+                        }}>{isLoadingAddNewUser ? 'loading..' : 'Save'}</Button>
                 </DialogActions>
             </Dialog>
 
@@ -325,10 +592,130 @@ export default function Departemen() {
                             fontSize: '11px',
                             paddingLeft: '25px',
                             paddingRight: '25px'
-                        }}>{isLoadingAddNewDepartemen ? 'loading..' : 'Save'}</Button>
+                        }}>{isLoadingAddNewUser ? 'loading..' : 'Save'}</Button>
                 </DialogActions>
             </Dialog>
 
+            {/* popup detail */}
+            <Dialog open={popupDetail} onClose={() => setPopupDetail(false)} fullWidth maxWidth="md">
+                <DialogTitle><Box fontSize={14} fontWeight={700}>Detail User</Box></DialogTitle>
+                <DialogContent>
+                    <Box fontSize={11}>
+                        {
+                            profileUser && loadingGetProfile === false ?
+                                <Grid container justifyContent="space-between">
+                                    <Grid item lg={3}>
+                                        <Box pt={4}>
+                                            <AccountCircleIcon style={{ color: "#001E3C", fontSize: "150px" }} />
+                                        </Box>
+                                    </Grid>
+                                    <Grid item lg={9}>
+                                        <Box>
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container alignItems="center">
+                                                    <Grid item lg={3}>Name </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].nama_depan} {profileUser[0].nama_belakang === null ? '' : profileUser[0].nama_belakang}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container alignItems="center">
+                                                    <Grid item lg={3}>Position </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].jabatan}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Department: </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].departemen}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Level: </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].level}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Status: </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].status === 1 ? 'Permanent'
+                                                        : profileUser[0].status === 2 ? 'Contract'
+                                                            : 'Probation'}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Hire Date: </Grid>
+                                                    <Grid item lg={9}>: {moment(profileUser[0].tanggal_masuk).format('DD MMMM YYYY')}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Email: </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].email}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Phone: </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].no_hp}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Birth Date: </Grid>
+                                                    <Grid item lg={9}>: {moment(profileUser[0].tanggal_lahir).format('DD MMMM YYYY')}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Gender: </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].jk === 'Perempuan' ? 'Female' : 'Male'}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+
+                                            <Box py={1} fontSize={12}>
+                                                <Grid container>
+                                                    <Grid item lg={3}>Address: </Grid>
+                                                    <Grid item lg={9}>: {profileUser[0].alamat}</Grid>
+                                                </Grid>
+                                                <Divider />
+                                            </Box>
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+                                :
+                                'loading..'
+                        }
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant="primary" size="sm" onClick={() => {
+                        setPopupDetail(false)
+                    }}
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Close</Button>
+                </DialogActions>
+            </Dialog>
 
             <Grid container>
                 <Grid item lg={2}>
@@ -343,7 +730,7 @@ export default function Departemen() {
                                 <Box pb={3} >
                                     <Button size="small" variant="outline-primary"
                                         style={{ fontSize: '11px', paddingRight: '15px', paddingLeft: '15px' }}
-                                    // onClick={() => setPopupCreate(true)}
+                                        onClick={() => setPopupCreate(true)}
                                     >
                                         Add New User
                             </Button>
@@ -368,6 +755,6 @@ export default function Departemen() {
                     </Box>
                 </Grid>
             </Grid>
-        </div>
+        </div >
     )
 }

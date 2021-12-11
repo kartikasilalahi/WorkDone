@@ -29,7 +29,11 @@ const login = (email, password) => {
                     // // localStorage.setItem("level", login.data.data[0].level)
                     localStorage.setItem("jabatan", login.data.data[0].jabatan)
                     localStorage.setItem("nama_depan", login.data.data[0].nama_depan)
-                    localStorage.setItem("nama_belakang", login.data.data[0].nama_belakang)
+                    if (login.data.data[0].nama_belakang === null) {
+                        localStorage.setItem("nama_belakang", '')
+                    } else {
+                        localStorage.setItem("nama_belakang", login.data.data[0].nama_belakang)
+                    }
                     localStorage.setItem("email", login.data.data[0].email)
                     localStorage.setItem("departemen", login.data.data[0].departemen)
                     localStorage.setItem("iddepartemen", login.data.data[0].iddepartement)
