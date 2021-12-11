@@ -747,8 +747,8 @@ export default function Departemen() {
                                             onChange={(e) => setDataEditUser({ ...dataEditUser, idlevel: Number(e.target.value) })}
                                         >
                                             <option value="" selected disabled>Select level</option>
-                                            <option value="1">Subordinate</option>
-                                            <option value="2">Lead</option>
+                                            <option value={1}>Subordinate</option>
+                                            <option value={2}>Lead</option>
                                         </Form.Control>
                                     </Form.Group>
                                 </Grid>
@@ -759,7 +759,7 @@ export default function Departemen() {
                                             style={{ fontSize: '11px' }}
                                             as="select"
                                             size="sm"
-                                            value={dataEditUser.status}
+                                            value={`'${dataEditUser.status}'`}
                                             onChange={(e) => setDataEditUser({ ...dataEditUser, status: Number(e.target.value) })}
                                         >
                                             <option value="" selected disabled>Select status</option>
