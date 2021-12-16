@@ -98,12 +98,12 @@ export default function Loginpage() {
                                                 <>Login</>
                                         }
                                     </Button>
-                                    <Form.Text className="text-muted">
+                                    {/* <Form.Text className="text-muted">
                                         Don't have an account yet?
                                         <Link to="/register">
                                             <span style={{ fontWeight: "bold", color: '#22252F' }}> Register</span>
                                         </Link>
-                                    </Form.Text>
+                                    </Form.Text> */}
                                 </Form>
                             </Box>
                         </Grid>

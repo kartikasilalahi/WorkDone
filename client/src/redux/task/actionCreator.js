@@ -1,10 +1,9 @@
 // import Cookies from 'js-cookie';
 // import crypto from 'crypto-js';
+import Password from 'antd/lib/input/Password'
 import Axios from 'axios'
 import { APIURL, API_FILES } from '../../helper/api'
 import action from './action'
-import moment from 'moment'
-import Task from '../../pages/landingpage/user/task'
 
 const {
     getAllTaskUserEffect,
@@ -114,6 +113,11 @@ const {
     addNewUserRequest,
     addNewUserErr,
 
+    changePasswordSuccess,
+    changePasswordRequest,
+    changePasswordErr,
+
+
 } = action
 
 
@@ -124,38 +128,6 @@ const getAllTaskUser = (id, keyword) => {
             const allTaskUser = await Axios.get(`${APIURL}taskman/alltaskuser?id=${id}&keyword=${keyword}`)
             if (allTaskUser.data.data) {
                 dispatch(getTotalTask(allTaskUser.data.data))
-
-                // var start = moment('2021-01-20T01:14:07.000Z'); //todays date
-                // var end = moment("2021-01-30T01:14:07.000Z"); // another date
-                // var duration = moment.duration(end.diff(start));
-                // var hour = duration.asHours();
-                // console.log("hour", hour)
-                // let Tasks = allTaskUser.data.data
-                // Tasks.sort(function (a, b) {
-                //     return moment.duration(moment(a.end_datetime.diff(a.start_datetimee))) - moment.duration(moment(b.end_datetime.diff(b.start_datetimee)))
-                // });
-
-                // console.log("Tas".Tasks)
-                // console.log("all".allTaskUser.data.data)
-                // let ass = []
-                // for (var i = 0; i < Tasks.length; i++) {
-                //     for (let j = 0; j <  Tasks.length; j++) {
-                //         var now = moment(new Date)
-                //         var start = moment(Tasks[i].start_datetime); //start date
-                //         var end = moment(Tasks[i].end_datetime); // another date
-                //         var duration1 = moment.duration(end.diff(start));
-                //         var duration2 = moment.duration(end.diff(now));
-                //         var hour1 = duration1.asHours();
-                //         var hour2= duration2.asHours();
-                //         let level = Task[i].level === "Low" ? 1 : Task[i].level === "Medium" ? 2 : 3
-                //         let P = S / (hour1+hour2)
-                //         if (inputArr[j] > inputArr[j + 1]) {
-                //             let tmp = inputArr[j];
-                //             inputArr[j] = inputArr[j + 1];
-                //             inputArr[j + 1] = tmp;
-                //         }
-                //     }
-                // }
                 dispatch(getAllTaskUserEffect(allTaskUser.data.data))
             } else {
                 dispatch(getAllTaskUserErr(allTaskUser.data.message))
@@ -272,6 +244,7 @@ const addNewTask = (data) => {
             const newTask = await Axios.post(`${APIURL}taskman/addnewtask`, data)
             if (newTask.data.message) {
                 dispatch(getAllTaskUser(data.assignee, ''))
+                dispatch(getAllTaskReviewer(data.reviewer, ''))
                 dispatch(addNewTaskSuccess(newTask.data.message))
                 dispatch(getNotifTaskUser(data.assignee))
             }
@@ -432,7 +405,7 @@ const getAllProjectInDepartemen = (iddepartemen) => {
     return async dispatch => {
         try {
             dispatch(getAllProjectInDepartemenRequest())
-            const allProject = await Axios.get(`${APIURL}taskman/allprojectuser/${iddepartemen}`)
+            const allProject = await Axios.get(`${APIURL}taskman/allprojectdepartemen/${iddepartemen}`)
             if (allProject.data.data) {
                 dispatch(getAllProjectInDepartemenSuccess(allProject.data.data))
             } else {
@@ -583,7 +556,22 @@ const addNewUser = (data) => {
                 dispatch(addNewUserSuccess(newuser.data.message))
             }
         } catch (error) {
-            dispatch(addNewTaskErr(error))
+            dispatch(addNewUserErr(error))
+        }
+    }
+}
+
+
+const UbahPassword = (data) => {
+    return async dispatch => {
+        try {
+            dispatch(changePasswordRequest())
+            const password = await Axios.post(`${APIURL}taskman/changepassword`, data)
+            if (password.data) {
+                dispatch(changePasswordSuccess(password.data.message))
+            }
+        } catch (error) {
+            dispatch(changePasswordErr(error))
         }
     }
 }
@@ -614,5 +602,6 @@ export {
     getAllProject,
     getProfileUser,
     getJabatanInDepartemen,
-    addNewUser
+    addNewUser,
+    UbahPassword,
 };

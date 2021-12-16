@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Box, Divider, Grid } from '@material-ui/core'
 import SideBar from '../../component/pages/user/sideBar'
 import { Button, Form, Dropdown } from 'react-bootstrap';
-// import ReactQuill from 'react-quill'
 import TopBar from '../../component/pages/user/topBar'
 import { sendReport, getProfileUser } from '../../../redux/task/actionCreator'
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,7 +19,6 @@ const Profile = () => {
     const profile = useSelector(state => state.task.profile_user)
     const loadingGetProfile = useSelector(state => state.task.is_loading_profile_user)
 
-    // const [reportField, setReportField] = useState('');
     const [isSend, setIsSend] = useState(false);
 
     const Toast = Swal.mixin({
@@ -50,7 +48,6 @@ const Profile = () => {
 
     }, [dispatch])
 
-    console.log("profile", profile)
 
     return (
         <div>

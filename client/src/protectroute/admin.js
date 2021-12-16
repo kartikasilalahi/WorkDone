@@ -3,6 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 import Dashboard from '../pages/landingpage/admin/dashboardAdmin'
 import Departemen from '../pages/landingpage/admin/departemen'
+import Jabatan from '../pages/landingpage/admin/jabatan'
 import User from '../pages/landingpage/admin/user'
 import Task from '../pages/landingpage/admin/task'
 import Project from '../pages/landingpage/admin/project'
@@ -16,6 +17,7 @@ const AdminRoute = () => {
     <Switch>
       <Route path={`${path}/dashboard`} component={Dashboard} />
       <Route path={`${path}/departemen`} component={Departemen} />
+      <Route path={`${path}/jabatan`} component={Jabatan} />
       <Route path={`${path}/all-user`} component={User} />
       <Route path={`${path}/all-task`} component={Task} />
       <Route path={`${path}/all-project`} component={Project} />

@@ -45,8 +45,9 @@ function SideBar() {
       label: "User",
       Icon: ReceiptIcon,
       items: [
+        { name: "/admin/all-user", label: "All User", onClick },
         { name: "/admin/departemen", label: "Departemen", onClick },
-        { name: "/admin/all-user", label: "All User", onClick }
+        { name: "/admin/jabatan", label: "Jabatan", onClick },
       ]
     },
     "divider",

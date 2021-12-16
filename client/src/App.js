@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom';
 import User from './protectroute/user'
 import Admin from './protectroute/admin'
 import Auth from './protectroute/auth'
-import Home from './pages/landingpage/Home'
+import Home from './pages/landingpage/Login'
 import Protectroute from './helper/protectRoute'
 // import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import 'react-quill/dist/quill.snow.css'
@@ -39,8 +39,8 @@ function App() {
               : isLoggedIn && role === "admin" ? <Protectroute path="/admin" component={Admin} />
                 : <Protectroute path="/user" component={User} />}
 
-        {isLoggedIn && role == "admin" && (path === "/" || path === "/auth/login" || path === "/auth/register") && (<Redirect to="/admin/dashboard" />)}
-        {isLoggedIn && role == "user" && (path === "/" || path === "/auth/login" || path === "/auth/register") && (<Redirect to="/user/dashboard" />)}
+        {isLoggedIn && role == "admin" && (path === "/") && (<Redirect to="/admin/dashboard" />)}
+        {isLoggedIn && role == "user" && (path === "/") && (<Redirect to="/user/dashboard" />)}
       </Router>
     </div>
   );

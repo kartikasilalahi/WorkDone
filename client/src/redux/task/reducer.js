@@ -92,6 +92,10 @@ const {
     ADD_NEW_USER_REQUEST,
     ADD_NEW_USER_ERR,
 
+    CHANGE_PASSWORD_SUCCESS,
+    CHANGE_PASSWORD_REQUEST,
+    CHANGE_PASSWORD_ERR,
+
 } = action
 
 const initState = {
@@ -199,6 +203,9 @@ const initState = {
 
     message_add_new_user: '',
     is_loading_add_new_user: false,
+
+    message_change_password: '',
+    is_loading_change_password: false,
 
 };
 
@@ -654,6 +661,20 @@ const AuthReducer = (state = initState, action) => {
                 ...state,
                 message_add_new_user: '',
                 is_loading_add_new_user: true
+            }
+
+        case CHANGE_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                message_change_password: data,
+                is_loading_change_password: false
+            }
+
+        case CHANGE_PASSWORD_REQUEST:
+            return {
+                ...state,
+                message_change_password: '',
+                is_loading_change_password: true
             }
         default:
             return state;

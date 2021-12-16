@@ -195,7 +195,7 @@ module.exports = {
         let sql = `SELECT p.project_name, t.* 
         from task_user tu  JOIN task t ON tu.id =  t.id 
         JOIN project p ON p.id = t.project_id
-        where tu.user_id = ${id} AND t.task_name LIKE '%${keyword}%'`
+        where tu.user_id = ${id} AND t.task_name LIKE '%${keyword}%' order by priorityValue desc`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 
@@ -254,6 +254,8 @@ module.exports = {
         let sql = `
         SELECT *
         from project WHERE departemen_id=${iddepartemen}`
+        console.log("sql", sql)
+
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
             res.send({
@@ -266,7 +268,8 @@ module.exports = {
     getDetailProject: (req, res) => {
         let { id } = req.params
         let sql = `
-        SELECT * FROM workdone.project where id=${id};`
+        SELECT p.*, d.name as departemen FROM project p
+        JOIN departemen d on p.departemen_id = d.id where p.id=${id}`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
             res.send({
@@ -294,6 +297,10 @@ module.exports = {
 
 
     addNewTask: (req, res) => {
+        // idenya: langsung itung nilai priority nya
+        // inpur kedalam tabel
+        // rumus:
+        // Level / (Td-To) + (Td-Tn)
         // flow : tmabahkan ke tabel task dulu baru e task user
         let { assignee, created_by, start_datetime, end_datetime, level, description, task_name } = req.body
         let progress = 'TO DO'
@@ -308,6 +315,23 @@ module.exports = {
         dataTask.progress = progress
         dataTask.isread = 0;
         dataTask.isreadbyreviewer = 0;
+
+        var start = moment(start_datetime); //start todo task
+        var duedate = moment(end_datetime); // due date
+        var now = moment(); // due date
+        let duration1 = moment.duration(duedate.diff(start));
+        let duration2 = moment.duration(duedate.diff(now));
+        let priorityValue = 0;
+        if (level === 'Difficult') {
+            priorityValue = 3 / (duration1 + duration2)
+        } else if (level === 'Medium') {
+            priorityValue = 2 / (duration1 + duration2)
+        } else {
+            priorityValue = 1 / (duration1 + duration2)
+        }
+
+        console.log(priorityValue)
+        dataTask.priorityValue = priorityValue
 
 
         mysql.query(sql, dataTask, (err, result) => {
@@ -412,7 +436,7 @@ module.exports = {
         let { id, keyword } = req.query
         let sql = `SELECT p.project_name, t.* 
         from task t JOIN project p ON p.id = t.project_id
-        where t.reviewer = ${id} AND t.task_name LIKE '%${keyword}%'`
+        where t.reviewer = ${id} AND t.task_name LIKE '%${keyword}%' order by priorityValue desc`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 
@@ -456,7 +480,8 @@ module.exports = {
 
     getAllProjectByDepartemen: (req, res) => {
         const { iddepartemen } = req.params;
-        let sql = `SELECT * from project WHERE id_departemen=${iddepartemen}`;
+        let sql = `SELECT * from project WHERE departemen_id=${iddepartemen}`;
+        console.log("sql", sql)
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 
@@ -578,7 +603,7 @@ module.exports = {
         let sql = `SELECT p.project_name, t.* 
         from task_user tu  JOIN task t ON tu.id =  t.id 
         JOIN project p ON p.id = t.project_id
-        where t.task_name LIKE '%${keyword}%'`
+        where t.task_name LIKE '%${keyword}%' order by priorityValue desc`
         mysql.query(sql, (error, result) => {
             if (error) res.status(500).send({ error })
 
@@ -635,9 +660,36 @@ module.exports = {
         })
     },
 
+    changePassword: (req, res) => {
+        const { id, current, newPassword } = req.body
+        console.log("req", req.body)
+
+        let sql = `SELECT * FROM user where id=${Number(id)} AND password='${current}'`
+        mysql.query(sql, (err, result) => {
+            if (result.length === 0) {
+                res.send({
+                    status: 200,
+                    message: `Opss.. Password saat ini salah`
+                })
+            } else {
+                sql = `UPDATE user SET password='${newPassword}' WHERE id=${Number(id)}`
+                mysql.query(sql, (err1, result2) => {
+                    if (err1) res.status(500).send({ error })
+
+                    res.send({
+                        status: 200,
+                        message: `Password berhasil diperbaharui`
+                    })
+                })
+            }
+
+        })
+
+    }
+
     // `project_name`, `departemen_id`, `project_description`
 
-    // integrate algo in all task user (PENDING)
+    // integrate algo in all task user (DONE )
     // create task by reviewer (DONE)
     // add project (DONE)
     // VIEW detail project (NOT YET)
@@ -649,11 +701,10 @@ module.exports = {
     // (table task and search task (DONE), detail task (not yet))
     // (table project and search project (DONE), detail project (not yet))
     // (table user and search user (DONE), add new user (DONE), edit user (not yet), detail user (DONE))
-    // profil (not yet)
+    // profil (view profile done, edit profile not yet)
     // change report on reviewer (view report per user => NOT YET)
-    // change password (not yet)
+    // change password (done)
     // LIVE ATTENDANCE (not yet)
-    // validate if form empty when submit (not yet)
     // SUSUN LAPORAN 
     // GASSSSSSSSSSSSSSSSSSSSSSSS
     // DETAIL TASK for user (assignee, reviewer, created by with name npot id_)

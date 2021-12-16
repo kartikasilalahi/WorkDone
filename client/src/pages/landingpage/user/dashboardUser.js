@@ -299,6 +299,7 @@ export default function DashboardUser() {
         "image"
     ];
 
+    console.log("allTaskUser", allTaskUser)
 
     return (
         <div>
@@ -737,8 +738,96 @@ export default function DashboardUser() {
             {/* popup detail project */}
             <Dialog open={openPopupDetailProject} onClose={() => setOpenPopupDetailProject(false)} maxWidth="sm" fullWidth>
                 <DialogTitle><Box fontSize={13} fontWeight={600}>Detail Project</Box></DialogTitle>
+                <DialogContent>
+                    <Box>
+                        {detailProject?.length > 0 ?
+                            <>
+                                <Box fontSize={11}>
+                                    <Form noValidate >
+                                        <Form.Group controlId="formBasicEmail">
+                                            <Form.Label>ID</Form.Label>
+                                            <Form.Control
+                                                style={{ fontSize: '11px' }}
+                                                size="sm"
+                                                type="text"
+                                                placeholder="id"
+                                                value={detailProject[0].id}
+                                                disabled />
+                                        </Form.Group>
+                                        <Form.Group controlId="formBasicEmail">
+                                            <Form.Label>Project Name</Form.Label>
+                                            <Form.Control
+                                                style={{ fontSize: '11px' }}
+                                                size="sm"
+                                                type="text"
+                                                placeholder="Project Name"
+                                                value={detailProject[0].project_name}
+                                                disabled
+                                                // onChange={(e) => setDataEditDepartment({ ...dataEditDepartment, name: e.target.value })}
+                                                required />
+                                        </Form.Group>
 
-            </Dialog>
+                                        <Form.Group controlId="formBasicSelect2">
+                                            <Form.Label>Department: </Form.Label>
+                                            <Form.Control
+                                                style={{ fontSize: '11px' }}
+                                                type="text"
+                                                size="sm"
+                                                disabled
+                                                value={detailProject[0].departemen}
+                                            // onChange={(e) => setDataEditDepartment({ ...dataEditDepartment, idatasan: Number(e.target.value) })}
+                                            />
+                                        </Form.Group>
+
+                                        <Form.Group controlId="formBasicSelect2">
+                                            <Form.Label>Description: </Form.Label>
+                                            <ReactQuill
+                                                theme="snow"
+                                                modules={modules}
+                                                formats={formats}
+                                                value={detailProject[0].project_description}
+                                            // onChange={(e) => setSelectedTask({ ...selectedTask, project_description: e })}
+                                            />
+                                        </Form.Group>
+
+
+
+                                    </Form>
+                                </Box>
+                            </>
+                            :
+                            'loading'}
+                    </Box>
+
+
+                </DialogContent>
+                <DialogActions>
+
+                    <Button size="sm" variant="info"
+                        // onClick={() => setIdTask(0)}
+                        // onClick={() => {
+                        //     dispatch(updateTask({
+                        //         idUser: id,
+                        //         id: selectedTask.id,
+                        //         task_name: selectedTask && selectedTask.task_name,
+                        //         description: selectedTask && selectedTask.description
+                        //     }))
+                        //     setIsUpdateTask(true)
+                        // }}
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Update</Button>
+                    <Button size="sm"
+                        style={{
+                            fontSize: '11px',
+                            paddingLeft: '25px',
+                            paddingRight: '25px'
+                        }}>Close</Button>
+                </DialogActions>
+
+            </Dialog >
 
             {/* start content */}
             <Grid container>
@@ -1076,7 +1165,7 @@ export default function DashboardUser() {
                                             </Box>
                                             <Box pt={2}>
                                                 {isLoadingTaskReviewer ? 'loading...' :
-                                                    allTaskReviewer.filter(tasks => tasks.progress !== 'DONE').slice(0, 10).map((task, i) => (
+                                                    allTaskReviewer.filter(tasks => tasks.progress !== 'DONE').slice(0, 15).map((task, i) => (
                                                         <Box key={i} p={1} mb={2}
                                                             onClick={() => {
                                                                 setIdTask(task.id)
@@ -1107,17 +1196,6 @@ export default function DashboardUser() {
                                                         </Box>
                                                     ))
                                                 }
-                                                {/* <Box p={2} mb={2}
-                                        style={{
-                                            width: "515px",
-                                            borderRadius: "5px",
-                                            WebkitBoxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                            boxShadow: "0 0 23px 4px rgb(0 0 0 / 6%)",
-                                            backgroundColor: '#fff'
-                                        }}>
-                                        <Box fontSize={12} textAlign="center" onClick={handleClickOpen}
-                                            style={{ cursor: 'pointer' }} fontWeight={600}>+ Create New Task</Box>
-                                    </Box> */}
                                             </Box>
                                         </Box>
                                     </Grid>

@@ -55,7 +55,7 @@ const TopBar = ({ label }) => {
                                         <Dropdown.Menu>
 
                                             <Dropdown.Item onClick={() => history.push('/admin/change-password')}>
-                                                Setting
+                                                Change Password
                                                         </Dropdown.Item>
                                             <Dropdown.Item onClick={() => {
                                                 localStorage.clear()

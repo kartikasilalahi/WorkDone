@@ -99,11 +99,33 @@ export default function Task() {
 
     const handleClosePopupCreateTask = () => {
         setOpenPopupCreateTask(false);
+        setDataNewTask({
+            assignee: idlevel === 2 ? id : '',
+            created_by: id,
+            reviewer: idlevel === 1 ? id : '',
+            level: '',
+            description: '',
+            task_name: '',
+            project_id: '',
+            end_datetime: new Date(),
+            start_datetime: new Date(),
+        })
     };
 
     const onSaveNewTask = () => {
         let data = dataNewTask
         dispatch(addNewTask(data))
+        setDataNewTask({
+            assignee: idlevel === 2 ? id : '',
+            created_by: id,
+            reviewer: idlevel === 1 ? id : '',
+            level: '',
+            description: '',
+            task_name: '',
+            project_id: '',
+            end_datetime: new Date(),
+            start_datetime: new Date(),
+        })
     }
 
     useEffect(() => {
@@ -567,7 +589,7 @@ export default function Task() {
                                             <Form.Control
                                                 style={{ fontSize: '11px' }}
                                                 as="select"
-                                                value={dataNewTask.reviewer}
+                                                value={dataNewTask.assignee}
                                                 size="sm"
                                                 onChange={(e) => {
                                                     setDataNewTask({ ...dataNewTask, assignee: Number(e.target.value) })

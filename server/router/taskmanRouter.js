@@ -38,6 +38,7 @@ router.post('/addnewproject', taskmanController.addNewProject)
 router.post('/addnewdepartemen', taskmanController.addNewDepartment)
 router.post('/editdepartemen', taskmanController.editDepartemen)
 router.post('/addnewduser', taskmanController.addNewUser)
+router.post('/changepassword', taskmanController.changePassword)
 
 
 

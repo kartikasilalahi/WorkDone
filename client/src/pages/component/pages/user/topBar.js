@@ -502,8 +502,10 @@ const TopBar = ({ label }) => {
                                         <Dropdown.Toggle as={AvaToggle} id="dropdown-custom-components">
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            <Dropdown.Item>
-                                                Setting
+                                            <Dropdown.Item onClick={() => {
+                                                window.location.href = '/user/change-password'
+                                            }}>
+                                                Change Password
                                                         </Dropdown.Item>
                                             <Dropdown.Item onClick={() => {
                                                 localStorage.clear()

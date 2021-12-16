@@ -116,6 +116,11 @@ const actions = {
     ADD_NEW_USER_SUCCESS: 'ADD_NEW_USER_SUCCESS',
     ADD_NEW_USER_ERR: 'ADD_NEW_USER_ERR',
 
+    CHANGE_PASSWORD_REQUEST: 'CHANGE_PASSWORD_REQUEST',
+    CHANGE_PASSWORD_SUCCESS: 'CHANGE_PASSWORD_SUCCESS',
+    CHANGE_PASSWORD_ERR: 'CHANGE_PASSWORD_ERR',
+
+
     getAllTaskUserEffect: (data) => {
         return {
             type: actions.GET_ALL_TASK_USER,
@@ -666,6 +671,26 @@ const actions = {
     addNewUserErr: err => {
         return {
             type: actions.ADD_NEW_USER_ERR,
+            err,
+        };
+    },
+
+    changePasswordRequest: () => {
+        return {
+            type: actions.CHANGE_PASSWORD_REQUEST,
+        };
+    },
+
+    changePasswordSuccess: data => {
+        return {
+            type: actions.CHANGE_PASSWORD_SUCCESS,
+            data,
+        };
+    },
+
+    changePasswordErr: err => {
+        return {
+            type: actions.CHANGE_PASSWORD_ERR,
             err,
         };
     },
