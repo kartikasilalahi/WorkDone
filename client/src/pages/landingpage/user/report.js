@@ -30,7 +30,9 @@ const Report = () => {
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
     })
-
+    let today = new Date()
+    let day = today.getDay()
+    // console.log("day", day)
     useEffect(() => {
         if (messageSendReport && messageSendReport.length > 0 && isSend) {
             Toast.fire({
@@ -86,28 +88,39 @@ const Report = () => {
                                     />
                                 </Box>
                                 <Box pt={1} px={2} textAlign="right">
-                                    <Button variant="success"
-                                        style={{
-                                            paddingRight: "40px",
-                                            paddingLeft: '40px',
-                                            fontSize: "13px",
-                                            borderRadius: '20px'
-                                        }}
-                                        onClick={() => {
-                                            setIsSend(true)
-                                            dispatch(sendReport({
-                                                iduser: id,
-                                                iddepartemen: iddepartemen,
-                                                data: reportField
-                                            }))
-                                        }}
-                                    >{loadingSendReport ? 'loading ..' : 'send'}</Button>
+                                    {
+                                        day !== 5 ?
+                                            <Button variant="success"
+                                                style={{
+                                                    paddingRight: "40px",
+                                                    paddingLeft: '40px',
+                                                    fontSize: "13px",
+                                                    borderRadius: '20px'
+                                                }}
+                                                disabled
+                                            >{loadingSendReport ? 'loading ..' : 'send'}</Button>
+                                            :
+                                            <Button variant="success"
+                                                style={{
+                                                    paddingRight: "40px",
+                                                    paddingLeft: '40px',
+                                                    fontSize: "13px",
+                                                    borderRadius: '20px'
+                                                }}
+                                                onClick={() => {
+                                                    setIsSend(true)
+                                                    dispatch(sendReport({
+                                                        iduser: id,
+                                                        iddepartemen: iddepartemen,
+                                                        data: reportField
+                                                    }))
+                                                }}
+                                            >{loadingSendReport ? 'loading ..' : 'send'}</Button>
+                                    }
                                 </Box>
                             </Box>
                             :
-                            <Box px={2} className="container-content" pb={5}>
-                                disini isi report tiap user
-                            </Box>
+                            null
                     }
                 </Grid>
             </Grid>

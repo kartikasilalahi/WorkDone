@@ -134,9 +134,9 @@ export default function AppBar() {
                         justify="space-between"
                         alignItems="center"
                     >
-                        <Grid item >
+                        {/* <Grid item >
                             <Box fontWeight={700} color="#50B799" fontSize={24}>WorkDone</Box>
-                        </Grid>
+                        </Grid> */}
                         {/* <Grid item >
                             <Link href="/auth/login"><span onClick={() => { }} style={{ paddingRight: "10px" }}>Login</span></Link>
                             <Link href="/auth/register"><span style={{ paddingLeft: "10px" }}>Register</span></Link>

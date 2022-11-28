@@ -55,7 +55,8 @@ module.exports = {
             u.idlevel,
             r.role_name as role, 
             j.name as jabatan, 
-            d.name as departemen 
+            d.name as departemen ,
+        d.idatasan
             from user u JOIN role r ON u.idrole = r.id 
             JOIN jabatan j ON u.idjabatan=j.id 
             JOIN departemen d ON j.departemen_id=d.id 
@@ -116,6 +117,7 @@ module.exports = {
         r.role_name as role, 
         j.name as jabatan, 
         d.name as departemen,
+        d.idatasan,        
         l.name as level
         from user u JOIN role r ON u.idrole = r.id 
         JOIN jabatan j ON u.idjabatan=j.id 
@@ -330,7 +332,9 @@ module.exports = {
             priorityValue = 1 / (duration1 + duration2)
         }
 
-        console.log(priorityValue)
+        console.log(duration1 + duration2, '<<')
+        console.log(duration1.asMilliseconds(), '<<')
+        console.log(duration2.asMilliseconds(), '<<')
         dataTask.priorityValue = priorityValue
 
 

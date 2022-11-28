@@ -126,7 +126,7 @@ const initState = {
     message_update_progress_task: '',
 
 
-    departemen_user: [],
+    departemen_user: undefined,
     is_loading_departemen_user: false,
     is_error_departemen_user: false,
     message_departemen_user: '',

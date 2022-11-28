@@ -154,6 +154,7 @@ export default function Task() {
 
     }, [listDepartemen, isLoadingListTask])
 
+    console.log("allYask", allTask)
 
     const columns = [
         {

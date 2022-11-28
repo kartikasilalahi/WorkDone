@@ -33,7 +33,7 @@ function SideBar() {
   }
 
   const items = [
-    { name: "/admin/dashboard", label: "Home", Icon: HomeIcon, onClick },
+    // { name: "/admin/dashboard", label: "Home", Icon: HomeIcon, onClick },
     // {
     //   name: "/admin/notifications",
     //   label: "Notifications",

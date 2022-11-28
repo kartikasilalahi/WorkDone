@@ -37,10 +37,11 @@ const login = (email, password) => {
                     localStorage.setItem("email", login.data.data[0].email)
                     localStorage.setItem("departemen", login.data.data[0].departemen)
                     localStorage.setItem("iddepartemen", login.data.data[0].iddepartement)
+                    localStorage.setItem("idatasan", login.data.data[0].idatasan)
                     localStorage.setItem("idlevel", login.data.data[0].idlevel)
                     localStorage.setItem("isLogin", true)
                     dispatch(loginSuccess(login.data.data[0]))
-                    if (login.data.data[0].role === "admin") return window.location.href = "/admin/dashboard"
+                    if (login.data.data[0].role === "admin") return window.location.href = "/admin/all-user"
                     return window.location.href = "/user/dashboard"
                 }
                 else {

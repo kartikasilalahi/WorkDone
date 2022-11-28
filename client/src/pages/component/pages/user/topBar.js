@@ -381,14 +381,14 @@ const TopBar = ({ label }) => {
                                 <Grid item lg={9}>: {detailTask[0].last_update === null ? moment(detailTask[0].created_on).format('DD MMM YYYY, h:mm') : moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
 
-                            <Grid container justifyContent="space-between" spacing={2}>
+                            {/* <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Created by</Grid>
                                 <Grid item lg={9}>: {detailTask[0].created_by}</Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Assignee</Grid>
                                 <Grid item lg={9}>: {detailTask[0].assignee}</Grid>
-                            </Grid>
+                            </Grid> */}
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Level of difficult</Grid>
                                 <Grid item lg={9}>: {detailTask[0].level}</Grid>
@@ -459,8 +459,7 @@ const TopBar = ({ label }) => {
                                                                 onClick={() => setIdTask(task.id)}>
                                                                 <Box py={1}>{
                                                                     task.progress === "TO DO" ?
-                                                                        <>You have new task <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span>
-                                                                to do</> :
+                                                                        <>You have new task <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name} </span>to do</> :
                                                                         <>Task  <span style={{ fontWeight: 'bold', color: "#67B9CC" }}>{task.task_name}</span> has been updated to {task.progress}</>
                                                                 }</Box>
                                                             </Dropdown.Item>

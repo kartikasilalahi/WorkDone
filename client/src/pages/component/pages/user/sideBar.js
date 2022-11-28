@@ -31,8 +31,9 @@ function SideBar() {
     localStorage.setItem("path", item.label)
     setlabel(item.label)
   }
+  const idlevel = localStorage.getItem('idlevel')
 
-  const items = [
+  const items2 = [
     { name: "/user/dashboard", label: "Home", Icon: HomeIcon, onClick },
     // {
     //   name: "/user/notifications",
@@ -73,13 +74,63 @@ function SideBar() {
 
   ];
 
+  const items1 = [
+    { name: "/user/dashboard", label: "Home", Icon: HomeIcon, onClick },
+    // {
+    //   name: "/user/notifications",
+    //   label: "Notifications",
+    //   Icon: NotificationsIcon,
+    //   onClick
+    // },
+    {
+      name: "task",
+      label: "Tasks",
+      Icon: ReceiptIcon,
+      items: [
+        { name: "/user/all-task", label: "All Task", onClick },
+        // { name: "/user/report", label: "Report", onClick }
+      ]
+    },
+    "divider",
 
+    {
+      name: "settings",
+      label: "Settings",
+      Icon: SettingsIcon,
+      items: [
+        { name: "/user/profile", label: "Profile", onClick },
+        { name: "/user/change-password", label: "Change Password", onClick },
+        "divider",
+        ,
 
-  return (
-    <div>
-      <Sidebar items={items} active={activeMenu} />
-    </div>
-  );
+      ]
+    },
+
+    {
+      name: "logout",
+      label: "Logout",
+      Icon: MeetingRoomRoundedIcon,
+      onClick
+    },
+
+  ];
+
+  if (idlevel === 2) {
+
+    return (
+      <div>
+        <Sidebar items={items2} active={activeMenu} />
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <Sidebar items={items1} active={activeMenu} />
+      </div>
+    );
+
+  }
+
 }
 
 export default SideBar;

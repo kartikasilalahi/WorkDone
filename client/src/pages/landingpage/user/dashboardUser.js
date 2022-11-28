@@ -124,7 +124,7 @@ export default function DashboardUser() {
     }, [dispatch])
 
     useEffect(() => {
-        if (listUserDepartemen.length > 0 && openPopupCreateProject) {
+        if (listUserDepartemen && listUserDepartemen.length > 0 && openPopupCreateProject) {
             let listuser = [];
             listUserDepartemen.filter((users) => users.id !== id).map((user) => {
                 const { nama_depan, nama_belakang } = user;
@@ -894,9 +894,9 @@ export default function DashboardUser() {
                                     <Grid xs={6} sm={6} lg={6}>
                                         <Box ml={3}  >
                                             <Box textAlign="right" pb={3}>
-                                                <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
+                                                {/* <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
                                                     <Box px={1} color="white" fontSize={11}>Live Attendance</Box>
-                                                </Button>
+                                                </Button> */}
 
                                                 <Box fontSize={12} pt={1} fontWeight='bold'>
                                                     {moment().format('DD MMMM YYYY,')}
@@ -1090,9 +1090,9 @@ export default function DashboardUser() {
                                     <Grid xs={6} sm={6} lg={6}>
                                         <Box ml={3}  >
                                             <Box textAlign="right" pb={3}>
-                                                <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
+                                                {/* <Button variant="info" size="small" style={{ borderRadius: "25px" }}>
                                                     <Box px={1} color="white" fontSize={11}>Live Attendance</Box>
-                                                </Button>
+                                                </Button> */}
 
                                                 <Box fontSize={12} pt={1} fontWeight='bold'>
                                                     {moment().format('DD MMMM YYYY,')}

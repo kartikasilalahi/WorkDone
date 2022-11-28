@@ -39,8 +39,8 @@ export default function Loginpage() {
 
         if (Login.login) {
             swal({
-                title: "Good job!",
-                text: "You clicked the button!",
+                title: "Great!",
+                text: "Login success",
                 icon: "success",
             });
         }

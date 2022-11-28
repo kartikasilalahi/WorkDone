@@ -60,6 +60,7 @@ export default function Task() {
 
     const id = Number(localStorage.getItem('id'));
     const iddepartemen = Number(localStorage.getItem('iddepartemen'));
+    const idatasan = Number(localStorage.getItem('idatasan'));
     const idlevel = Number(localStorage.getItem('idlevel'));
 
     const [listTask, setListTask] = useState([]);
@@ -145,6 +146,8 @@ export default function Task() {
         dispatch(getUserDepartemen(iddepartemen))
     }, [iddepartemen])
 
+    console.log(";li", listUserDepartemen)
+
     useEffect(() => {
         if (idTask > 0) {
             // setSelectedTask(allTaskUser[idTask - 0])
@@ -221,7 +224,7 @@ export default function Task() {
         if (idlevel === 2) {
             if (allTaskUser && !isLoadingTaskUser) {
                 let datatask = []
-                allTaskUser.map((task, i) => {
+                allTaskUser.filter((e) => e.progress !== 'DONE').map((task, i) => {
                     const { id, task_name, project_name, progress, start_datetime, end_datetime } = task
                     let taskname = ""
                     let end = moment(end_datetime);
@@ -334,7 +337,13 @@ export default function Task() {
         }
     }, [allTaskUser, allTaskReviewer])
     // allProjectInDepartemen
+    // let today = moment().format('YYYY-MM-DD')
+    // console.log(today, '23:59:59')
 
+    // let now = moment()
+    // console.log('now ' + now.toString())
+    // console.log('start ' + now.startOf('day').toString())
+    // console.log('end ' + now.endOf('day').toString().)
     useEffect(() => {
         if (idlevel === 2) {
             if (allProjectUser && !isLoadingProjectUser) {
@@ -364,6 +373,9 @@ export default function Task() {
     // const onChange = (pagination, filters, sorter, extra) => {
     //     console.log('params', pagination, filters, sorter, extra);
     // }
+    // console.log("allYask", listTask)
+    // console.log("all", allTaskUser)
+
 
     const Toast = Swal.mixin({
         toast: true,
@@ -430,7 +442,7 @@ export default function Task() {
         {
             title: 'Task Name',
             dataIndex: 'task_name',
-            defaultSortOrder: 'descend',
+            // defaultSortOrder: 'descend',
         },
         {
             title: 'Project',
@@ -446,7 +458,7 @@ export default function Task() {
         {
             title: 'End Datetime',
             dataIndex: 'end_datetime',
-            defaultSortOrder: 'ascend',
+            // defaultSortOrder: 'ascend',
             sorter: (a, b) => new Date(a.end_datetime) - new Date(b.end_datetime),
         },
         {
@@ -454,6 +466,20 @@ export default function Task() {
             dataIndex: 'action'
         }
     ];
+
+    console.log("id atasa", idatasan)
+
+    // if (listUserDepartemen) {
+    //     const a = listUserDepartemen.filter((u) => u.id === Number(idatasan))
+    //     console.log("a", a)
+    // }
+
+    const getUser = (list, x) => {
+        if (list) {
+            const a = list.filter((u) => u.id === Number(x))
+            return a[0].nama_depan
+        }
+    }
 
     return (
         <div>
@@ -564,8 +590,8 @@ export default function Task() {
                                             >
                                                 <option value="" selected disabled>Select Reviewer..</option>
                                                 {
-                                                    listUserDepartemen && listUserDepartemen.map((user) => (
-                                                        <option value={user.id} key={user.id}>{user.nama_depan} {user.nama_belakang}</option>
+                                                    listUserDepartemen && listUserDepartemen.length && listUserDepartemen.filter((u) => u.id === Number(idatasan)).map((val) => (
+                                                        <option value={val.id} key={val.id}>{val.nama_depan} {val.nama_belakang}</option>
                                                     ))
                                                 }
                                             </Form.Control>
@@ -597,7 +623,7 @@ export default function Task() {
                                             >
                                                 <option value="" selected disabled>Select Assignee..</option>
                                                 {
-                                                    listUserDepartemen && listUserDepartemen.map((user) => (
+                                                    listUserDepartemen && listUserDepartemen.filter((x) => x.id !== id).map((user) => (
                                                         <option value={user.id} key={user.id}>{user.nama_depan} {user.nama_belakang}</option>
                                                     ))
                                                 }
@@ -646,11 +672,11 @@ export default function Task() {
             <Dialog open={idTask > 0} onClose={() => setIdTask(0)} maxWidth="sm" fullWidth>
                 <DialogTitle><Box fontSize={14} fontWeight={700}>Edit Task</Box></DialogTitle>
                 <DialogContent>
-                    {selectedTask ? (
+                    {selectedTask && detailTask ? (
                         <Box fontSize={11}>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Status</Grid>
-                                <Grid item lg={9}>
+                                {/* <Grid item lg={9}>
                                     {
                                         currentProgress === "DECLINE" ?
                                             <Dropdown onSelect={(e) => {
@@ -718,6 +744,120 @@ export default function Task() {
                                                 </Dropdown>
                                     }
                                 </Grid>
+                             */}
+                                {idlevel === 2 ?
+                                    <Grid item lg={9}>
+                                        {
+                                            currentProgress === "DECLINE" ?
+                                                <Dropdown onSelect={(e) => {
+                                                    setCurrentProgress(e)
+                                                    setIsUpdateProgress(true)
+                                                    setIdUpdateTask(detailTask[0].id)
+                                                    setNewprogress((e))
+                                                }}>
+                                                    {
+                                                        isLoadingUpdateProgressTask ?
+                                                            <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                style={{ fontSize: '10px' }} >
+                                                                loading..
+                                                    </Dropdown.Toggle>
+                                                            :
+                                                            <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                style={{ fontSize: '10px' }}
+                                                                variant='danger'
+                                                            >
+                                                                {currentProgress}
+                                                            </Dropdown.Toggle>
+                                                    }
+
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item
+                                                            style={{ fontSize: '11px' }}
+                                                            eventKey="IN PROGRESS" >
+                                                            RE-DO &#10137; (IN PROGRESS)</Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                                :
+                                                currentProgress === "DONE" ?
+                                                    <Button variant="success">
+                                                        <Box px={1} fontSize={10} color="white">{currentProgress}</Box>
+                                                    </Button>
+                                                    :
+                                                    <Dropdown onSelect={(e) => {
+                                                        setCurrentProgress(e)
+                                                        setIsUpdateProgress(true)
+                                                        setIdUpdateTask(detailTask[0].id)
+                                                        setNewprogress((e))
+                                                    }}>
+                                                        {
+                                                            isLoadingUpdateProgressTask ?
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }} >
+                                                                    loading..
+                                                    </Dropdown.Toggle>
+                                                                :
+                                                                <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                    style={{ fontSize: '10px' }}
+                                                                    variant={currentProgress === 'TO DO' ? 'secondary'
+                                                                        : currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                            : currentProgress === 'REVIEW' ? 'info' : 'primary'
+                                                                    }>
+                                                                    {currentProgress === 'REVIEW' ? 'SEND REQUESTFOR REVIEW' : currentProgress}
+                                                                </Dropdown.Toggle>
+                                                        }
+
+                                                        <Dropdown.Menu>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'TO DO'} eventKey="TO DO">TO DO</Dropdown.Item>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'IN PROGRESS'} eventKey="IN PROGRESS" >IN PROGRESS</Dropdown.Item>
+                                                            <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'REVIEW'} eventKey="REVIEW" >SEND REQUEST FOR REVIEW</Dropdown.Item>
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                        }
+                                    </Grid>
+                                    :
+                                    <Grid item lg={9}>
+                                        {
+                                            currentProgress !== "REVIEW" ?
+                                                <Button variant={
+                                                    currentProgress === 'DECLINE' ? 'danger' :
+                                                        currentProgress === 'DONE' ? 'success' :
+                                                            currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                : currentProgress === 'REVIEW' ? 'info' : 'secondary'}>
+                                                    <Box px={1} fontSize={10} color="white">{currentProgress}</Box>
+                                                </Button>
+                                                :
+                                                <Dropdown onSelect={(e) => {
+                                                    setCurrentProgress(e)
+                                                    setIsUpdateProgress(true)
+                                                    setIdUpdateTask(detailTask[0].id)
+                                                    setNewprogress((e))
+                                                }}>
+                                                    {
+                                                        isLoadingUpdateProgressTask ?
+                                                            <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                style={{ fontSize: '10px' }} >
+                                                                loading..
+                                                    </Dropdown.Toggle>
+                                                            :
+                                                            <Dropdown.Toggle size="sm" id="dropdown-basic"
+                                                                style={{ fontSize: '10px' }}
+                                                                variant={
+                                                                    currentProgress === 'DECLINE' ? 'danger' :
+                                                                        currentProgress === 'DONE' ? 'success' :
+                                                                            currentProgress === 'IN PROGRESS' ? 'warning'
+                                                                                : currentProgress === 'REVIEW' ? 'info' : 'secondary'}>
+                                                                {currentProgress}
+                                                            </Dropdown.Toggle>
+                                                    }
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'DONE'} eventKey="DONE">APPROVE</Dropdown.Item>
+                                                        <Dropdown.Item style={{ fontSize: '11px' }} active={detailTask[0].progress === 'DECLINE'} eventKey="DECLINE" >DECLINE</Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                        }
+                                    </Grid>
+
+                                }
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Id</Grid>
@@ -791,18 +931,16 @@ export default function Task() {
                                 <Grid item lg={9}>: {selectedTask.last_update === null ? moment(selectedTask.created_on).format('DD MMM YYYY, h:mm') : moment(selectedTask.last_update).format('DD MMM YYYY, h:mm')}</Grid>
                             </Grid>
 
-                            <Grid container justifyContent="space-between" spacing={2}>
+                            {/* <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Created by</Grid>
-                                <Grid item lg={9}>:
-                                {selectedTask.created_by}
-                                    {/* {listUser.filter((val) => val.id === selectedTask.created_by)[0].nama_depan} */}
+                                <Grid item lg={9}>: {listUserDepartemen && listUserDepartemen.length && <>{(listUserDepartemen.filter((val) => val.id === selectedTask.created_by))[0].nama_depan}</>}
                                 </Grid>
                             </Grid>
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Assignee</Grid>
-                                <Grid item lg={9}>: {selectedTask.assignee}
+                                <Grid item lg={9}>:  {listUserDepartemen && listUserDepartemen.length && <>{(listUserDepartemen.filter((val) => val.id === selectedTask.assignee))[0].nama_depan}</>}
                                 </Grid>
-                            </Grid>
+                            </Grid> */}
                             <Grid container justifyContent="space-between" spacing={2}>
                                 <Grid item lg={3}>Level of difficult</Grid>
                                 <Grid item lg={9}>: {selectedTask.level}</Grid>
@@ -876,6 +1014,15 @@ export default function Task() {
                                     moment(detailTask[0].last_update).format('DD MMM YYYY, h:mm')} </Box>
                                 <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Level Of Difficult:</Box>
                                 <Box fontSize={12}>{detailTask[0].level} </Box>
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Created By:</Box>
+                                <Box fontSize={12}> {getUser(listUserDepartemen, detailTask[0].created_by)}
+
+                                    {/* {listUserDepartemen && selectedTask && listUserDepartemen.length && <>{(listUserDepartemen.filter((val) => val.id === selectedTask.created_by))[0].nama_depan}</>} */}
+                                </Box>
+                                <Box fontSize={11} color="#276A71" fontWeight={600} pt={2}>Assignee:</Box>
+                                <Box fontSize={12}> {getUser(listUserDepartemen, detailTask[0].assignee)}
+                                </Box>
+                                {/* <Box fontSize={12}>{listUserDepartemen && selectedTask && listUserDepartemen.length > 0 && <>{(listUserDepartemen.filter((val) => val.id === selectedTask.assignee))[0].nama_depan}</>}</Box> */}
                             </>
                         )
                     }
